@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { BlogPost, DBService, CaseStudy, ContactSubmission, ContactSubmissionInsert, Lead, LeadInsert } from "@/lib/types";
+import type { BlogPost, DBService, CaseStudy, ContactSubmissionInsert } from "@/lib/types";
 
 // ============================================================
 // Blog Posts
@@ -13,20 +13,18 @@ export async function getBlogPosts(options?: {
   const supabase = await createClient();
   let query = supabase
     .from("blog_posts")
-    .select("*")
+    .select("id, slug, title, content, excerpt, category, featured_image, author, read_time, featured, published, published_at, created_at, updated_at")
     .eq("published", true)
-    .order("published_at", { ascending: false });
+    .order("published_at", { ascending: false })
+    .limit(options?.limit || 50);
 
   if (options?.category && options.category !== "All") {
     query = query.eq("category", options.category);
   }
 
-  if (options?.limit) {
-    query = query.limit(options.limit);
-  }
-
   if (options?.offset) {
-    query = query.range(options.offset, options.offset + (options.limit || 10) - 1);
+    const limit = options.limit || 50;
+    query = query.range(options.offset, options.offset + limit - 1);
   }
 
   const { data, error } = await query;
@@ -38,7 +36,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*")
+    .select("id, slug, title, content, excerpt, category, featured_image, author, read_time, featured, published, published_at, created_at, updated_at")
     .eq("slug", slug)
     .eq("published", true)
     .single();
@@ -67,7 +65,7 @@ export async function getRelatedPosts(
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*")
+    .select("id, slug, title, content, excerpt, category, featured_image, author, read_time, featured, published, published_at, created_at, updated_at")
     .eq("published", true)
     .eq("category", category)
     .neq("slug", currentSlug)
@@ -88,8 +86,9 @@ export async function getServices(options?: {
   const supabase = await createClient();
   let query = supabase
     .from("services")
-    .select("*")
-    .order("sort_order", { ascending: true });
+    .select("id, slug, name, description, short_description, price, price_period, category, icon, features, active, sort_order, created_at")
+    .order("sort_order", { ascending: true })
+    .limit(100);
 
   if (options?.activeOnly !== false) {
     query = query.eq("active", true);
@@ -108,7 +107,7 @@ export async function getServiceBySlug(slug: string): Promise<DBService | null> 
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("services")
-    .select("*")
+    .select("id, slug, name, description, short_description, price, price_period, category, icon, features, active, sort_order, created_at")
     .eq("slug", slug)
     .single();
 
@@ -136,7 +135,7 @@ export async function getRelatedServices(
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("services")
-    .select("*")
+    .select("id, slug, name, description, short_description, price, price_period, category, icon, features, active, sort_order, created_at")
     .eq("active", true)
     .eq("category", category)
     .neq("slug", currentSlug)
@@ -157,9 +156,10 @@ export async function getCaseStudies(options?: {
   const supabase = await createClient();
   let query = supabase
     .from("case_studies")
-    .select("*")
+    .select("id, slug, client_name, industry, result_summary, description, challenge, solution, metrics, tech_stack, featured_image, gallery, timeline, featured, published, created_at")
     .eq("published", true)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(50);
 
   if (options?.industry && options.industry !== "All") {
     query = query.eq("industry", options.industry);
@@ -178,7 +178,7 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudy | null
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("case_studies")
-    .select("*")
+    .select("id, slug, client_name, industry, result_summary, description, challenge, solution, metrics, tech_stack, featured_image, gallery, timeline, featured, published, created_at")
     .eq("slug", slug)
     .eq("published", true)
     .single();
@@ -210,60 +210,6 @@ export async function submitContactForm(
   const { error } = await supabase
     .from("contact_submissions")
     .insert(submission);
-
-  if (error) {
-    return { success: false, error: error.message };
-  }
-  return { success: true };
-}
-
-export async function getContactSubmissions(): Promise<ContactSubmission[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("contact_submissions")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (error) throw error;
-  return data || [];
-}
-
-// ============================================================
-// Leads
-// ============================================================
-
-export async function getLeads(): Promise<Lead[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("leads")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (error) throw error;
-  return data || [];
-}
-
-export async function createLead(
-  lead: LeadInsert
-): Promise<{ success: boolean; error?: string }> {
-  const supabase = await createClient();
-  const { error } = await supabase.from("leads").insert(lead);
-
-  if (error) {
-    return { success: false, error: error.message };
-  }
-  return { success: true };
-}
-
-export async function updateLeadStatus(
-  id: string,
-  status: string
-): Promise<{ success: boolean; error?: string }> {
-  const supabase = await createClient();
-  const { error } = await supabase
-    .from("leads")
-    .update({ status })
-    .eq("id", id);
 
   if (error) {
     return { success: false, error: error.message };

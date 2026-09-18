@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${study.client_name} Case Study`,
     description: study.result_summary,
     openGraph: {
-      title: `${study.client_name} — Pixelwyre Digital`,
+      title: `${study.client_name} — Case Study`,
       description: study.result_summary,
       type: "article",
     },

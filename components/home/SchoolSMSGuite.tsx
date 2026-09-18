@@ -82,7 +82,7 @@ export default function SchoolSMSGuite() {
               }}
             >
               <div style={{ fontSize: "2rem", marginBottom: "10px" }}>{m.icon}</div>
-              <h4 style={{ marginBottom: "6px", fontSize: "0.95rem" }}>{m.name}</h4>
+              <h3 style={{ marginBottom: "6px", fontSize: "0.95rem" }}>{m.name}</h3>
               <p style={{ fontSize: "0.78rem", margin: 0, lineHeight: 1.5 }}>{m.desc}</p>
             </div>
           ))}
@@ -117,9 +117,9 @@ export default function SchoolSMSGuite() {
             marginBottom: "40px",
           }}
         >
-          <h4 style={{ marginBottom: "20px", color: roles[activeRole].color }}>
+          <h3 style={{ marginBottom: "20px", fontSize: "1.05rem", color: roles[activeRole].color }}>
             {roles[activeRole].name} Dashboard View
-          </h4>
+          </h3>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "16px" }}>
             {roles[activeRole].cards.map((c) => (
               <div
@@ -128,7 +128,7 @@ export default function SchoolSMSGuite() {
                 style={{ borderTopColor: roles[activeRole].color }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-                  <h4 style={{ margin: 0 }}>{c.title}</h4>
+                  <h3 style={{ margin: 0 }}>{c.title}</h3>
                   <span
                     style={{
                       fontSize: "0.72rem",

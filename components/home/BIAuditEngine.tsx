@@ -175,7 +175,7 @@ export default function BIAuditEngine() {
               </div>
 
               <div style={{ borderTop: "1px solid #1E3A8A", paddingTop: "20px" }}>
-                <h4 style={{ color: "#FFFFFF", marginBottom: "14px" }}>Get Your Full Report</h4>
+                <h3 style={{ color: "#FFFFFF", marginBottom: "14px", fontSize: "1.05rem" }}>Get Your Full Report</h3>
                 <form onSubmit={submitLead}>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "10px" }}>
                     <input

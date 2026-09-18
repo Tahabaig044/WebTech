@@ -52,7 +52,7 @@ export default function BrochureShowcase() {
                   {doc.tag}
                 </span>
               </div>
-              <h4 style={{ marginBottom: "8px" }}>{doc.title}</h4>
+              <h3 style={{ marginBottom: "8px", fontSize: "1rem" }}>{doc.title}</h3>
               <p style={{ fontSize: "0.88rem", marginBottom: "16px" }}>{doc.desc}</p>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span style={{ fontSize: "0.78rem", color: "#64748B" }}>{doc.format}</span>

@@ -69,45 +69,47 @@ export default function BlogForm({ initial, mode }: BlogFormProps) {
   return (
     <form onSubmit={handleSubmit} style={{ maxWidth: "720px" }}>
       {error && (
-        <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "10px", padding: "12px 16px", marginBottom: "20px", color: "#EF4444", fontSize: "0.85rem" }}>
+        <div role="alert" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "10px", padding: "12px 16px", marginBottom: "20px", color: "#EF4444", fontSize: "0.85rem" }}>
           {error}
         </div>
       )}
 
       <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
         <div>
-          <label style={labelStyle}>Title *</label>
-          <input style={inputStyle} value={form.title} onChange={(e) => { set("title", e.target.value); if (mode === "create") set("slug", autoSlug(e.target.value)); }} required />
+          <label htmlFor="blog-title" style={labelStyle}>Title *</label>
+          <input id="blog-title" style={inputStyle} value={form.title} onChange={(e) => { set("title", e.target.value); if (mode === "create") set("slug", autoSlug(e.target.value)); }} required />
         </div>
         <div>
-          <label style={labelStyle}>Slug *</label>
-          <input style={inputStyle} value={form.slug} onChange={(e) => set("slug", e.target.value)} required />
+          <label htmlFor="blog-slug" style={labelStyle}>Slug *</label>
+          <input id="blog-slug" style={inputStyle} value={form.slug} onChange={(e) => set("slug", e.target.value)} required />
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div>
-            <label style={labelStyle}>Category</label>
-            <input style={inputStyle} value={form.category} onChange={(e) => set("category", e.target.value)} />
+            <label htmlFor="blog-category" style={labelStyle}>Category</label>
+            <input id="blog-category" style={inputStyle} value={form.category} onChange={(e) => set("category", e.target.value)} />
           </div>
           <div>
-            <label style={labelStyle}>Author</label>
-            <input style={inputStyle} value={form.author} onChange={(e) => set("author", e.target.value)} />
+            <label htmlFor="blog-author" style={labelStyle}>Author</label>
+            <input id="blog-author" style={inputStyle} value={form.author} onChange={(e) => set("author", e.target.value)} />
           </div>
         </div>
         <div>
-          <label style={labelStyle}>Excerpt</label>
+          <label htmlFor="blog-excerpt" style={labelStyle}>Excerpt</label>
           <textarea
+            id="blog-excerpt"
             style={{ ...inputStyle, minHeight: "60px", resize: "vertical" }}
             value={form.excerpt}
             onChange={(e) => set("excerpt", e.target.value)}
           />
         </div>
         <div>
-          <label style={labelStyle}>Featured Image URL</label>
-          <input style={inputStyle} value={form.featured_image} onChange={(e) => set("featured_image", e.target.value)} placeholder="https://..." />
+          <label htmlFor="blog-image" style={labelStyle}>Featured Image URL</label>
+          <input id="blog-image" style={inputStyle} value={form.featured_image} onChange={(e) => set("featured_image", e.target.value)} placeholder="https://..." />
         </div>
         <div>
-          <label style={labelStyle}>Content * (Markdown)</label>
+          <label htmlFor="blog-content" style={labelStyle}>Content * (Markdown)</label>
           <textarea
+            id="blog-content"
             style={{ ...inputStyle, minHeight: "300px", resize: "vertical", fontFamily: "monospace", fontSize: "0.82rem", lineHeight: "1.6" }}
             value={form.content}
             onChange={(e) => set("content", e.target.value)}
@@ -116,16 +118,16 @@ export default function BlogForm({ initial, mode }: BlogFormProps) {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div>
-            <label style={labelStyle}>Read Time</label>
-            <input style={inputStyle} value={form.read_time} onChange={(e) => set("read_time", e.target.value)} placeholder="5 min read" />
+            <label htmlFor="blog-readtime" style={labelStyle}>Read Time</label>
+            <input id="blog-readtime" style={inputStyle} value={form.read_time} onChange={(e) => set("read_time", e.target.value)} placeholder="5 min read" />
           </div>
           <div style={{ display: "flex", gap: "20px", alignItems: "end", paddingBottom: "4px" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
-              <input type="checkbox" checked={form.featured} onChange={(e) => set("featured", e.target.checked)} style={{ accentColor: "#2563EB" }} />
+            <label htmlFor="blog-featured" style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
+              <input id="blog-featured" type="checkbox" checked={form.featured} onChange={(e) => set("featured", e.target.checked)} style={{ accentColor: "#2563EB" }} />
               Featured
             </label>
-            <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
-              <input type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} style={{ accentColor: "#10B981" }} />
+            <label htmlFor="blog-published" style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
+              <input id="blog-published" type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} style={{ accentColor: "#10B981" }} />
               Published
             </label>
           </div>

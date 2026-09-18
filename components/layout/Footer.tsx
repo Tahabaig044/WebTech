@@ -74,7 +74,7 @@ export default function Footer() {
 
           {/* Col 2: Navigation */}
           <div>
-            <h4 style={{ fontSize: "0.95rem", marginBottom: 16 }}>Navigation</h4>
+            <h3 style={{ fontSize: "0.95rem", marginBottom: 16 }}>Navigation</h3>
             <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
               {footerNav.map((link) => (
                 <li key={link.href}>
@@ -103,7 +103,7 @@ export default function Footer() {
 
           {/* Col 3: Contact */}
           <div>
-            <h4 style={{ fontSize: "0.95rem", marginBottom: 16 }}>Contact</h4>
+            <h3 style={{ fontSize: "0.95rem", marginBottom: 16 }}>Contact</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 12, fontSize: "0.85rem", color: "#94A3B8" }}>
               <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="#60A5FA" style={{ marginTop: 2, flexShrink: 0 }}>
@@ -128,7 +128,7 @@ export default function Footer() {
 
           {/* Col 4: Enterprise ERP CTA */}
           <div>
-            <h4 style={{ fontSize: "0.95rem", marginBottom: 16 }}>Enterprise ERP Suite</h4>
+            <h3 style={{ fontSize: "0.95rem", marginBottom: 16 }}>Enterprise ERP Suite</h3>
             <p style={{ fontSize: "0.85rem", color: "#94A3B8", marginBottom: 16 }}>
               Central ERP Intelligence for invoicing, CRM, hosting, ticketing &amp; analytics — all in one dashboard.
             </p>

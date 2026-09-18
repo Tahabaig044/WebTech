@@ -70,51 +70,53 @@ export default function ServiceForm({ initial, mode }: ServiceFormProps) {
   return (
     <form onSubmit={handleSubmit} style={{ maxWidth: "720px" }}>
       {error && (
-        <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "10px", padding: "12px 16px", marginBottom: "20px", color: "#EF4444", fontSize: "0.85rem" }}>
+        <div role="alert" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "10px", padding: "12px 16px", marginBottom: "20px", color: "#EF4444", fontSize: "0.85rem" }}>
           {error}
         </div>
       )}
 
       <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
         <div>
-          <label style={labelStyle}>Name *</label>
-          <input style={inputStyle} value={form.name} onChange={(e) => { set("name", e.target.value); if (mode === "create") set("slug", autoSlug(e.target.value)); }} required />
+          <label htmlFor="service-name" style={labelStyle}>Name *</label>
+          <input id="service-name" style={inputStyle} value={form.name} onChange={(e) => { set("name", e.target.value); if (mode === "create") set("slug", autoSlug(e.target.value)); }} required />
         </div>
         <div>
-          <label style={labelStyle}>Slug *</label>
-          <input style={inputStyle} value={form.slug} onChange={(e) => set("slug", e.target.value)} required />
+          <label htmlFor="service-slug" style={labelStyle}>Slug *</label>
+          <input id="service-slug" style={inputStyle} value={form.slug} onChange={(e) => set("slug", e.target.value)} required />
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div>
-            <label style={labelStyle}>Category *</label>
-            <input style={inputStyle} value={form.category} onChange={(e) => set("category", e.target.value)} required />
+            <label htmlFor="service-category" style={labelStyle}>Category *</label>
+            <input id="service-category" style={inputStyle} value={form.category} onChange={(e) => set("category", e.target.value)} required />
           </div>
           <div>
-            <label style={labelStyle}>Icon (emoji)</label>
-            <input style={inputStyle} value={form.icon} onChange={(e) => set("icon", e.target.value)} placeholder="🌐" />
+            <label htmlFor="service-icon" style={labelStyle}>Icon (emoji)</label>
+            <input id="service-icon" style={inputStyle} value={form.icon} onChange={(e) => set("icon", e.target.value)} placeholder="🌐" />
           </div>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div>
-            <label style={labelStyle}>Price</label>
-            <input style={inputStyle} value={form.price} onChange={(e) => set("price", e.target.value)} placeholder="PKR 25,000" />
+            <label htmlFor="service-price" style={labelStyle}>Price</label>
+            <input id="service-price" style={inputStyle} value={form.price} onChange={(e) => set("price", e.target.value)} placeholder="PKR 25,000" />
           </div>
           <div>
-            <label style={labelStyle}>Price Period</label>
-            <input style={inputStyle} value={form.price_period} onChange={(e) => set("price_period", e.target.value)} placeholder="/one-time" />
+            <label htmlFor="service-price-period" style={labelStyle}>Price Period</label>
+            <input id="service-price-period" style={inputStyle} value={form.price_period} onChange={(e) => set("price_period", e.target.value)} placeholder="/one-time" />
           </div>
         </div>
         <div>
-          <label style={labelStyle}>Short Description</label>
+          <label htmlFor="service-short-desc" style={labelStyle}>Short Description</label>
           <textarea
+            id="service-short-desc"
             style={{ ...inputStyle, minHeight: "60px", resize: "vertical" }}
             value={form.short_description}
             onChange={(e) => set("short_description", e.target.value)}
           />
         </div>
         <div>
-          <label style={labelStyle}>Description * (Markdown)</label>
+          <label htmlFor="service-desc" style={labelStyle}>Description * (Markdown)</label>
           <textarea
+            id="service-desc"
             style={{ ...inputStyle, minHeight: "200px", resize: "vertical", fontFamily: "monospace", fontSize: "0.82rem", lineHeight: "1.6" }}
             value={form.description}
             onChange={(e) => set("description", e.target.value)}
@@ -122,8 +124,9 @@ export default function ServiceForm({ initial, mode }: ServiceFormProps) {
           />
         </div>
         <div>
-          <label style={labelStyle}>Features (one per line)</label>
+          <label htmlFor="service-features" style={labelStyle}>Features (one per line)</label>
           <textarea
+            id="service-features"
             style={{ ...inputStyle, minHeight: "120px", resize: "vertical", fontFamily: "monospace", fontSize: "0.82rem", lineHeight: "1.6" }}
             value={form.features}
             onChange={(e) => set("features", e.target.value)}
@@ -132,12 +135,12 @@ export default function ServiceForm({ initial, mode }: ServiceFormProps) {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div>
-            <label style={labelStyle}>Sort Order</label>
-            <input style={inputStyle} type="number" value={form.sort_order} onChange={(e) => set("sort_order", parseInt(e.target.value) || 0)} />
+            <label htmlFor="service-sort" style={labelStyle}>Sort Order</label>
+            <input id="service-sort" style={inputStyle} type="number" value={form.sort_order} onChange={(e) => set("sort_order", parseInt(e.target.value) || 0)} />
           </div>
           <div style={{ display: "flex", alignItems: "end", paddingBottom: "4px" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
-              <input type="checkbox" checked={form.active} onChange={(e) => set("active", e.target.checked)} style={{ accentColor: "#10B981" }} />
+            <label htmlFor="service-active" style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
+              <input id="service-active" type="checkbox" checked={form.active} onChange={(e) => set("active", e.target.checked)} style={{ accentColor: "#10B981" }} />
               Active
             </label>
           </div>

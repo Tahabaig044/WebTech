@@ -3,7 +3,7 @@
 import { auth } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import type { BlogPostInsert, DBServiceInsert, CaseStudyInsert } from "@/lib/types";
+import type { BlogPostInsert, DBServiceInsert, CaseStudyInsert, AdminClient, AdminInvoice } from "@/lib/types";
 
 async function requireAdmin() {
   const session = await auth();
@@ -23,8 +23,9 @@ export async function getAllBlogPosts() {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*")
-    .order("created_at", { ascending: false });
+    .select("id, slug, title, content, excerpt, category, featured_image, author, read_time, featured, published, published_at, created_at, updated_at")
+    .order("created_at", { ascending: false })
+    .limit(200);
 
   if (error) throw error;
   return data || [];
@@ -82,8 +83,9 @@ export async function getAllServices(includeInactive = true) {
   const supabase = createClient();
   let query = supabase
     .from("services")
-    .select("*")
-    .order("sort_order", { ascending: true });
+    .select("id, slug, name, description, short_description, price, price_period, category, icon, features, active, sort_order, created_at")
+    .order("sort_order", { ascending: true })
+    .limit(200);
 
   if (!includeInactive) {
     query = query.eq("active", true);
@@ -146,8 +148,9 @@ export async function getAllCaseStudies() {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("case_studies")
-    .select("*")
-    .order("created_at", { ascending: false });
+    .select("id, slug, client_name, industry, result_summary, description, challenge, solution, metrics, tech_stack, featured_image, gallery, timeline, featured, published, created_at")
+    .order("created_at", { ascending: false })
+    .limit(200);
 
   if (error) throw error;
   return data || [];
@@ -194,4 +197,81 @@ export async function deleteCaseStudy(id: string) {
   revalidatePath("/admin/case-studies");
   revalidatePath("/case-studies");
   return { success: true };
+}
+
+// ============================================================
+// Clients (derived from users + projects + invoices)
+// ============================================================
+
+export async function getAdminClients(): Promise<AdminClient[]> {
+  await requireAdmin();
+  const supabase = createClient();
+
+  const [usersRes, projectsRes, invoicesRes] = await Promise.all([
+    supabase.from("users").select("id, name, email, role, created_at").order("created_at", { ascending: false }).limit(200),
+    supabase.from("projects").select("client_email, id, created_at").limit(500),
+    supabase.from("invoices").select("client_email, amount").limit(500),
+  ]);
+
+  if (usersRes.error) throw usersRes.error;
+
+  const users = usersRes.data || [];
+  const projects = projectsRes.data || [];
+  const invoices = invoicesRes.data || [];
+
+  const projectByEmail = new Map<string, { count: number; lastDate: string | null }>();
+  for (const p of projects) {
+    const existing = projectByEmail.get(p.client_email);
+    if (existing) {
+      existing.count++;
+      if (p.created_at > (existing.lastDate || "")) existing.lastDate = p.created_at;
+    } else {
+      projectByEmail.set(p.client_email, { count: 1, lastDate: p.created_at });
+    }
+  }
+
+  const invoiceByEmail = new Map<string, { count: number; total: number }>();
+  for (const inv of invoices) {
+    const existing = invoiceByEmail.get(inv.client_email);
+    if (existing) {
+      existing.count++;
+      existing.total += Number(inv.amount) || 0;
+    } else {
+      invoiceByEmail.set(inv.client_email, { count: 1, total: Number(inv.amount) || 0 });
+    }
+  }
+
+  return users
+    .filter((u) => u.role === "client" || projectByEmail.has(u.email) || invoiceByEmail.has(u.email))
+    .map((u) => {
+      const proj = projectByEmail.get(u.email);
+      const inv = invoiceByEmail.get(u.email);
+      return {
+        email: u.email,
+        name: u.name,
+        role: u.role || "client",
+        created_at: u.created_at,
+        project_count: proj?.count || 0,
+        invoice_count: inv?.count || 0,
+        total_spent: inv?.total || 0,
+        last_project_date: proj?.lastDate || null,
+      };
+    });
+}
+
+// ============================================================
+// Invoices (from invoices table)
+// ============================================================
+
+export async function getAdminInvoices(): Promise<AdminInvoice[]> {
+  await requireAdmin();
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("invoices")
+    .select("id, client_email, invoice_number, amount, currency, status, description, due_date, paid_at, created_at")
+    .order("created_at", { ascending: false })
+    .limit(200);
+
+  if (error) throw error;
+  return (data || []) as AdminInvoice[];
 }

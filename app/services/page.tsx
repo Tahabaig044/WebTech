@@ -6,7 +6,7 @@ import type { DBService } from "@/lib/types";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Services — Pixelwyre Digital",
+  title: "Services",
   description: "Explore 100+ digital services — web development, SEO, Google Ads, managed hosting, and custom ERP automation from Pixelwyre Digital.",
 };
 
@@ -87,7 +87,7 @@ export default async function ServicesPage() {
 
       <section style={{ padding: "60px 0 80px" }}>
         <div className="wrap">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: "28px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(360px, 100%), 1fr))", gap: "28px" }}>
             {categories.map((cat) => (
               <div key={cat.title} className="card" style={{ borderTopColor: cat.color }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "16px" }}>
@@ -126,7 +126,7 @@ export default async function ServicesPage() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "28px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))", gap: "28px" }}>
             {fallbackPricing.map((tier) => (
               <div
                 key={tier.name}

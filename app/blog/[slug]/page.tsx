@@ -156,7 +156,7 @@ function RelatedPostCard({
             </span>
           )}
         </div>
-        <h4 style={{ marginBottom: "8px", fontSize: "1.05rem" }}>{title}</h4>
+        <h3 style={{ marginBottom: "8px", fontSize: "1.05rem" }}>{title}</h3>
         <p style={{ fontSize: "0.85rem", margin: 0, lineHeight: 1.6 }}>
           {excerpt || ""}
         </p>

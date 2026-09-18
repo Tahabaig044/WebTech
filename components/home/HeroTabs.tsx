@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 const tabs = [
   { id: "web", label: "Web Dev" },
@@ -14,12 +14,38 @@ type TabId = (typeof tabs)[number]["id"];
 export default function HeroTabs() {
   const [active, setActive] = useState<TabId>("web");
 
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      const currentIndex = tabs.findIndex((t) => t.id === active);
+      let nextIndex = currentIndex;
+
+      if (e.key === "ArrowRight") {
+        nextIndex = (currentIndex + 1) % tabs.length;
+      } else if (e.key === "ArrowLeft") {
+        nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+      } else if (e.key === "Home") {
+        nextIndex = 0;
+      } else if (e.key === "End") {
+        nextIndex = tabs.length - 1;
+      } else {
+        return;
+      }
+
+      e.preventDefault();
+      setActive(tabs[nextIndex].id);
+    },
+    [active]
+  );
+
   return (
     <div
       className="card-dark"
       style={{ padding: "0", overflow: "hidden", minHeight: "340px" }}
     >
       <div
+        role="tablist"
+        aria-label="Service categories"
+        onKeyDown={handleKeyDown}
         style={{
           display: "flex",
           borderBottom: "1px solid #1E3A8A",
@@ -29,6 +55,11 @@ export default function HeroTabs() {
         {tabs.map((tab) => (
           <button
             key={tab.id}
+            role="tab"
+            aria-selected={active === tab.id}
+            aria-controls={`tabpanel-${tab.id}`}
+            id={`tab-${tab.id}`}
+            tabIndex={active === tab.id ? 0 : -1}
             onClick={() => setActive(tab.id)}
             style={{
               flex: 1,
@@ -50,8 +81,8 @@ export default function HeroTabs() {
 
       <div style={{ padding: "28px" }}>
         {active === "web" && (
-          <div>
-            <h4 style={{ marginBottom: "6px" }}>⚡ Mobile 90+ PageSpeed</h4>
+          <div role="tabpanel" id="tabpanel-web" aria-labelledby="tab-web">
+            <h3 style={{ marginBottom: "6px", fontSize: "1.1rem" }}>⚡ Mobile 90+ PageSpeed</h3>
             <p style={{ fontSize: "0.88rem", marginBottom: "16px" }}>
               Lightning-fast websites that convert visitors into customers.
             </p>
@@ -82,7 +113,7 @@ export default function HeroTabs() {
                 gap: "12px",
               }}
             >
-              <span style={{ fontSize: "1.5rem" }}>🚀</span>
+              <span aria-hidden="true" style={{ fontSize: "1.5rem" }}>🚀</span>
               <div>
                 <p style={{ color: "#FFFFFF", margin: 0, fontWeight: 700, fontSize: "0.9rem" }}>Conversion-Optimized Layout</p>
                 <p style={{ color: "#94A3B8", margin: 0, fontSize: "0.8rem" }}>90+ speed on all devices</p>
@@ -92,9 +123,9 @@ export default function HeroTabs() {
         )}
 
         {active === "gmb" && (
-          <div>
-            <h4 style={{ marginBottom: "16px" }}>📍 Google Maps Top 3 Rank</h4>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "14px" }}>
+          <div role="tabpanel" id="tabpanel-gmb" aria-labelledby="tab-gmb">
+            <h3 style={{ marginBottom: "16px", fontSize: "1.1rem" }}>📍 Google Maps Top 3 Rank</h3>
+            <div className="hero-tabs-grid-3">
               <div style={{ textAlign: "center" }}>
                 <div
                   style={{
@@ -142,7 +173,7 @@ export default function HeroTabs() {
         )}
 
         {active === "hosting" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+          <div role="tabpanel" id="tabpanel-hosting" aria-labelledby="tab-hosting" className="hero-tabs-grid-2">
             <div
               style={{
                 background: "rgba(16,185,129,0.1)",
@@ -151,8 +182,8 @@ export default function HeroTabs() {
                 padding: "18px",
               }}
             >
-              <div style={{ fontSize: "1.2rem", marginBottom: "8px" }}>🔒</div>
-              <h4 style={{ fontSize: "0.92rem", marginBottom: "4px" }}>256-Bit SSL</h4>
+              <div aria-hidden="true" style={{ fontSize: "1.2rem", marginBottom: "8px" }}>🔒</div>
+              <h3 style={{ fontSize: "0.92rem", marginBottom: "4px" }}>256-Bit SSL</h3>
               <p style={{ fontSize: "0.8rem", color: "#94A3B8", margin: 0 }}>
                 Free with every hosting plan
               </p>
@@ -165,8 +196,8 @@ export default function HeroTabs() {
                 padding: "18px",
               }}
             >
-              <div style={{ fontSize: "1.2rem", marginBottom: "8px" }}>💰</div>
-              <h4 style={{ fontSize: "0.92rem", marginBottom: "4px" }}>From ₨1,499/mo</h4>
+              <div aria-hidden="true" style={{ fontSize: "1.2rem", marginBottom: "8px" }}>💰</div>
+              <h3 style={{ fontSize: "0.92rem", marginBottom: "4px" }}>From ₨1,499/mo</h3>
               <p style={{ fontSize: "0.8rem", color: "#94A3B8", margin: 0 }}>
                 Managed cloud hosting in PKR
               </p>
@@ -180,8 +211,8 @@ export default function HeroTabs() {
         )}
 
         {active === "erp" && (
-          <div>
-            <h4 style={{ marginBottom: "8px" }}>🧠 Central ERP Intelligence Suite</h4>
+          <div role="tabpanel" id="tabpanel-erp" aria-labelledby="tab-erp">
+            <h3 style={{ marginBottom: "8px", fontSize: "1.1rem" }}>🧠 Central ERP Intelligence Suite</h3>
             <p style={{ fontSize: "0.88rem", marginBottom: "18px" }}>
               One dashboard to manage clients, invoicing, tasks, and automations across every service your business offers.
             </p>
@@ -189,7 +220,7 @@ export default function HeroTabs() {
               {["Client CRM & Lead Pipeline", "Invoice & Payment Tracking", "Automated Task Assignments"].map(
                 (item) => (
                   <li key={item} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px", color: "#CBD5E1", fontSize: "0.88rem" }}>
-                    <span style={{ color: "#34D399" }}>✓</span> {item}
+                    <span aria-hidden="true" style={{ color: "#34D399" }}>✓</span> {item}
                   </li>
                 )
               )}

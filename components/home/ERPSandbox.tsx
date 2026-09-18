@@ -82,7 +82,7 @@ export default function ERPSandbox() {
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-                  <h4 style={{ color: "#FFFFFF", margin: 0 }}>{p.name}</h4>
+                  <h3 style={{ color: "#FFFFFF", margin: 0, fontSize: "0.95rem" }}>{p.name}</h3>
                   <span
                     style={{
                       fontSize: "0.72rem",

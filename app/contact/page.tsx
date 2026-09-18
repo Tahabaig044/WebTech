@@ -40,13 +40,13 @@ export default function ContactPage() {
 
       <section style={{ padding: "80px 0" }}>
         <div className="wrap">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px" }}>
+          <div className="public-grid-2">
             <div>
               <h2 style={{ marginBottom: "24px" }}>Send Us a Message</h2>
 
               {state.success && (
-                <div style={{ background: "#F0FDF4", border: "1px solid #86EFAC", borderRadius: "10px", padding: "16px 20px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "10px" }}>
-                  <span style={{ fontSize: "1.2rem" }}>✅</span>
+                <div role="status" style={{ background: "#F0FDF4", border: "1px solid #86EFAC", borderRadius: "10px", padding: "16px 20px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "10px" }}>
+                  <span aria-hidden="true" style={{ fontSize: "1.2rem" }}>✅</span>
                   <div>
                     <p style={{ margin: 0, fontWeight: 700, color: "#166534" }}>Message sent successfully!</p>
                     <p style={{ margin: 0, fontSize: "0.85rem", color: "#15803D" }}>We&apos;ll get back to you within 2 hours.</p>
@@ -55,38 +55,56 @@ export default function ContactPage() {
               )}
 
               {state.error && (
-                <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: "10px", padding: "16px 20px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "10px" }}>
-                  <span style={{ fontSize: "1.2rem" }}>❌</span>
+                <div role="alert" style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: "10px", padding: "16px 20px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "10px" }}>
+                  <span aria-hidden="true" style={{ fontSize: "1.2rem" }}>❌</span>
                   <p style={{ margin: 0, color: "#991B1B" }}>{state.error}</p>
                 </div>
               )}
 
               <form action={formAction} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-                  <input type="text" name="name" placeholder="Your Name" required />
-                  <input type="email" name="email" placeholder="Email Address" required />
+                <div className="public-form-row">
+                  <div>
+                    <label htmlFor="contact-name" className="sr-only">Your Name</label>
+                    <input id="contact-name" type="text" name="name" placeholder="Your Name" required aria-required="true" />
+                  </div>
+                  <div>
+                    <label htmlFor="contact-email" className="sr-only">Email Address</label>
+                    <input id="contact-email" type="email" name="email" placeholder="Email Address" required aria-required="true" />
+                  </div>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-                  <input type="tel" name="phone" placeholder="Phone Number" />
-                  <select name="budget" defaultValue="">
-                    <option value="" disabled>Budget Range</option>
-                    <option>Under ₨ 50,000</option>
-                    <option>₨ 50,000 – 150,000</option>
-                    <option>₨ 150,000 – 500,000</option>
-                    <option>₨ 500,000+</option>
+                <div className="public-form-row">
+                  <div>
+                    <label htmlFor="contact-phone" className="sr-only">Phone Number</label>
+                    <input id="contact-phone" type="tel" name="phone" placeholder="Phone Number" />
+                  </div>
+                  <div>
+                    <label htmlFor="contact-budget" className="sr-only">Budget Range</label>
+                    <select id="contact-budget" name="budget" defaultValue="">
+                      <option value="" disabled>Budget Range</option>
+                      <option>Under ₨ 50,000</option>
+                      <option>₨ 50,000 – 150,000</option>
+                      <option>₨ 150,000 – 500,000</option>
+                      <option>₨ 500,000+</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="contact-service" className="sr-only">Select a Service</label>
+                  <select id="contact-service" name="service" defaultValue="">
+                    <option value="" disabled>Select a Service</option>
+                    <option>Web Development</option>
+                    <option>SEO</option>
+                    <option>Google Ads</option>
+                    <option>Managed Hosting</option>
+                    <option>ERP / Automation</option>
+                    <option>Industry SaaS Suite</option>
+                    <option>Other</option>
                   </select>
                 </div>
-                <select name="service" defaultValue="">
-                  <option value="" disabled>Select a Service</option>
-                  <option>Web Development</option>
-                  <option>SEO</option>
-                  <option>Google Ads</option>
-                  <option>Managed Hosting</option>
-                  <option>ERP / Automation</option>
-                  <option>Industry SaaS Suite</option>
-                  <option>Other</option>
-                </select>
-                <textarea name="message" placeholder="Tell us about your project..." rows={5} required />
+                <div>
+                  <label htmlFor="contact-message" className="sr-only">Message</label>
+                  <textarea id="contact-message" name="message" placeholder="Tell us about your project..." rows={5} required aria-required="true" />
+                </div>
                 <button type="submit" className="btn btn-primary" disabled={isPending} style={{ padding: "14px 28px", fontSize: "1rem" }}>
                   {isPending ? "Sending..." : "Send Message →"}
                 </button>
@@ -100,7 +118,7 @@ export default function ContactPage() {
                   <div key={c.title} className="card" style={{ borderTopColor: c.color, flexDirection: "row", alignItems: "center", gap: "16px", padding: "20px 24px" }}>
                     <div style={{ fontSize: "1.5rem", flexShrink: 0 }}>{c.icon}</div>
                     <div>
-                      <h4 style={{ marginBottom: "2px" }}>{c.title}</h4>
+                      <h3 style={{ marginBottom: "2px", fontSize: "1rem" }}>{c.title}</h3>
                       <p style={{ margin: 0, fontSize: "0.92rem", fontWeight: 700, color: "#0F172A" }}>{c.value}</p>
                       <p style={{ margin: 0, fontSize: "0.78rem", color: "#94A3B8" }}>{c.desc}</p>
                     </div>
@@ -109,7 +127,7 @@ export default function ContactPage() {
               </div>
 
               <div style={{ background: "linear-gradient(135deg, #060D19 0%, #0F2B5C 100%)", borderRadius: "12px", padding: "24px", border: "1px solid #1E3A8A" }}>
-                <h4 style={{ color: "#FFFFFF", marginBottom: "8px" }}>⚡ Quick Response Guarantee</h4>
+                <h3 style={{ color: "#FFFFFF", marginBottom: "8px", fontSize: "1rem" }}>⚡ Quick Response Guarantee</h3>
                 <p style={{ color: "#94A3B8", margin: 0, fontSize: "0.88rem" }}>
                   We respond to all inquiries within 2 hours during business hours (9 AM – 7 PM PKT, Mon–Sat). For urgent matters, WhatsApp is the fastest way to reach us.
                 </p>
@@ -130,7 +148,7 @@ export default function ContactPage() {
           <div style={{ display: "grid", gap: "16px", maxWidth: "800px", margin: "0 auto" }}>
             {faqs.map((faq) => (
               <div key={faq.q} className="card" style={{ borderTopColor: "#E2E8F0", padding: "24px 28px" }}>
-                <h4 style={{ marginBottom: "8px", fontSize: "1rem" }}>{faq.q}</h4>
+                <h3 style={{ marginBottom: "8px", fontSize: "1rem" }}>{faq.q}</h3>
                 <p style={{ margin: 0, fontSize: "0.88rem" }}>{faq.a}</p>
               </div>
             ))}

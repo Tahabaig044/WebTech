@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About Us — Pixelwyre Digital",
+  title: "About Us",
   description: "Learn about Pixelwyre Digital — a full-stack digital agency helping Pakistani businesses build, market, and scale online.",
 };
 
@@ -54,7 +54,7 @@ export default function AboutPage() {
             {values.map((v) => (
               <div key={v.title} className="card">
                 <div style={{ fontSize: "2rem", marginBottom: "12px" }}>{v.icon}</div>
-                <h4 style={{ marginBottom: "8px" }}>{v.title}</h4>
+                <h3 style={{ marginBottom: "8px", fontSize: "1rem" }}>{v.title}</h3>
                 <p style={{ fontSize: "0.88rem", margin: 0 }}>{v.desc}</p>
               </div>
             ))}
@@ -92,7 +92,7 @@ export default function AboutPage() {
                   {item.year}
                 </div>
                 <div style={{ paddingTop: "8px" }}>
-                  <h4 style={{ marginBottom: "4px" }}>{item.title}</h4>
+                  <h3 style={{ marginBottom: "4px", fontSize: "0.95rem" }}>{item.title}</h3>
                   <p style={{ fontSize: "0.88rem", margin: 0 }}>{item.desc}</p>
                 </div>
               </div>
@@ -126,7 +126,7 @@ export default function AboutPage() {
                 >
                   {t.initials}
                 </div>
-                <h4 style={{ marginBottom: "4px" }}>{t.name}</h4>
+                <h3 style={{ marginBottom: "4px", fontSize: "0.95rem" }}>{t.name}</h3>
                 <p style={{ margin: "0 0 12px 0", fontSize: "0.82rem", color: t.color, fontWeight: 700 }}>{t.role}</p>
                 <p style={{ margin: 0, fontSize: "0.84rem", color: "#64748B" }}>{t.bio}</p>
               </div>

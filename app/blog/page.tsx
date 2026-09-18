@@ -6,7 +6,7 @@ import type { BlogPost } from "@/lib/types";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Blog — Pixelwyre Digital",
+  title: "Blog",
   description: "Insights, tutorials, and updates from Pixelwyre Digital — covering web development, SEO, hosting, and digital strategy.",
 };
 
@@ -71,7 +71,7 @@ export default async function BlogPage() {
 
       <section style={{ padding: "30px 0 80px" }}>
         <div className="wrap">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "28px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: "28px" }}>
             {posts.map((post) => (
               <div key={post.slug} className="card" style={{ borderTopColor: post.featured ? "#2563EB" : "#E2E8F0" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>

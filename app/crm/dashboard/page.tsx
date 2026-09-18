@@ -14,6 +14,7 @@ export default function CRMDashboardPage() {
       .from("leads")
       .select("*")
       .order("created_at", { ascending: false })
+      .limit(50)
       .then(({ data }: { data: Lead[] | null }) => {
         setLeads(data || []);
         setLoading(false);
@@ -67,7 +68,7 @@ export default function CRMDashboardPage() {
         </p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginBottom: "28px" }}>
+      <div className="crm-pipeline-grid" style={{ marginBottom: "28px" }}>
         {/* Pipeline Funnel */}
         <div style={{ background: "linear-gradient(135deg, rgba(6,182,212,0.04) 0%, rgba(3,7,18,0.98) 100%)", border: "1px solid rgba(6,182,212,0.12)", borderRadius: "14px", padding: "24px" }}>
           <h3 style={{ color: "#F1F5F9", fontSize: "1rem", fontWeight: 700, margin: "0 0 20px" }}>Lead Pipeline Funnel</h3>
@@ -116,11 +117,6 @@ export default function CRMDashboardPage() {
         </div>
       </div>
 
-      <style>{`
-        @media (max-width: 900px) {
-          div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </div>
   );
 }

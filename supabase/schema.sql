@@ -113,6 +113,14 @@ CREATE INDEX IF NOT EXISTS idx_contact_submissions_created   ON contact_submissi
 
 CREATE INDEX IF NOT EXISTS idx_leads_status   ON leads (status);
 CREATE INDEX IF NOT EXISTS idx_leads_service  ON leads (service);
+CREATE INDEX IF NOT EXISTS idx_leads_created  ON leads (created_at);
+
+CREATE INDEX IF NOT EXISTS idx_projects_client_email ON projects (client_email);
+CREATE INDEX IF NOT EXISTS idx_invoices_client_email ON invoices (client_email);
+CREATE INDEX IF NOT EXISTS idx_invoices_status       ON invoices (status);
+CREATE INDEX IF NOT EXISTS idx_support_tickets_client_email ON support_tickets (client_email);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_published_at ON blog_posts (published_at);
+CREATE INDEX IF NOT EXISTS idx_case_studies_created_at ON case_studies (created_at);
 
 -- ============================================================
 -- updated_at TRIGGER

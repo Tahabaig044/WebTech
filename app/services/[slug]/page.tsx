@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: `${service.name} — Pixelwyre Digital`,
+    title: `${service.name}`,
     description:
       service.short_description ||
       `${service.name} — professional ${service.category.toLowerCase()} service from Pixelwyre Digital. ${service.price}.`,

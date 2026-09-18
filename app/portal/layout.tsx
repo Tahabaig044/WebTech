@@ -39,6 +39,8 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
 
       {/* Sidebar */}
       <aside
+        id="portal-sidebar"
+        aria-label="Portal navigation"
         style={{
           position: "fixed",
           top: 0,
@@ -160,6 +162,9 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-expanded={sidebarOpen}
+              aria-controls="portal-sidebar"
+              aria-label={sidebarOpen ? "Close menu" : "Open menu"}
               style={{
                 background: "rgba(139,92,246,0.12)",
                 border: "1px solid rgba(139,92,246,0.25)",

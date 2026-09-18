@@ -317,3 +317,31 @@ export interface SupportTicket {
   created_at: string;
   updated_at: string;
 }
+
+// ============================================================
+// Admin Aggregate Types
+// ============================================================
+
+export interface AdminClient {
+  email: string;
+  name: string | null;
+  role: string;
+  created_at: string;
+  project_count: number;
+  invoice_count: number;
+  total_spent: number;
+  last_project_date: string | null;
+}
+
+export interface AdminInvoice {
+  id: string;
+  client_email: string;
+  invoice_number: string;
+  amount: number;
+  currency: string | null;
+  status: string | null;
+  description: string | null;
+  due_date: string | null;
+  paid_at: string | null;
+  created_at: string;
+}
