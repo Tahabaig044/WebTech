@@ -43,7 +43,7 @@ export default function TechStack() {
                 {item.icon}
               </div>
               <div>
-                <h4 style={{ marginBottom: "6px" }}>{item.name}</h4>
+                <h3 style={{ marginBottom: "6px", fontSize: "0.95rem" }}>{item.name}</h3>
                 <p style={{ margin: 0, fontSize: "0.86rem" }}>{item.desc}</p>
               </div>
             </div>

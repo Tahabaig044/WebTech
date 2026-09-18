@@ -86,12 +86,12 @@ export default function ServicesGrid() {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "28px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: "28px" }}>
           {filtered.length > 0 ? (
             filtered.map((item) => (
               <div key={item.name} className="card">
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" }}>
-                  <h4 style={{ margin: 0 }}>{item.name}</h4>
+                  <h3 style={{ margin: 0, fontSize: "1rem" }}>{item.name}</h3>
                   <span
                     style={{
                       fontSize: "0.72rem",

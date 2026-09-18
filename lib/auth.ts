@@ -8,7 +8,7 @@ import bcryptjs from "bcryptjs";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+  ssl: { rejectUnauthorized: true },
 });
 
 declare module "next-auth" {

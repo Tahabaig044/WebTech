@@ -170,7 +170,7 @@ export default function ProductShowcase() {
                   </span>
                 </div>
               </div>
-              <h4 style={{ fontSize: "1.05rem", marginBottom: "8px" }}>{p.title}</h4>
+              <h3 style={{ fontSize: "1.05rem", marginBottom: "8px" }}>{p.title}</h3>
               <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginBottom: "14px", flex: 1 }}>
                 {p.description}
               </p>

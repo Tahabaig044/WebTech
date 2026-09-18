@@ -69,8 +69,8 @@ export default function SupportPage() {
         <button onClick={() => setShowNewTicket(true)} style={{ padding: "10px 20px", borderRadius: "10px", border: "none", background: "linear-gradient(135deg, #8B5CF6, #6D28D9)", color: "#fff", fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 14px rgba(139,92,246,0.35)", fontFamily: "var(--font-heading)" }}>+ New Ticket</button>
       </div>
 
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(139,92,246,0.12)", borderRadius: "16px", overflow: "hidden" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "0.8fr 2fr 1fr 0.8fr 0.8fr", gap: "12px", padding: "14px 20px", background: "rgba(139,92,246,0.06)", borderBottom: "1px solid rgba(139,92,246,0.12)" }}>
+      <div className="portal-table-wrap" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(139,92,246,0.12)", borderRadius: "16px", overflow: "hidden" }}>
+        <div className="portal-table-grid" style={{ gridTemplateColumns: "0.8fr 2fr 1fr 0.8fr 0.8fr", padding: "14px 20px", background: "rgba(139,92,246,0.06)", borderBottom: "1px solid rgba(139,92,246,0.12)", minWidth: "560px" }}>
           {["#", "Subject", "Date", "Status", "Priority"].map((h) => (
             <div key={h} style={{ color: "#9CA3AF", fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>{h}</div>
           ))}
@@ -85,7 +85,7 @@ export default function SupportPage() {
           const pr = getPriorityStyle(t.priority);
           const isSelected = selectedTicket === t.id;
           return (
-            <div key={t.id} onClick={() => setSelectedTicket(isSelected ? null : t.id)} style={{ display: "grid", gridTemplateColumns: "0.8fr 2fr 1fr 0.8fr 0.8fr", gap: "12px", padding: "14px 20px", alignItems: "center", borderBottom: i < tickets.length - 1 ? "1px solid rgba(139,92,246,0.06)" : "none", background: isSelected ? "rgba(139,92,246,0.06)" : "transparent", cursor: "pointer" }}>
+            <div key={t.id} onClick={() => setSelectedTicket(isSelected ? null : t.id)} className="portal-table-grid" style={{ gridTemplateColumns: "0.8fr 2fr 1fr 0.8fr 0.8fr", padding: "14px 20px", borderBottom: i < tickets.length - 1 ? "1px solid rgba(139,92,246,0.06)" : "none", background: isSelected ? "rgba(139,92,246,0.06)" : "transparent", cursor: "pointer", minWidth: "560px" }}>
               <div style={{ color: "#C4B5FD", fontWeight: 600, fontSize: "0.85rem", fontFamily: "var(--font-mono)" }}>TK-{String(i + 1).padStart(3, "0")}</div>
               <div style={{ color: "#E5E7EB", fontWeight: 600, fontSize: "0.88rem" }}>{t.subject}</div>
               <div style={{ color: "#9CA3AF", fontSize: "0.82rem" }}>{new Date(t.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</div>

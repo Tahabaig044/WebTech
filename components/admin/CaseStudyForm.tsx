@@ -71,41 +71,42 @@ export default function CaseStudyForm({ initial, mode }: CaseStudyFormProps) {
   return (
     <form onSubmit={handleSubmit} style={{ maxWidth: "720px" }}>
       {error && (
-        <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "10px", padding: "12px 16px", marginBottom: "20px", color: "#EF4444", fontSize: "0.85rem" }}>
+        <div role="alert" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "10px", padding: "12px 16px", marginBottom: "20px", color: "#EF4444", fontSize: "0.85rem" }}>
           {error}
         </div>
       )}
 
       <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
         <div>
-          <label style={labelStyle}>Client Name *</label>
-          <input style={inputStyle} value={form.client_name} onChange={(e) => { set("client_name", e.target.value); if (mode === "create") set("slug", autoSlug(e.target.value)); }} required />
+          <label htmlFor="cs-client" style={labelStyle}>Client Name *</label>
+          <input id="cs-client" style={inputStyle} value={form.client_name} onChange={(e) => { set("client_name", e.target.value); if (mode === "create") set("slug", autoSlug(e.target.value)); }} required />
         </div>
         <div>
-          <label style={labelStyle}>Slug *</label>
-          <input style={inputStyle} value={form.slug} onChange={(e) => set("slug", e.target.value)} required />
+          <label htmlFor="cs-slug" style={labelStyle}>Slug *</label>
+          <input id="cs-slug" style={inputStyle} value={form.slug} onChange={(e) => set("slug", e.target.value)} required />
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div>
-            <label style={labelStyle}>Industry *</label>
-            <input style={inputStyle} value={form.industry} onChange={(e) => set("industry", e.target.value)} required />
+            <label htmlFor="cs-industry" style={labelStyle}>Industry *</label>
+            <input id="cs-industry" style={inputStyle} value={form.industry} onChange={(e) => set("industry", e.target.value)} required />
           </div>
           <div>
-            <label style={labelStyle}>Timeline</label>
-            <input style={inputStyle} value={form.timeline} onChange={(e) => set("timeline", e.target.value)} placeholder="3 months" />
+            <label htmlFor="cs-timeline" style={labelStyle}>Timeline</label>
+            <input id="cs-timeline" style={inputStyle} value={form.timeline} onChange={(e) => set("timeline", e.target.value)} placeholder="3 months" />
           </div>
         </div>
         <div>
-          <label style={labelStyle}>Result Summary *</label>
-          <input style={inputStyle} value={form.result_summary} onChange={(e) => set("result_summary", e.target.value)} required placeholder="Brief result summary" />
+          <label htmlFor="cs-result" style={labelStyle}>Result Summary *</label>
+          <input id="cs-result" style={inputStyle} value={form.result_summary} onChange={(e) => set("result_summary", e.target.value)} required placeholder="Brief result summary" />
         </div>
         <div>
-          <label style={labelStyle}>Featured Image URL</label>
-          <input style={inputStyle} value={form.featured_image} onChange={(e) => set("featured_image", e.target.value)} placeholder="https://..." />
+          <label htmlFor="cs-image" style={labelStyle}>Featured Image URL</label>
+          <input id="cs-image" style={inputStyle} value={form.featured_image} onChange={(e) => set("featured_image", e.target.value)} placeholder="https://..." />
         </div>
         <div>
-          <label style={labelStyle}>Description * (Markdown)</label>
+          <label htmlFor="cs-desc" style={labelStyle}>Description * (Markdown)</label>
           <textarea
+            id="cs-desc"
             style={{ ...inputStyle, minHeight: "200px", resize: "vertical", fontFamily: "monospace", fontSize: "0.82rem", lineHeight: "1.6" }}
             value={form.description}
             onChange={(e) => set("description", e.target.value)}
@@ -113,32 +114,34 @@ export default function CaseStudyForm({ initial, mode }: CaseStudyFormProps) {
           />
         </div>
         <div>
-          <label style={labelStyle}>Challenge</label>
+          <label htmlFor="cs-challenge" style={labelStyle}>Challenge</label>
           <textarea
+            id="cs-challenge"
             style={{ ...inputStyle, minHeight: "80px", resize: "vertical" }}
             value={form.challenge}
             onChange={(e) => set("challenge", e.target.value)}
           />
         </div>
         <div>
-          <label style={labelStyle}>Solution</label>
+          <label htmlFor="cs-solution" style={labelStyle}>Solution</label>
           <textarea
+            id="cs-solution"
             style={{ ...inputStyle, minHeight: "80px", resize: "vertical" }}
             value={form.solution}
             onChange={(e) => set("solution", e.target.value)}
           />
         </div>
         <div>
-          <label style={labelStyle}>Tech Stack (comma-separated)</label>
-          <input style={inputStyle} value={form.tech_stack} onChange={(e) => set("tech_stack", e.target.value)} placeholder="React, Node.js, Supabase" />
+          <label htmlFor="cs-tech" style={labelStyle}>Tech Stack (comma-separated)</label>
+          <input id="cs-tech" style={inputStyle} value={form.tech_stack} onChange={(e) => set("tech_stack", e.target.value)} placeholder="React, Node.js, Supabase" />
         </div>
         <div style={{ display: "flex", gap: "20px", paddingBottom: "4px" }}>
-          <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
-            <input type="checkbox" checked={form.featured} onChange={(e) => set("featured", e.target.checked)} style={{ accentColor: "#2563EB" }} />
+          <label htmlFor="cs-featured" style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
+            <input id="cs-featured" type="checkbox" checked={form.featured} onChange={(e) => set("featured", e.target.checked)} style={{ accentColor: "#2563EB" }} />
             Featured
           </label>
-          <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
-            <input type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} style={{ accentColor: "#10B981" }} />
+          <label htmlFor="cs-published" style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
+            <input id="cs-published" type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} style={{ accentColor: "#10B981" }} />
             Published
           </label>
         </div>

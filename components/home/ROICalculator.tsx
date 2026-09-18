@@ -78,7 +78,7 @@ export default function ROICalculator() {
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "28px" }}>
           <div className="card" style={{ padding: "28px" }}>
-            <h4 style={{ marginBottom: "16px" }}>Configure Your Package</h4>
+            <h3 style={{ marginBottom: "16px", fontSize: "1rem" }}>Configure Your Package</h3>
 
             <label style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-dark)", display: "block", marginBottom: "6px" }}>
               Industry
@@ -148,7 +148,7 @@ export default function ROICalculator() {
           </div>
 
           <div className="card-dark" style={{ padding: "28px" }}>
-            <h4 style={{ marginBottom: "20px" }}>Your Projected ROI</h4>
+            <h3 style={{ marginBottom: "20px", fontSize: "1rem" }}>Your Projected ROI</h3>
 
             <div style={{ background: "rgba(37,99,235,0.15)", border: "1px solid #2563EB", borderRadius: "10px", padding: "18px", marginBottom: "16px", textAlign: "center" }}>
               <div style={{ fontSize: "0.78rem", color: "#94A3B8", marginBottom: "4px" }}>Projected Annual ROI</div>

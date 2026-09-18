@@ -4,7 +4,7 @@ export default function HeroSection() {
   return (
     <section style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)" }}>
       <div className="wrap" style={{ paddingTop: "60px", paddingBottom: "40px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px", alignItems: "center" }}>
+        <div className="hero-grid">
           <div>
             <span className="eyebrow">⚡ Web Dev · Local SEO · Ads · Managed Hosting</span>
             <h1 style={{ marginBottom: "18px", lineHeight: 1.2 }}>
@@ -43,7 +43,7 @@ export default function HeroSection() {
         >
           <span style={{ fontSize: "1.4rem" }}>🔍</span>
           <div style={{ flex: 1, minWidth: "200px" }}>
-            <h4 style={{ color: "#FFFFFF", marginBottom: "2px", fontSize: "1rem" }}>Instant Business Audit</h4>
+            <h2 style={{ color: "#FFFFFF", marginBottom: "2px", fontSize: "1rem" }}>Instant Business Audit</h2>
             <p style={{ color: "#94A3B8", margin: 0, fontSize: "0.85rem" }}>Check your Google Maps rank, mobile speed & WhatsApp bot status</p>
           </div>
           <input

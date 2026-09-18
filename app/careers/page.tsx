@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Careers — Pixelwyre Digital",
+  title: "Careers",
   description: "Join Pixelwyre Digital — we're hiring developers, designers, and digital marketers. Build the future of Pakistan's digital economy.",
 };
 
@@ -58,7 +58,7 @@ export default function CareersPage() {
             {culture.map((c) => (
               <div key={c.title} className="card">
                 <div style={{ fontSize: "2rem", marginBottom: "12px" }}>{c.icon}</div>
-                <h4 style={{ marginBottom: "8px" }}>{c.title}</h4>
+                <h3 style={{ marginBottom: "8px", fontSize: "1rem" }}>{c.title}</h3>
                 <p style={{ fontSize: "0.88rem", margin: 0 }}>{c.desc}</p>
               </div>
             ))}
@@ -75,7 +75,7 @@ export default function CareersPage() {
               <div key={p.title} style={{ display: "flex", gap: "14px", padding: "20px", background: "#F8FAFC", borderRadius: "12px", border: "1px solid #E2E8F0" }}>
                 <div style={{ fontSize: "1.5rem", flexShrink: 0 }}>{p.icon}</div>
                 <div>
-                  <h4 style={{ marginBottom: "4px", fontSize: "0.95rem" }}>{p.title}</h4>
+                  <h3 style={{ marginBottom: "4px", fontSize: "0.95rem" }}>{p.title}</h3>
                   <p style={{ margin: 0, fontSize: "0.82rem" }}>{p.desc}</p>
                 </div>
               </div>

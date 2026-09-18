@@ -6,7 +6,7 @@ import type { CaseStudy } from "@/lib/types";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Case Studies — Pixelwyre Digital",
+  title: "Case Studies",
   description: "Real results from Pixelwyre Digital clients — see how we helped businesses grow with web development, SEO, and automation.",
 };
 
@@ -53,7 +53,7 @@ export default async function CaseStudiesPage() {
 
       <section style={{ padding: "50px 0", background: "#F8FAFC", borderBottom: "1px solid #E2E8F0" }}>
         <div className="wrap">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "28px", textAlign: "center" }}>
+          <div className="public-stats-grid">
             {stats.map((stat) => (
               <div key={stat.label}>
                 <div style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 800, fontFamily: "var(--font-heading)", color: "var(--brand-blue)", lineHeight: 1.1, marginBottom: "4px" }}>

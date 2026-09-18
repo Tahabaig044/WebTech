@@ -34,7 +34,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop nav links */}
-        <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
+        <ul id="nav-links" className={`nav-links ${menuOpen ? "open" : ""}`}>
           {navLinks.map((link) => (
             <li key={link.href}>
               <Link
@@ -79,6 +79,8 @@ export default function Navbar() {
             className="nav-toggle"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle navigation"
+            aria-expanded={menuOpen}
+            aria-controls="nav-links"
           >
             {menuOpen ? "✕" : "☰"}
           </button>

@@ -16,6 +16,7 @@ export default function PortalLoginPage() {
     <div style={{ display: "flex", minHeight: "100vh", background: "#0B0F1A", overflow: "hidden" }}>
       {/* Left branded panel - diagonal split */}
       <div
+        className="portal-login-left"
         style={{
           position: "relative",
           width: "55%",
@@ -179,6 +180,7 @@ export default function PortalLoginPage() {
 
       {/* Right login form */}
       <div
+        className="portal-login-right"
         style={{
           flex: 1,
           display: "flex",
@@ -411,14 +413,6 @@ export default function PortalLoginPage() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 900px) {
-          .portal-left-panel { display: none !important; }
-          .portal-right-panel { width: 100% !important; }
-          .portal-mobile-logo { display: flex !important; }
-        }
-      `}</style>
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 import type { Project, Invoice, SupportTicket } from "@/lib/types";
 
 async function requireClient() {
@@ -16,9 +17,10 @@ export async function getPortalProjects(): Promise<Project[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("projects")
-    .select("*")
+    .select("id, client_email, name, category, description, progress, status, created_at, updated_at")
     .eq("client_email", session.user.email!)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(100);
 
   if (error) throw error;
   return data || [];
@@ -29,9 +31,10 @@ export async function getPortalInvoices(): Promise<Invoice[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("invoices")
-    .select("*")
+    .select("id, client_email, invoice_number, amount, currency, status, description, due_date, paid_at, created_at")
     .eq("client_email", session.user.email!)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(100);
 
   if (error) throw error;
   return data || [];
@@ -42,9 +45,10 @@ export async function getPortalTickets(): Promise<SupportTicket[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("support_tickets")
-    .select("*")
+    .select("id, client_email, subject, message, status, priority, created_at, updated_at")
     .eq("client_email", session.user.email!)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(100);
 
   if (error) throw error;
   return data || [];
@@ -57,11 +61,27 @@ export async function createSupportTicket(ticket: {
 }) {
   const session = await requireClient();
   const supabase = createClient();
+
+  const subject = ticket.subject?.trim();
+  const message = ticket.message?.trim();
+  if (!subject || subject.length < 3) {
+    return { success: false, error: "Subject must be at least 3 characters." };
+  }
+  if (!message || message.length < 10) {
+    return { success: false, error: "Message must be at least 10 characters." };
+  }
+
+  const validPriorities = ["low", "medium", "high", "urgent"];
+  const priority = validPriorities.includes(ticket.priority || "") ? ticket.priority : "medium";
+
   const { error } = await supabase.from("support_tickets").insert({
-    ...ticket,
+    subject,
+    message,
+    priority,
     client_email: session.user.email!,
   });
   if (error) return { success: false, error: error.message };
+  revalidatePath("/portal/dashboard/support");
   return { success: true };
 }
 

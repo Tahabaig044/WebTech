@@ -21,7 +21,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
     <>
       <TopBar />
       <Navbar />
-      <main style={{ flex: 1 }}>{children}</main>
+      <main id="main-content" style={{ flex: 1 }}>{children}</main>
       <Footer />
       <WhatsAppFloat />
     </>

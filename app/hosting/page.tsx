@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Managed Hosting — Pixelwyre Digital",
+  title: "Managed Hosting",
   description: "Enterprise-grade managed hosting with 99.99% uptime SLA, daily backups, SSL, CDN, and 24/7 monitoring from Pixelwyre Digital.",
 };
 

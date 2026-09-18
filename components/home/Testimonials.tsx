@@ -68,7 +68,7 @@ export default function Testimonials() {
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "28px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: "28px" }}>
           {testimonials.map((t) => (
             <div key={t.name} className="card">
               <Stars count={t.stars} />
@@ -94,7 +94,7 @@ export default function Testimonials() {
                   {t.initials}
                 </div>
                 <div>
-                  <h4 style={{ margin: 0, fontSize: "0.9rem" }}>{t.name}</h4>
+                  <h3 style={{ margin: 0, fontSize: "0.9rem" }}>{t.name}</h3>
                   <p style={{ margin: 0, fontSize: "0.78rem", color: "#64748B" }}>
                     {t.role}, {t.company}
                   </p>

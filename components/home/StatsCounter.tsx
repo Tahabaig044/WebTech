@@ -17,12 +17,7 @@ export default function StatsCounter() {
     >
       <div className="wrap">
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "28px",
-            textAlign: "center",
-          }}
+          className="public-stats-grid"
         >
           {stats.map((stat) => (
             <div key={stat.label}>

@@ -18,6 +18,7 @@ export default function NotFound() {
     >
       {/* Floating geometric shapes */}
       <div
+        aria-hidden="true"
         className="not-found-shape"
         style={{
           position: "absolute",
@@ -98,7 +99,7 @@ export default function NotFound() {
       />
 
       {/* Main content */}
-      <div style={{ position: "relative", zIndex: 10, textAlign: "center", padding: "0 24px" }}>
+      <div role="main" style={{ position: "relative", zIndex: 10, textAlign: "center", padding: "0 24px" }}>
         {/* Large 404 */}
         <div
           style={{

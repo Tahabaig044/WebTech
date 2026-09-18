@@ -1645,6 +1645,169 @@ textarea:focus {
   }
 }
 
+/* ============================================================
+   RESPONSIVE UTILITIES (Phase 4)
+   ============================================================ */
+
+/* Public: responsive 2-col grid */
+.public-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .public-grid-2 {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* Public: responsive 4-col stats */
+.public-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .public-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+@media (max-width: 480px) {
+  .public-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+/* Public: responsive form inner grids */
+.public-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .public-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Hero: responsive 2-col layout */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* Hero tabs: responsive inner grids */
+.hero-tabs-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 480px) {
+  .hero-tabs-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hero-tabs-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 480px) {
+  .hero-tabs-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Portal: scrollable table wrapper */
+.portal-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Portal: responsive main grid */
+.portal-main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 768px) {
+  .portal-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Portal: responsive table columns */
+.portal-table-grid {
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .portal-table-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .portal-table-grid > *:nth-child(n+3) {
+    display: none;
+  }
+}
+
+/* Admin: responsive client detail panel */
+.admin-client-detail {
+  width: 340px;
+  flex-shrink: 0;
+}
+@media (max-width: 768px) {
+  .admin-client-detail {
+    width: 100% !important;
+    max-height: none !important;
+    position: static !important;
+  }
+  .admin-client-split {
+    flex-direction: column !important;
+  }
+}
+
+/* CRM: responsive pipeline grid */
+.crm-pipeline-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 900px) {
+  .crm-pipeline-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Portal login: responsive layout */
+@media (max-width: 900px) {
+  .portal-login-left {
+    display: none !important;
+  }
+  .portal-login-right {
+    width: 100% !important;
+    padding: 40px 24px !important;
+  }
+  .portal-mobile-logo {
+    display: flex !important;
+  }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .admin-sidebar,
@@ -1680,4 +1843,46 @@ textarea:focus {
 .admin-sidebar::-webkit-scrollbar-thumb:hover,
 .admin-main::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only.focus\:not-sr-only:focus {
+  position: fixed;
+  width: auto;
+  height: auto;
+  padding: 0.75rem 1.5rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: nowrap;
+  z-index: 999999;
+  top: 1rem;
+  left: 1rem;
+  background: #2563EB;
+  color: white;
+  font-weight: 700;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
+}
+
+/* Focus visible outlines for interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
 }

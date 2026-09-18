@@ -33,6 +33,8 @@ export default function CRMLayout({ children }: { children: React.ReactNode }) {
       )}
 
       <aside
+        id="crm-sidebar"
+        aria-label="CRM navigation"
         style={{
           position: "fixed",
           top: 0,
@@ -149,6 +151,9 @@ export default function CRMLayout({ children }: { children: React.ReactNode }) {
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-expanded={sidebarOpen}
+              aria-controls="crm-sidebar"
+              aria-label={sidebarOpen ? "Close menu" : "Open menu"}
               style={{
                 background: "rgba(6,182,212,0.12)",
                 border: "1px solid rgba(6,182,212,0.25)",

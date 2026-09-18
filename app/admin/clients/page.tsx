@@ -1,32 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getAdminClients } from "@/lib/actions/admin";
+import type { AdminClient } from "@/lib/types";
 
-const clients = [
-  { name: "Raza Holdings", email: "info@razaholdings.pk", phone: "+92 300 1234567", projects: 3, totalSpent: "₨1,250,000", status: "Active" },
-  { name: "Fatima Enterprises", email: "contact@fatima.pk", phone: "+92 321 7654321", projects: 2, totalSpent: "₨680,000", status: "Active" },
-  { name: "BlueSky Trading", email: "admin@bluesky.pk", phone: "+92 333 9876543", projects: 1, totalSpent: "₨320,000", status: "Active" },
-  { name: "Apex Solutions", email: "hello@apexsol.pk", phone: "+92 345 1122334", projects: 4, totalSpent: "₨2,100,000", status: "Active" },
-  { name: "Digital Dynamics", email: "team@digdyn.pk", phone: "+92 300 5566778", projects: 1, totalSpent: "₨520,000", status: "Inactive" },
-  { name: "Karim & Co.", email: "karim@karimco.pk", phone: "+92 312 9988776", projects: 0, totalSpent: "₨0", status: "Lead" },
-  { name: "Nova Industries", email: "info@novaind.pk", phone: "+92 345 4433221", projects: 0, totalSpent: "₨0", status: "Lead" },
-  { name: "Safi Brothers", email: "safi@safibros.pk", phone: "+92 321 6677889", projects: 2, totalSpent: "₨890,000", status: "Active" },
-];
+function getStatusLabel(client: AdminClient): string {
+  if (client.project_count > 0) return "Active";
+  if (client.invoice_count > 0) return "Active";
+  return "Client";
+}
 
-const statusBadge: Record<string, string> = {
-  Active: "success",
-  Inactive: "muted",
-  Lead: "warning",
-};
+function formatCurrency(amount: number): string {
+  if (amount >= 1_000_000) return `₨${(amount / 1_000_000).toFixed(1)}M`;
+  if (amount >= 1_000) return `₨${(amount / 1_000).toFixed(0)}K`;
+  return `₨${amount.toLocaleString()}`;
+}
 
 export default function AdminClientsPage() {
+  const [clients, setClients] = useState<AdminClient[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [selectedClient, setSelectedClient] = useState<typeof clients[0] | null>(null);
+  const [selectedClient, setSelectedClient] = useState<AdminClient | null>(null);
+
+  useEffect(() => {
+    getAdminClients()
+      .then(setClients)
+      .catch((e) => setError(e.message || "Failed to load clients"))
+      .finally(() => setLoading(false));
+  }, []);
 
   const filtered = clients.filter((c) => {
-    const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.email.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = statusFilter === "All" || c.status === statusFilter;
+    const matchSearch =
+      (c.name || "").toLowerCase().includes(search.toLowerCase()) ||
+      c.email.toLowerCase().includes(search.toLowerCase());
+    const status = getStatusLabel(c);
+    const matchStatus = statusFilter === "All" || status === statusFilter;
     return matchSearch && matchStatus;
   });
 
@@ -36,6 +46,12 @@ export default function AdminClientsPage() {
         <h1 className="admin-page-title">Client Management</h1>
         <p className="admin-page-subtitle">Manage and view all your clients</p>
       </div>
+
+      {error && (
+        <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "10px", padding: "12px 16px", marginBottom: "20px", color: "#EF4444", fontSize: "0.85rem" }}>
+          {error}
+        </div>
+      )}
 
       <div style={{ display: "flex", gap: "12px", marginBottom: "20px", flexWrap: "wrap" }}>
         <div className="admin-input" style={{ flex: 1, minWidth: "250px" }}>
@@ -57,68 +73,73 @@ export default function AdminClientsPage() {
             className="admin-focus"
             aria-label="Filter clients by status"
           >
-            {["All", "Active", "Inactive", "Lead"].map((s) => (
+            {["All", "Active", "Client"].map((s) => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
         </div>
       </div>
 
-      <div className="admin-card" style={{ display: "flex", gap: "20px", overflow: "hidden" }}>
+      <div className="admin-card admin-client-split" style={{ display: "flex", gap: "20px", overflow: "hidden" }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div className="admin-table-wrap">
-            <table className="admin-table" aria-label="Clients list">
-              <thead>
-                <tr>
-                  <th>Client</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th style={{ textAlign: "center" }}>Projects</th>
-                  <th>Total Spent</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((client, i) => (
-                  <tr
-                    key={i}
-                    onClick={() => setSelectedClient(client)}
-                    style={{
-                      cursor: "pointer",
-                      background: selectedClient === client ? "rgba(37,99,235,0.06)" : undefined,
-                    }}
-                    aria-label={`Select ${client.name}`}
-                  >
-                    <td>{client.name}</td>
-                    <td>{client.email}</td>
-                    <td>{client.phone}</td>
-                    <td style={{ textAlign: "center", fontWeight: 600 }}>{client.projects}</td>
-                    <td style={{ fontWeight: 600 }}>{client.totalSpent}</td>
-                    <td>
-                      <span className={`admin-badge ${statusBadge[client.status]}`}>
-                        {client.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-                {filtered.length === 0 && (
+          {loading ? (
+            <div style={{ textAlign: "center", padding: "60px 0", color: "var(--admin-text-muted)" }}>Loading clients...</div>
+          ) : (
+            <div className="admin-table-wrap">
+              <table className="admin-table" aria-label="Clients list">
+                <thead>
                   <tr>
-                    <td colSpan={6} style={{ textAlign: "center", padding: "40px 16px", color: "var(--admin-text-faint)" }}>
-                      No clients match your filters.
-                    </td>
+                    <th>Client</th>
+                    <th>Email</th>
+                    <th style={{ textAlign: "center" }}>Projects</th>
+                    <th style={{ textAlign: "center" }}>Invoices</th>
+                    <th>Total Spent</th>
+                    <th>Status</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {filtered.map((client) => {
+                    const status = getStatusLabel(client);
+                    return (
+                      <tr
+                        key={client.email}
+                        onClick={() => setSelectedClient(client)}
+                        style={{
+                          cursor: "pointer",
+                          background: selectedClient?.email === client.email ? "rgba(37,99,235,0.06)" : undefined,
+                        }}
+                        aria-label={`Select ${client.name || client.email}`}
+                      >
+                        <td>{client.name || "—"}</td>
+                        <td>{client.email}</td>
+                        <td style={{ textAlign: "center", fontWeight: 600 }}>{client.project_count}</td>
+                        <td style={{ textAlign: "center", fontWeight: 600 }}>{client.invoice_count}</td>
+                        <td style={{ fontWeight: 600 }}>{formatCurrency(client.total_spent)}</td>
+                        <td>
+                          <span className={`admin-badge ${status === "Active" ? "success" : "muted"}`}>
+                            {status}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  {filtered.length === 0 && (
+                    <tr>
+                      <td colSpan={6} style={{ textAlign: "center", padding: "40px 16px", color: "var(--admin-text-faint)" }}>
+                        {clients.length === 0 ? "No clients yet. Clients appear here once they have projects or invoices." : "No clients match your filters."}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         {selectedClient && (
           <div
-            className="admin-card"
+            className="admin-card admin-client-detail"
             style={{
-              width: "340px",
-              flexShrink: 0,
               display: "flex",
               flexDirection: "column",
               maxHeight: "calc(100vh - 220px)",
@@ -126,7 +147,7 @@ export default function AdminClientsPage() {
               top: "20px",
             }}
             role="complementary"
-            aria-label={`Details for ${selectedClient.name}`}
+            aria-label={`Details for ${selectedClient.name || selectedClient.email}`}
           >
             <div style={{ padding: "20px 24px", borderBottom: "1px solid var(--admin-border)", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
               <h3 style={{ color: "var(--admin-text)", fontSize: "0.95rem", fontWeight: 700, margin: 0, fontFamily: "var(--font-heading)" }}>Client Details</h3>
@@ -159,7 +180,7 @@ export default function AdminClientsPage() {
               <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
                 <div>
                   <div style={{ color: "var(--admin-text-faint)", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "6px" }}>Name</div>
-                  <div style={{ color: "var(--admin-text)", fontSize: "0.92rem", fontWeight: 600 }}>{selectedClient.name}</div>
+                  <div style={{ color: "var(--admin-text)", fontSize: "0.92rem", fontWeight: 600 }}>{selectedClient.name || "—"}</div>
                 </div>
 
                 <div>
@@ -171,10 +192,9 @@ export default function AdminClientsPage() {
                 </div>
 
                 <div>
-                  <div style={{ color: "var(--admin-text-faint)", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "6px" }}>Phone</div>
-                  <div style={{ color: "var(--admin-text-secondary)", fontSize: "0.875rem", display: "flex", alignItems: "center", gap: "6px" }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: "14px", height: "14px", color: "var(--admin-text-faint)", flexShrink: 0 }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
-                    {selectedClient.phone}
+                  <div style={{ color: "var(--admin-text-faint)", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "6px" }}>Role</div>
+                  <div style={{ color: "var(--admin-text-secondary)", fontSize: "0.875rem" }}>
+                    {selectedClient.role || "client"}
                   </div>
                 </div>
 
@@ -182,20 +202,27 @@ export default function AdminClientsPage() {
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                     <div style={{ background: "var(--admin-bg)", borderRadius: "var(--admin-radius)", padding: "14px 16px", border: "1px solid var(--admin-border)" }}>
                       <div style={{ color: "var(--admin-text-faint)", fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "4px" }}>Projects</div>
-                      <div style={{ color: "var(--admin-accent)", fontSize: "1.4rem", fontWeight: 800, fontFamily: "var(--font-heading)" }}>{selectedClient.projects}</div>
+                      <div style={{ color: "var(--admin-accent)", fontSize: "1.4rem", fontWeight: 800, fontFamily: "var(--font-heading)" }}>{selectedClient.project_count}</div>
                     </div>
                     <div style={{ background: "var(--admin-bg)", borderRadius: "var(--admin-radius)", padding: "14px 16px", border: "1px solid var(--admin-border)" }}>
                       <div style={{ color: "var(--admin-text-faint)", fontSize: "0.68rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "4px" }}>Total Spent</div>
-                      <div style={{ color: "var(--admin-success)", fontSize: "1.4rem", fontWeight: 800, fontFamily: "var(--font-heading)" }}>{selectedClient.totalSpent}</div>
+                      <div style={{ color: "var(--admin-success)", fontSize: "1.4rem", fontWeight: 800, fontFamily: "var(--font-heading)" }}>{formatCurrency(selectedClient.total_spent)}</div>
                     </div>
                   </div>
                 </div>
 
                 <div>
                   <div style={{ color: "var(--admin-text-faint)", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "8px" }}>Status</div>
-                  <span className={`admin-badge ${statusBadge[selectedClient.status]}`} style={{ padding: "5px 14px", fontSize: "0.8rem" }}>
-                    {selectedClient.status}
+                  <span className={`admin-badge ${getStatusLabel(selectedClient) === "Active" ? "success" : "muted"}`} style={{ padding: "5px 14px", fontSize: "0.8rem" }}>
+                    {getStatusLabel(selectedClient)}
                   </span>
+                </div>
+
+                <div>
+                  <div style={{ color: "var(--admin-text-faint)", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "6px" }}>Member Since</div>
+                  <div style={{ color: "var(--admin-text-secondary)", fontSize: "0.875rem" }}>
+                    {new Date(selectedClient.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  </div>
                 </div>
               </div>
             </div>
@@ -203,18 +230,7 @@ export default function AdminClientsPage() {
         )}
       </div>
 
-      <style>{`
-        @media (max-width: 768px) {
-          .admin-card[style*="display: flex"][style*="gap: 20px"] {
-            flex-direction: column !important;
-          }
-          .admin-card[style*="display: flex"][style*="gap: 20px"] > div[style*="width: 340px"] {
-            width: 100% !important;
-            max-height: none !important;
-            position: static !important;
-          }
-        }
-      `}</style>
+
     </div>
   );
 }

@@ -59,8 +59,8 @@ export default function InvoicesPage() {
         ))}
       </div>
 
-      <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(139,92,246,0.12)", borderRadius: "16px", overflow: "hidden" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr 1fr 1fr 0.8fr", gap: "12px", padding: "14px 20px", background: "rgba(139,92,246,0.06)", borderBottom: "1px solid rgba(139,92,246,0.12)" }}>
+      <div className="portal-table-wrap" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(139,92,246,0.12)", borderRadius: "16px", overflow: "hidden" }}>
+        <div className="portal-table-grid" style={{ gridTemplateColumns: "1fr 1.5fr 1fr 1fr 0.8fr", padding: "14px 20px", background: "rgba(139,92,246,0.06)", borderBottom: "1px solid rgba(139,92,246,0.12)", minWidth: "600px" }}>
           {["Invoice #", "Description", "Date", "Amount", "Status"].map((h) => (
             <div key={h} style={{ color: "#9CA3AF", fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>{h}</div>
           ))}
@@ -73,7 +73,7 @@ export default function InvoicesPage() {
         ) : invoices.map((inv, i) => {
           const st = getStatusStyle(inv.status);
           return (
-            <div key={inv.id} style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr 1fr 1fr 0.8fr", gap: "12px", padding: "14px 20px", alignItems: "center", borderBottom: i < invoices.length - 1 ? "1px solid rgba(139,92,246,0.06)" : "none" }}>
+            <div key={inv.id} className="portal-table-grid" style={{ gridTemplateColumns: "1fr 1.5fr 1fr 1fr 0.8fr", padding: "14px 20px", borderBottom: i < invoices.length - 1 ? "1px solid rgba(139,92,246,0.06)" : "none", minWidth: "600px" }}>
               <div style={{ color: "#E5E7EB", fontWeight: 600, fontSize: "0.88rem", fontFamily: "var(--font-mono)" }}>{inv.invoice_number}</div>
               <div style={{ color: "#CBD5E1", fontSize: "0.84rem" }}>{inv.description}</div>
               <div style={{ color: "#9CA3AF", fontSize: "0.82rem" }}>{new Date(inv.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</div>
