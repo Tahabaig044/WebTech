@@ -1,8 +1,8 @@
 const badges = [
-  { platform: "Trustpilot", score: "4.9/5", icon: "⭐", color: "var(--brand-trustpilot)" },
-  { platform: "Google Reviews", score: "5.0/5", icon: "🏆", color: "#4285F4" },
-  { platform: "Clutch", score: "4.9/5", icon: "🎖️", color: "#E03C31" },
-  { platform: "SLA Guarantee", score: "100%", icon: "✅", color: "#16A34A" },
+  { title: "Full-Stack Development", desc: "Web, mobile, and custom applications", icon: "🌐", color: "#2563EB" },
+  { title: "Digital Marketing", desc: "SEO, Google Ads, and social media", icon: "📈", color: "#F59E0B" },
+  { title: "Business Automation", desc: "ERP, CRM, and workflow systems", icon: "⚡", color: "#7C3AED" },
+  { title: "24/7 Managed Hosting", desc: "Cloud infrastructure and monitoring", icon: "☁️", color: "#0284C7" },
 ];
 
 export default function TrustMarquee() {
@@ -25,7 +25,7 @@ export default function TrustMarquee() {
             marginBottom: "8px",
           }}
         >
-          Trusted by 100+ Brands
+          Trusted by Businesses Across Pakistan
         </div>
         <h2
           style={{
@@ -45,7 +45,7 @@ export default function TrustMarquee() {
         >
           {badges.map((b) => (
             <div
-              key={b.platform}
+              key={b.title}
               style={{
                 background: "rgba(15,43,92,0.4)",
                 border: "1px solid rgba(59,130,246,0.25)",
@@ -56,11 +56,11 @@ export default function TrustMarquee() {
               }}
             >
               <div style={{ fontSize: "1.8rem", marginBottom: "8px" }}>{b.icon}</div>
-              <div style={{ fontSize: "1.5rem", fontWeight: 800, color: b.color, marginBottom: "4px" }}>
-                {b.score}
+              <div style={{ fontSize: "1rem", fontWeight: 800, color: b.color, marginBottom: "4px" }}>
+                {b.title}
               </div>
               <div style={{ fontSize: "0.82rem", color: "#94A3B8", fontWeight: 600 }}>
-                {b.platform}
+                {b.desc}
               </div>
             </div>
           ))}

@@ -19,24 +19,6 @@ export default function TopBar() {
       <div className="wrap">
         {/* Left group */}
         <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-          {/* Trustpilot badge */}
-          <Link
-            href="https://trustpilot.com/review/pixelwyre.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"
-                fill="#00B67A"
-              />
-            </svg>
-            <span style={{ color: "#00B67A", fontWeight: 700, fontSize: "0.8rem" }}>
-              Trustpilot
-            </span>
-          </Link>
-
           {/* WhatsApp link */}
           <Link
             href="https://wa.me/923112980115"

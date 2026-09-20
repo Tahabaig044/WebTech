@@ -1,8 +1,8 @@
 const stats = [
-  { value: "12+", label: "Years in Business" },
-  { value: "500+", label: "Verified Clients" },
-  { value: "1.2M+", label: "Leads Delivered" },
-  { value: "+340%", label: "Average Client ROI" },
+  { value: "Full-Stack", label: "Web Development" },
+  { value: "SEO & Ads", label: "Digital Marketing" },
+  { value: "ERP & CRM", label: "Business Automation" },
+  { value: "24/7", label: "Managed Hosting" },
 ];
 
 export default function StatsCounter() {

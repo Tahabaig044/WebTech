@@ -3,20 +3,20 @@
 import { useState } from "react";
 
 const clientProjects = [
-  { name: "Al-Razaq Traders", status: "In Progress", progress: 68, task: "E-Commerce Store", deadline: "Feb 15, 2026" },
-  { name: "GreenField Academy", status: "Review", progress: 92, task: "School SMS Setup", deadline: "Jan 28, 2026" },
-  { name: "FitZone Gym", status: "Deployed", progress: 100, task: "Landing + CRM", deadline: "Completed" },
+  { name: "Client A", status: "In Progress", progress: 68, task: "E-Commerce Store", deadline: "In Progress" },
+  { name: "Client B", status: "Review", progress: 92, task: "School SMS Setup", deadline: "Under Review" },
+  { name: "Client C", status: "Deployed", progress: 100, task: "Landing + CRM", deadline: "Completed" },
 ];
 
 const adminLog = [
-  { time: "14:32:01", type: "LEAD", msg: "New lead captured: Al-Razaq Traders — WhatsApp Bot" },
-  { time: "14:32:03", type: "DISPATCH", msg: "Assigned to Agent: Hassan K. — Priority: High" },
-  { time: "14:35:12", type: "DEAL", msg: "Quote sent: PKR 180,000 — E-Commerce Package" },
-  { time: "14:38:45", type: "DEPLOY", msg: "GreenField Academy — staging site live" },
-  { time: "14:41:07", type: "BILL", msg: "Invoice #1047 generated — FitZone Gym — PKR 85,000" },
-  { time: "14:43:22", type: "HOST", msg: "SSL renewed: pixelwyre.com — valid till 2027-01-13" },
-  { time: "14:45:58", type: "ALERT", msg: "Server CPU spike detected — auto-scaled to 2 vCPU" },
-  { time: "14:48:11", type: "MSG", msg: "WhatsApp broadcast sent: 247 contacts — New Year Offer" },
+  { time: "14:32:01", type: "LEAD", msg: "New lead captured — WhatsApp Bot inquiry" },
+  { time: "14:32:03", type: "DISPATCH", msg: "Assigned to Agent — Priority: High" },
+  { time: "14:35:12", type: "DEAL", msg: "Quote sent — E-Commerce Package" },
+  { time: "14:38:45", type: "DEPLOY", msg: "Staging site deployed successfully" },
+  { time: "14:41:07", type: "BILL", msg: "Invoice generated — Development Package" },
+  { time: "14:43:22", type: "HOST", msg: "SSL renewed — valid till 2027" },
+  { time: "14:45:58", type: "ALERT", msg: "Server auto-scaled — performance optimized" },
+  { time: "14:48:11", type: "MSG", msg: "WhatsApp broadcast sent — promotional campaign" },
 ];
 
 const typeColors: Record<string, string> = {

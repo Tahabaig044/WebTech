@@ -151,18 +151,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             >
               {sidebarOpen ? UIIcons.close : UIIcons.menu}
             </button>
-            <div className="admin-search">
-              {UIIcons.search}
-              <input type="text" placeholder="Search..." aria-label="Search admin" />
-            </div>
           </div>
 
           <div className="admin-header-right">
-            <button className="admin-notif-btn admin-focus" aria-label="Notifications">
-              {UIIcons.bell}
-              <span className="admin-notif-dot" aria-hidden="true" />
-            </button>
-
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <div className="admin-avatar" aria-hidden="true">SA</div>
               <div className="md-show">

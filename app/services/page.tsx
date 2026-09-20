@@ -25,15 +25,6 @@ const categoryMeta: Record<string, { icon: string; color: string }> = {
   "Marketing": { icon: "📈", color: "#F59E0B" },
 };
 
-const fallbackCategories = [
-  { title: "Web Development", desc: "Landing pages, business websites, e-commerce stores, and custom web applications built with modern frameworks.", icon: "🌐", color: "#2563EB", services: ["Landing Page (1-Day Delivery)", "Business Website (5–15 Pages)", "E-Commerce Store (PKR Payments)", "Custom Web Application", "Progressive Web App (PWA)", "Speed Optimization (90+ PageSpeed)"], startingAt: "₨ 14,999" },
-  { title: "Search Engine Optimization", desc: "Local SEO, Google Maps optimization, technical audits, and content strategy to dominate search rankings.", icon: "🔍", color: "#16A34A", services: ["Google Maps Top 3 Rank", "Local SEO Audit & Fix", "Technical SEO Audit", "Content Strategy & Blog", "Link Building Campaign", "Reputation Management"], startingAt: "₨ 5,799/mo" },
-  { title: "Paid Advertising", desc: "Google Ads, Facebook/Instagram ads, retargeting campaigns with transparent ROI reporting.", icon: "📈", color: "#F59E0B", services: ["Google Ads Setup & Management", "Facebook & Instagram Ads", "Retargeting Campaigns", "Product Listing Ads (PLA)", "YouTube Pre-Roll Ads", "Monthly ROI Dashboard"], startingAt: "₨ 8,999/mo" },
-  { title: "Managed Hosting", desc: "Cloud infrastructure, SSL, backups, CDN, and 24/7 monitoring with a 99.99% uptime SLA.", icon: "☁️", color: "#0284C7", services: ["Shared Cloud Hosting", "VPS Managed Hosting", "WordPress Managed Hosting", "E-Commerce Hosting", "Free SSL Certificate", "Daily Backups & CDN"], startingAt: "₨ 1,499/mo" },
-  { title: "ERP & Automation", desc: "Custom CRM pipelines, WhatsApp bots, Google Apps Script workflows, and business intelligence dashboards.", icon: "⚡", color: "#7C3AED", services: ["Custom CRM Pipeline", "WhatsApp Chatbot (GPT-Powered)", "Google Apps Script Automation", "Invoice & Billing System", "Business Intelligence Dashboard", "Workflow Automation"], startingAt: "₨ 25,000" },
-  { title: "Industry SaaS Products", desc: "Pre-built management suites for schools, clinics, gyms, and restaurants — deploy in days, not months.", icon: "🏭", color: "#10B981", services: ["School SMS & Attendance Suite", "Clinic Patient Booking Suite", "Gym Membership & CRM Suite", "Restaurant QR Menu & Orders", "Salon Booking & Reviews Suite", "Real Estate Listing CRM"], startingAt: "₨ 33,000" },
-];
-
 const fallbackPricing = [
   { name: "Starter", price: "₨ 25,000", period: "one-time", desc: "Perfect for new businesses launching their first digital presence.", color: "#2563EB", features: ["5-Page Business Website", "Mobile Responsive Design", "Basic SEO Setup", "SSL Certificate", "1 Month Managed Hosting", "WhatsApp Business Integration"], popular: false },
   { name: "Growth", price: "₨ 65,000", period: "one-time", desc: "For businesses ready to generate leads and rank on Google Maps.", color: "#16A34A", features: ["10-Page Website + Blog", "Google Maps SEO (Top 3 Rank)", "Landing Page for Ads", "WhatsApp Chatbot Setup", "3 Months Managed Hosting", "Monthly Performance Report", "Google Ads Campaign Setup"], popular: true },
@@ -62,7 +53,7 @@ export default async function ServicesPage() {
   }
 
   const useFallback = !services || services.length === 0;
-  const categories = useFallback ? fallbackCategories : Array.from(categoryMap.entries()).map(([title, svcList]) => ({
+  const categories = useFallback ? [] : Array.from(categoryMap.entries()).map(([title, svcList]) => ({
     title,
     desc: `Explore our ${title.toLowerCase()} services.`,
     icon: (categoryMeta[title] || { icon: "⚙️" }).icon,
@@ -88,7 +79,7 @@ export default async function ServicesPage() {
       <section style={{ padding: "60px 0 80px" }}>
         <div className="wrap">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(360px, 100%), 1fr))", gap: "28px" }}>
-            {categories.map((cat) => (
+            {categories.length > 0 ? categories.map((cat) => (
               <div key={cat.title} className="card" style={{ borderTopColor: cat.color }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "16px" }}>
                   <div style={{ fontSize: "2.2rem" }}>{cat.icon}</div>
@@ -109,7 +100,14 @@ export default async function ServicesPage() {
                   Get Quote →
                 </Link>
               </div>
-            ))}
+            )) : (
+              <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "60px 0" }}>
+                <p style={{ fontSize: "1rem", color: "#64748B", marginBottom: "16px" }}>Services are being set up. Please check back soon.</p>
+                <Link href="/contact" className="btn btn-primary" style={{ fontSize: "0.88rem", padding: "10px 24px" }}>
+                  Contact Us →
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </section>
