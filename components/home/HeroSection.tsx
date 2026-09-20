@@ -1,3 +1,4 @@
+import Link from "next/link";
 import HeroTabs from "./HeroTabs";
 
 export default function HeroSection() {
@@ -14,12 +15,12 @@ export default function HeroSection() {
               One connected system for building, launching, marketing, and hosting your business online — operated centrally through our ERP intelligence suite.
             </p>
             <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
-              <a href="/contact" className="btn btn-primary" style={{ padding: "12px 28px", fontSize: "0.95rem" }}>
+              <Link href="/contact" className="btn btn-primary" style={{ padding: "12px 28px", fontSize: "0.95rem" }}>
                 Start Your Project →
-              </a>
-              <a href="/services" className="btn btn-secondary" style={{ padding: "12px 28px", fontSize: "0.95rem" }}>
+              </Link>
+              <Link href="/services" className="btn btn-secondary" style={{ padding: "12px 28px", fontSize: "0.95rem" }}>
                 Explore 100+ Services
-              </a>
+              </Link>
             </div>
           </div>
 
