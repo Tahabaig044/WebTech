@@ -319,7 +319,7 @@ export default function PortalLoginPage() {
                 href="/contact"
                 style={{ color: "#8B5CF6", fontSize: "0.82rem", fontWeight: 600, textDecoration: "none" }}
               >
-                Forgot Password?
+                Need help? Contact Support
               </Link>
             </div>
 

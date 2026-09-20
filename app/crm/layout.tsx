@@ -3,21 +3,26 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 const navItems = [
   { label: "Dashboard", href: "/crm/dashboard", icon: "◈" },
-  { label: "Pipeline", href: "/crm/dashboard", icon: "◉" },
-  { label: "Tasks", href: "/crm/dashboard", icon: "⊞" },
-  { label: "SLA Monitor", href: "/crm/dashboard", icon: "⏱" },
-  { label: "Agents", href: "/crm/dashboard", icon: "◎" },
-  { label: "Reports", href: "/crm/dashboard", icon: " ⊟" },
 ];
 
 export default function CRMLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const isLoginPage = pathname === "/crm";
+  const { data: session } = useSession();
+
+  const userName = session?.user?.name || "Agent";
+  const userRole = session?.user?.role || "Agent";
+  const userInitials = userName
+    .split(" ")
+    .map((n: string) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2) || "A";
 
   if (isLoginPage) {
     return <>{children}</>;
@@ -170,89 +175,29 @@ export default function CRMLayout({ children }: { children: React.ReactNode }) {
             >
               ☰
             </button>
-            <div
-              style={{
-                background: "rgba(6,182,212,0.08)",
-                border: "1px solid rgba(6,182,212,0.15)",
-                borderRadius: "10px",
-                padding: "8px 16px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                minWidth: "220px",
-              }}
-            >
-              <span style={{ color: "#6B7280", fontSize: "0.9rem" }}>⌕</span>
-              <input
-                type="text"
-                placeholder="Search CRM..."
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  outline: "none",
-                  color: "#E5E7EB",
-                  fontSize: "0.85rem",
-                  width: "100%",
-                  fontFamily: "var(--font-body)",
-                }}
-              />
-            </div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <button
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div
               style={{
-                position: "relative",
-                background: "rgba(6,182,212,0.1)",
-                border: "1px solid rgba(6,182,212,0.2)",
-                color: "#22D3EE",
-                width: "38px",
-                height: "38px",
-                borderRadius: "10px",
+                width: "36px",
+                height: "36px",
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #06B6D4, #0891B2)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "1.1rem",
-                cursor: "pointer",
+                color: "#fff",
+                fontWeight: 700,
+                fontSize: "0.82rem",
+                boxShadow: "0 2px 8px rgba(6,182,212,0.4)",
               }}
             >
-              🔔
-              <span
-                style={{
-                  position: "absolute",
-                  top: "6px",
-                  right: "6px",
-                  width: "8px",
-                  height: "8px",
-                  background: "#F43F5E",
-                  borderRadius: "50%",
-                  border: "2px solid #030712",
-                }}
-              />
-            </button>
-
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <div
-                style={{
-                  width: "36px",
-                  height: "36px",
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #06B6D4, #0891B2)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#fff",
-                  fontWeight: 700,
-                  fontSize: "0.82rem",
-                  boxShadow: "0 2px 8px rgba(6,182,212,0.4)",
-                }}
-              >
-                AG
-              </div>
-              <div style={{ display: "none" }} className="md-show">
-                <div style={{ color: "#F1F5F9", fontSize: "0.82rem", fontWeight: 600 }}>Agent</div>
-                <div style={{ color: "#6B7280", fontSize: "0.7rem" }}>CRM Agent</div>
-              </div>
+              {userInitials}
+            </div>
+            <div style={{ display: "none" }} className="md-show">
+              <div style={{ color: "#F1F5F9", fontSize: "0.82rem", fontWeight: 600 }}>{userName}</div>
+              <div style={{ color: "#6B7280", fontSize: "0.7rem" }}>{userRole}</div>
             </div>
           </div>
         </header>

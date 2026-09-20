@@ -13,8 +13,19 @@ import BrochureShowcase from "@/components/home/BrochureShowcase";
 import Testimonials from "@/components/home/Testimonials";
 import FAQAccordion from "@/components/home/FAQAccordion";
 import StatsCounter from "@/components/home/StatsCounter";
+import { getServices } from "@/lib/supabase/queries";
 
-export default function Home() {
+export const revalidate = 60;
+
+export default async function Home() {
+  let services: { name: string; price: string | null; category: string | null }[] = [];
+  try {
+    const dbServices = await getServices();
+    services = dbServices.map((s) => ({ name: s.name, price: s.price, category: s.category }));
+  } catch {
+    services = [];
+  }
+
   return (
     <>
       <HeroSection />
@@ -31,7 +42,7 @@ export default function Home() {
 
       <IndustryHub />
 
-      <ServicesGrid />
+      <ServicesGrid services={services} />
 
       <BIAuditEngine />
 

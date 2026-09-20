@@ -3,20 +3,30 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 const navItems = [
   { label: "Dashboard", href: "/portal/dashboard", icon: "◈" },
   { label: "Projects", href: "/portal/dashboard/projects", icon: "⊞" },
   { label: "Invoices", href: "/portal/dashboard/invoices", icon: " ⊡" },
   { label: "Support", href: "/portal/dashboard/support", icon: " ⊘" },
-  { label: "Settings", href: "/portal/dashboard", icon: " ⊚" },
+  { label: "Settings", href: "/portal/dashboard/settings", icon: " ⊚" },
 ];
 
 export default function PortalLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const isLoginPage = pathname === "/portal";
+  const { data: session } = useSession();
+
+  const userName = session?.user?.name || "Client";
+  const userRole = session?.user?.role || "Client";
+  const userInitials = userName
+    .split(" ")
+    .map((n: string) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2) || "C";
 
   if (isLoginPage) {
     return <>{children}</>;
@@ -181,91 +191,29 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
             >
               ☰
             </button>
-            <div
-              style={{
-                background: "rgba(139,92,246,0.08)",
-                border: "1px solid rgba(139,92,246,0.15)",
-                borderRadius: "10px",
-                padding: "8px 16px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                minWidth: "220px",
-              }}
-            >
-              <span style={{ color: "#6B7280", fontSize: "0.9rem" }}>⌕</span>
-              <input
-                type="text"
-                placeholder="Search..."
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  outline: "none",
-                  color: "#E5E7EB",
-                  fontSize: "0.85rem",
-                  width: "100%",
-                  fontFamily: "var(--font-body)",
-                }}
-              />
-            </div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            {/* Notifications */}
-            <button
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div
               style={{
-                position: "relative",
-                background: "rgba(139,92,246,0.1)",
-                border: "1px solid rgba(139,92,246,0.2)",
-                color: "#C4B5FD",
-                width: "38px",
-                height: "38px",
-                borderRadius: "10px",
+                width: "36px",
+                height: "36px",
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #10B981, #059669)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "1.1rem",
-                cursor: "pointer",
+                color: "#fff",
+                fontWeight: 700,
+                fontSize: "0.82rem",
+                boxShadow: "0 2px 8px rgba(16,185,129,0.4)",
               }}
             >
-              🔔
-              <span
-                style={{
-                  position: "absolute",
-                  top: "6px",
-                  right: "6px",
-                  width: "8px",
-                  height: "8px",
-                  background: "#EF4444",
-                  borderRadius: "50%",
-                  border: "2px solid #0D1321",
-                }}
-              />
-            </button>
-
-            {/* Avatar */}
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <div
-                style={{
-                  width: "36px",
-                  height: "36px",
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #10B981, #059669)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#fff",
-                  fontWeight: 700,
-                  fontSize: "0.82rem",
-                  boxShadow: "0 2px 8px rgba(16,185,129,0.4)",
-                }}
-              >
-                JD
-              </div>
-              <div style={{ display: "none" }} className="md-show">
-                <div style={{ color: "#F1F5F9", fontSize: "0.82rem", fontWeight: 600 }}>John Doe</div>
-                <div style={{ color: "#6B7280", fontSize: "0.7rem" }}>Pro Client</div>
-              </div>
+              {userInitials}
+            </div>
+            <div style={{ display: "none" }} className="md-show">
+              <div style={{ color: "#F1F5F9", fontSize: "0.82rem", fontWeight: 600 }}>{userName}</div>
+              <div style={{ color: "#6B7280", fontSize: "0.7rem" }}>{userRole}</div>
             </div>
           </div>
         </header>
