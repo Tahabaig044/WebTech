@@ -76,7 +76,7 @@ export default function ROICalculator() {
           <h2>Calculate Your Projected Growth</h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "28px" }}>
+        <div className="roi-grid" style={{ gap: "28px" }}>
           <div className="card" style={{ padding: "28px" }}>
             <h3 style={{ marginBottom: "16px", fontSize: "1rem" }}>Configure Your Package</h3>
 
@@ -95,7 +95,7 @@ export default function ROICalculator() {
             </select>
 
             <label style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-dark)", display: "block", marginBottom: "6px" }}>
-              Target Monthly Customers: <strong style={{ color: "var(--brand-blue)" }}>{customers}</strong>
+              Target Monthly Customers: <strong style={{ color: "#A855F7" }}>{customers}</strong>
             </label>
             <input
               type="range"
@@ -103,7 +103,7 @@ export default function ROICalculator() {
               max="200"
               value={customers}
               onChange={(e) => setCustomers(Number(e.target.value))}
-              style={{ width: "100%", marginBottom: "18px", accentColor: "var(--brand-blue)" }}
+              style={{ width: "100%", marginBottom: "18px", accentColor: "#7C3AED" }}
             />
 
             <label style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-dark)", display: "block", marginBottom: "8px" }}>
@@ -116,9 +116,9 @@ export default function ROICalculator() {
                     type="checkbox"
                     checked={selectedAddons.includes(a.id)}
                     onChange={() => toggleAddon(a.id)}
-                    style={{ accentColor: "var(--brand-blue)", width: "16px", height: "16px" }}
+                    style={{ accentColor: "#7C3AED", width: "16px", height: "16px" }}
                   />
-                  {a.label} <span style={{ color: "var(--text-muted)", fontSize: "0.8rem" }}>₨{a.price.toLocaleString()}</span>
+                  {a.label} <span style={{ color: "#94A3B8", fontSize: "0.8rem" }}>₨{a.price.toLocaleString()}</span>
                 </label>
               ))}
             </div>
@@ -150,21 +150,21 @@ export default function ROICalculator() {
           <div className="card-dark" style={{ padding: "28px" }}>
             <h3 style={{ marginBottom: "20px", fontSize: "1rem" }}>Your Projected ROI</h3>
 
-            <div style={{ background: "rgba(37,99,235,0.15)", border: "1px solid #2563EB", borderRadius: "10px", padding: "18px", marginBottom: "16px", textAlign: "center" }}>
+            <div style={{ background: "rgba(124,58,237,0.15)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: "10px", padding: "18px", marginBottom: "16px", textAlign: "center" }}>
               <div style={{ fontSize: "0.78rem", color: "#94A3B8", marginBottom: "4px" }}>Projected Annual ROI</div>
               <div style={{ fontSize: "2.2rem", fontWeight: 800, color: "#34D399" }}>₨{projectedROI.toLocaleString()}</div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
-              <div style={{ background: "rgba(15,43,92,0.5)", border: "1px solid rgba(59,130,246,0.3)", borderRadius: "8px", padding: "14px" }}>
+            <div className="roi-stats-grid" style={{ gap: "12px", marginBottom: "16px" }}>
+              <div style={{ background: "rgba(10,18,36,0.65)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: "8px", padding: "14px" }}>
                 <div style={{ fontSize: "0.72rem", color: "#94A3B8" }}>Recommended Package</div>
-                <div style={{ fontSize: "1rem", fontWeight: 700, color: "#FFFFFF" }}>
+                <div style={{ fontSize: "1rem", fontWeight: 700, color: "#F8FAFC" }}>
                   {customers <= 50 ? "Starter Suite" : customers <= 120 ? "Growth Suite" : "Enterprise Suite"}
                 </div>
               </div>
-              <div style={{ background: "rgba(15,43,92,0.5)", border: "1px solid rgba(59,130,246,0.3)", borderRadius: "8px", padding: "14px" }}>
+              <div style={{ background: "rgba(10,18,36,0.65)", border: "1px solid rgba(139,92,246,0.25)", borderRadius: "8px", padding: "14px" }}>
                 <div style={{ fontSize: "0.72rem", color: "#94A3B8" }}>Estimated Setup</div>
-                <div style={{ fontSize: "1rem", fontWeight: 700, color: "#FFFFFF" }}>₨{setupCost.toLocaleString()}</div>
+                <div style={{ fontSize: "1rem", fontWeight: 700, color: "#F8FAFC" }}>₨{setupCost.toLocaleString()}</div>
               </div>
             </div>
 
@@ -188,6 +188,20 @@ export default function ROICalculator() {
           </div>
         </div>
       </div>
+      <style>{`
+        .roi-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+        .roi-stats-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+        @media (max-width: 768px) {
+          .roi-grid { grid-template-columns: 1fr; }
+          .roi-stats-grid { grid-template-columns: 1fr; }
+        }
+      `}</style>
     </section>
   );
 }

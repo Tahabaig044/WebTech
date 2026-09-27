@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createBlogPost, updateBlogPost } from "@/lib/actions/admin";
+import { blogPostSchema } from "@/lib/validations/admin";
 import type { BlogPost } from "@/lib/types";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 const inputStyle: React.CSSProperties = {
   width: "100%", background: "var(--admin-surface)", border: "1px solid var(--admin-border)",
@@ -24,6 +26,7 @@ export default function BlogForm({ initial, mode }: BlogFormProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState({
     title: initial?.title || "",
     slug: initial?.slug || "",
@@ -31,7 +34,7 @@ export default function BlogForm({ initial, mode }: BlogFormProps) {
     excerpt: initial?.excerpt || "",
     category: initial?.category || "General",
     featured_image: initial?.featured_image || "",
-    author: initial?.author || "Pixelwyre Team",
+    author: initial?.author || "WebTech Team",
     read_time: initial?.read_time || "5 min read",
     featured: initial?.featured || false,
     published: initial?.published ?? false,
@@ -52,6 +55,19 @@ export default function BlogForm({ initial, mode }: BlogFormProps) {
       slug: form.slug || autoSlug(form.title),
       published_at: form.published ? new Date().toISOString() : null,
     };
+
+    const validation = blogPostSchema.safeParse(payload);
+    if (!validation.success) {
+      const errors: Record<string, string> = {};
+      validation.error.issues.forEach((issue) => {
+        const key = issue.path[0] as string;
+        if (!errors[key]) errors[key] = issue.message;
+      });
+      setFieldErrors(errors);
+      setSaving(false);
+      return;
+    }
+    setFieldErrors({});
 
     const result = mode === "create"
       ? await createBlogPost(payload)
@@ -77,16 +93,19 @@ export default function BlogForm({ initial, mode }: BlogFormProps) {
       <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
         <div>
           <label htmlFor="blog-title" style={labelStyle}>Title *</label>
-          <input id="blog-title" style={inputStyle} value={form.title} onChange={(e) => { set("title", e.target.value); if (mode === "create") set("slug", autoSlug(e.target.value)); }} required />
+          <input id="blog-title" style={inputStyle} value={form.title} onChange={(e) => { set("title", e.target.value); if (mode === "create") set("slug", autoSlug(e.target.value)); setFieldErrors((prev) => { const next = { ...prev }; delete next.title; return next; }); }} required />
+          {fieldErrors.title && <p style={{ color: "#EF4444", fontSize: "0.75rem", marginTop: "4px" }}>{fieldErrors.title}</p>}
         </div>
         <div>
           <label htmlFor="blog-slug" style={labelStyle}>Slug *</label>
-          <input id="blog-slug" style={inputStyle} value={form.slug} onChange={(e) => set("slug", e.target.value)} required />
+          <input id="blog-slug" style={inputStyle} value={form.slug} onChange={(e) => { set("slug", e.target.value); setFieldErrors((prev) => { const next = { ...prev }; delete next.slug; return next; }); }} required />
+          {fieldErrors.slug && <p style={{ color: "#EF4444", fontSize: "0.75rem", marginTop: "4px" }}>{fieldErrors.slug}</p>}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div>
             <label htmlFor="blog-category" style={labelStyle}>Category</label>
-            <input id="blog-category" style={inputStyle} value={form.category} onChange={(e) => set("category", e.target.value)} />
+            <input id="blog-category" style={inputStyle} value={form.category} onChange={(e) => { set("category", e.target.value); setFieldErrors((prev) => { const next = { ...prev }; delete next.category; return next; }); }} />
+            {fieldErrors.category && <p style={{ color: "#EF4444", fontSize: "0.75rem", marginTop: "4px" }}>{fieldErrors.category}</p>}
           </div>
           <div>
             <label htmlFor="blog-author" style={labelStyle}>Author</label>
@@ -103,8 +122,12 @@ export default function BlogForm({ initial, mode }: BlogFormProps) {
           />
         </div>
         <div>
-          <label htmlFor="blog-image" style={labelStyle}>Featured Image URL</label>
-          <input id="blog-image" style={inputStyle} value={form.featured_image} onChange={(e) => set("featured_image", e.target.value)} placeholder="https://..." />
+          <ImageUpload
+            value={form.featured_image}
+            onChange={(url) => set("featured_image", url)}
+            folder="blog"
+            label="Featured Image"
+          />
         </div>
         <div>
           <label htmlFor="blog-content" style={labelStyle}>Content * (Markdown)</label>
@@ -112,9 +135,10 @@ export default function BlogForm({ initial, mode }: BlogFormProps) {
             id="blog-content"
             style={{ ...inputStyle, minHeight: "300px", resize: "vertical", fontFamily: "monospace", fontSize: "0.82rem", lineHeight: "1.6" }}
             value={form.content}
-            onChange={(e) => set("content", e.target.value)}
+            onChange={(e) => { set("content", e.target.value); setFieldErrors((prev) => { const next = { ...prev }; delete next.content; return next; }); }}
             required
           />
+          {fieldErrors.content && <p style={{ color: "#EF4444", fontSize: "0.75rem", marginTop: "4px" }}>{fieldErrors.content}</p>}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div>
@@ -123,7 +147,7 @@ export default function BlogForm({ initial, mode }: BlogFormProps) {
           </div>
           <div style={{ display: "flex", gap: "20px", alignItems: "end", paddingBottom: "4px" }}>
             <label htmlFor="blog-featured" style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
-              <input id="blog-featured" type="checkbox" checked={form.featured} onChange={(e) => set("featured", e.target.checked)} style={{ accentColor: "#2563EB" }} />
+              <input id="blog-featured" type="checkbox" checked={form.featured} onChange={(e) => set("featured", e.target.checked)} style={{ accentColor: "#7C3AED" }} />
               Featured
             </label>
             <label htmlFor="blog-published" style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
@@ -140,7 +164,7 @@ export default function BlogForm({ initial, mode }: BlogFormProps) {
           disabled={saving}
           style={{
             padding: "10px 24px", borderRadius: "10px", border: "none",
-            background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
+            background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
             color: "#fff", fontSize: "0.875rem", fontWeight: 700, cursor: saving ? "not-allowed" : "pointer",
             opacity: saving ? 0.7 : 1,
           }}

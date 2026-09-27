@@ -1,8 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { getAdminClients } from "@/lib/actions/admin";
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+import { getAdminClients, getLeadForClient } from "@/lib/actions/admin";
 import type { AdminClient } from "@/lib/types";
+import Pagination from "@/components/admin/Pagination";
+import { exportToCSV, CLIENT_EXPORT_COLUMNS } from "@/lib/utils/export";
 
 function getStatusLabel(client: AdminClient): string {
   if (client.project_count > 0) return "Active";
@@ -23,6 +26,9 @@ export default function AdminClientsPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [selectedClient, setSelectedClient] = useState<AdminClient | null>(null);
+  const [sourceLead, setSourceLead] = useState<{ id: string; name: string } | null>(null);
+  const [page, setPage] = useState(1);
+  const pageSize = 20;
 
   useEffect(() => {
     getAdminClients()
@@ -30,6 +36,23 @@ export default function AdminClientsPage() {
       .catch((e) => setError(e.message || "Failed to load clients"))
       .finally(() => setLoading(false));
   }, []);
+
+  const fetchSourceLead = useCallback(async (clientId: string) => {
+    try {
+      const lead = await getLeadForClient(clientId);
+      setSourceLead(lead);
+    } catch {
+      setSourceLead(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedClient) {
+      fetchSourceLead(selectedClient.email);
+    } else {
+      setSourceLead(null);
+    }
+  }, [selectedClient, fetchSourceLead]);
 
   const filtered = clients.filter((c) => {
     const matchSearch =
@@ -39,6 +62,9 @@ export default function AdminClientsPage() {
     const matchStatus = statusFilter === "All" || status === statusFilter;
     return matchSearch && matchStatus;
   });
+
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <div>
@@ -60,7 +86,7 @@ export default function AdminClientsPage() {
             type="text"
             placeholder="Search clients..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             className="admin-focus"
             aria-label="Search clients by name or email"
           />
@@ -69,7 +95,7 @@ export default function AdminClientsPage() {
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg>
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
             className="admin-focus"
             aria-label="Filter clients by status"
           >
@@ -78,6 +104,18 @@ export default function AdminClientsPage() {
             ))}
           </select>
         </div>
+        <button
+          onClick={() => exportToCSV(filtered , CLIENT_EXPORT_COLUMNS, "clients")}
+          style={{
+            padding: "8px 16px", borderRadius: "8px", border: "1px solid var(--admin-border)",
+            background: "var(--admin-surface)", color: "var(--admin-text)", fontSize: "0.8125rem",
+            fontWeight: 600, cursor: "pointer", fontFamily: "var(--font-body)",
+            display: "inline-flex", alignItems: "center", gap: "6px",
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+          Export
+        </button>
       </div>
 
       <div className="admin-card admin-client-split" style={{ display: "flex", gap: "20px", overflow: "hidden" }}>
@@ -98,7 +136,7 @@ export default function AdminClientsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.map((client) => {
+                  {paginated.map((client) => {
                     const status = getStatusLabel(client);
                     return (
                       <tr
@@ -106,7 +144,7 @@ export default function AdminClientsPage() {
                         onClick={() => setSelectedClient(client)}
                         style={{
                           cursor: "pointer",
-                          background: selectedClient?.email === client.email ? "rgba(37,99,235,0.06)" : undefined,
+                          background: selectedClient?.email === client.email ? "rgba(124,58,237,0.06)" : undefined,
                         }}
                         aria-label={`Select ${client.name || client.email}`}
                       >
@@ -224,13 +262,27 @@ export default function AdminClientsPage() {
                     {new Date(selectedClient.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </div>
                 </div>
+
+                {sourceLead && (
+                  <div>
+                    <div style={{ color: "var(--admin-text-faint)", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "6px" }}>Source</div>
+                    <Link
+                      href={`/admin/leads/${sourceLead.id}`}
+                      style={{ color: "var(--admin-accent)", fontSize: "0.875rem", textDecoration: "none", fontWeight: 600 }}
+                    >
+                      Lead: {sourceLead.name} →
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         )}
       </div>
 
-
+      {!loading && filtered.length > 0 && (
+        <Pagination page={page} totalPages={totalPages} total={filtered.length} pageSize={pageSize} onPageChange={setPage} />
+      )}
     </div>
   );
 }

@@ -12,12 +12,11 @@
         "office_address": "Suite 402, Pixelwyre Enterprise Tower, Shahrah-e-Faisal, Karachi, Pakistan",
         "whatsapp_number": "923112980115",
         "whatsapp_message": "Hi Pixelwyre team! I want to discuss a project for my business.",
-        "crm_endpoint": "https://script.google.com/macros/s/AKfycbz_TEST_ENDPOINT_HERE/exec",
-        "crm_api_token": "$Tester1435",
+        "crm_endpoint": "",
         "copyright_text": "\u00a9 2026 Pixelwyre Digital. All rights reserved. Operating through Central ERP Intelligence Suite.",
         "tawk_property_id": "64a000000000000000000000/1h0000000",
-        "google_apps_script_url": "https://script.google.com/macros/s/AKfycbwF1WoNr3ZRucDJpaE6eTW32OjYlpQhiXPhdD_hql8BIMXyk3QK5wqYNHJ97Vhzylfk/exec",
-        "crm_endpoint_url": "https://script.google.com/macros/s/AKfycbwF1WoNr3ZRucDJpaE6eTW32OjYlpQhiXPhdD_hql8BIMXyk3QK5wqYNHJ97Vhzylfk/exec"
+        "google_apps_script_url": "",
+        "crm_endpoint_url": ""
     },
     "social": {
         "facebook": "https://facebook.com/pixelwyre",

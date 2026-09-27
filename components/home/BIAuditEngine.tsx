@@ -56,15 +56,15 @@ export default function BIAuditEngine() {
     <section
       style={{
         padding: "60px 0",
-        background: "linear-gradient(180deg, #060D19 0%, #0B172C 100%)",
-        borderBottom: "1px solid #1E3A8A",
+        background: "linear-gradient(180deg, #020617 0%, #0A1224 100%)",
+        borderBottom: "1px solid var(--border)",
       }}
     >
       <div className="wrap">
         <div style={{ textAlign: "center", marginBottom: "32px" }}>
           <span className="eyebrow">🔬 Free BI Audit</span>
-          <h2 style={{ color: "#FFFFFF" }}>Scan Your Business Digital Health</h2>
-          <p style={{ color: "#94A3B8", maxWidth: "500px", margin: "0 auto" }}>
+          <h2>Scan Your Business Digital Health</h2>
+          <p style={{ color: "var(--text-muted)", maxWidth: "500px", margin: "0 auto" }}>
             Get instant insights on your Google Maps rank, mobile speed, and WhatsApp automation status.
           </p>
         </div>
@@ -73,27 +73,28 @@ export default function BIAuditEngine() {
           style={{
             maxWidth: "640px",
             margin: "0 auto",
-            background: "linear-gradient(135deg, #060D19 0%, #0A1E3F 40%, #0F2B5C 100%)",
-            border: "1px solid #1E3A8A",
+            background: "rgba(10, 18, 36, 0.65)",
+            backdropFilter: "blur(16px)",
+            border: "1px solid rgba(139, 92, 246, 0.2)",
             borderRadius: "var(--radius-lg)",
             padding: "36px",
-            boxShadow: "var(--shadow-shiny)",
+            boxShadow: "0 12px 35px rgba(124, 58, 237, 0.1), 0 0 0 1px rgba(139, 92, 246, 0.05)",
           }}
         >
           {step === 1 && (
             <div>
               <h3 style={{ color: "#FFFFFF", marginBottom: "20px", textAlign: "center" }}>Business Information</h3>
-              <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#CBD5E1", display: "block", marginBottom: "6px" }}>
+              <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text-secondary)", display: "block", marginBottom: "6px" }}>
                 Business Name
               </label>
               <input
                 type="text"
-                placeholder="e.g. Pixelwyre Digital"
+                placeholder="e.g. WebTech Solutions Hub"
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
-                style={{ marginBottom: "14px", background: "#060C1B", border: "1.5px solid #3B82F6", color: "#FFFFFF" }}
+                style={{ marginBottom: "14px", background: "rgba(3, 7, 18, 0.8)", border: "1.5px solid rgba(139, 92, 246, 0.3)", color: "#FFFFFF" }}
               />
-              <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#CBD5E1", display: "block", marginBottom: "6px" }}>
+              <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text-secondary)", display: "block", marginBottom: "6px" }}>
                 Website URL
               </label>
               <input
@@ -101,15 +102,15 @@ export default function BIAuditEngine() {
                 placeholder="https://yourbusiness.com"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                style={{ marginBottom: "14px", background: "#060C1B", border: "1.5px solid #3B82F6", color: "#FFFFFF" }}
+                style={{ marginBottom: "14px", background: "rgba(3, 7, 18, 0.8)", border: "1.5px solid rgba(139, 92, 246, 0.3)", color: "#FFFFFF" }}
               />
-              <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#CBD5E1", display: "block", marginBottom: "6px" }}>
+              <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text-secondary)", display: "block", marginBottom: "6px" }}>
                 Industry Category
               </label>
               <select
                 value={industry}
                 onChange={(e) => setIndustry(e.target.value)}
-                style={{ marginBottom: "20px", background: "#060C1B", border: "1.5px solid #3B82F6", color: industry ? "#FFFFFF" : "#94A3B8" }}
+                style={{ marginBottom: "20px", background: "rgba(3, 7, 18, 0.8)", border: "1.5px solid rgba(139, 92, 246, 0.3)", color: industry ? "#FFFFFF" : "var(--text-muted)" }}
               >
                 <option value="">Select industry...</option>
                 {industries.map((ind) => (
@@ -131,11 +132,11 @@ export default function BIAuditEngine() {
             <div style={{ textAlign: "center", padding: "30px 0" }}>
               <div style={{ fontSize: "2.5rem", marginBottom: "16px", animation: "pulse 1.5s ease-in-out infinite" }}>🔬</div>
               <h3 style={{ color: "#FFFFFF", marginBottom: "12px" }}>Scanning {businessName}...</h3>
-              <p style={{ color: "#94A3B8", fontSize: "0.88rem", marginBottom: "20px" }}>Analyzing your digital presence</p>
-              <div style={{ background: "#1E293B", borderRadius: "8px", height: "10px", overflow: "hidden", marginBottom: "12px" }}>
+              <p style={{ color: "var(--text-muted)", fontSize: "0.88rem", marginBottom: "20px" }}>Analyzing your digital presence</p>
+              <div style={{ background: "rgba(148, 163, 184, 0.1)", borderRadius: "8px", height: "10px", overflow: "hidden", marginBottom: "12px" }}>
                 <div
                   style={{
-                    background: "linear-gradient(90deg, #2563EB, #3B82F6)",
+                    background: "linear-gradient(90deg, #7C3AED, #A855F7)",
                     height: "100%",
                     width: `${progress}%`,
                     borderRadius: "8px",
@@ -143,7 +144,7 @@ export default function BIAuditEngine() {
                   }}
                 />
               </div>
-              <span style={{ fontSize: "0.82rem", color: "#60A5FA", fontWeight: 700 }}>{progress}%</span>
+              <span style={{ fontSize: "0.82rem", color: "#A855F7", fontWeight: 700 }}>{progress}%</span>
             </div>
           )}
 
@@ -151,30 +152,30 @@ export default function BIAuditEngine() {
             <div>
               <h3 style={{ color: "#FFFFFF", marginBottom: "20px", textAlign: "center" }}>Audit Results</h3>
               <div style={{ display: "grid", gap: "12px", marginBottom: "24px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(15,43,92,0.5)", border: "1px solid rgba(59,130,246,0.3)", borderRadius: "10px", padding: "14px 18px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(10, 18, 36, 0.65)", border: "1px solid rgba(139, 92, 246, 0.2)", borderRadius: "10px", padding: "14px 18px" }}>
                   <div>
-                    <div style={{ fontSize: "0.82rem", color: "#94A3B8" }}>Google Maps Rank</div>
-                    <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#34D399" }}>Not Ranked</div>
+                    <div style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Google Maps Rank</div>
+                    <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#10B981" }}>Not Ranked</div>
                   </div>
                   <span style={{ fontSize: "1.3rem" }}>📍</span>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(15,43,92,0.5)", border: "1px solid rgba(59,130,246,0.3)", borderRadius: "10px", padding: "14px 18px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(10, 18, 36, 0.65)", border: "1px solid rgba(139, 92, 246, 0.2)", borderRadius: "10px", padding: "14px 18px" }}>
                   <div>
-                    <div style={{ fontSize: "0.82rem", color: "#94A3B8" }}>Mobile Speed Score</div>
+                    <div style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Mobile Speed Score</div>
                     <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#FBBF24" }}>42/100</div>
                   </div>
                   <span style={{ fontSize: "1.3rem" }}>⚡</span>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(15,43,92,0.5)", border: "1px solid rgba(59,130,246,0.3)", borderRadius: "10px", padding: "14px 18px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(10, 18, 36, 0.65)", border: "1px solid rgba(139, 92, 246, 0.2)", borderRadius: "10px", padding: "14px 18px" }}>
                   <div>
-                    <div style={{ fontSize: "0.82rem", color: "#94A3B8" }}>WhatsApp Bot</div>
+                    <div style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>WhatsApp Bot</div>
                     <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#EF4444" }}>Not Installed</div>
                   </div>
                   <span style={{ fontSize: "1.3rem" }}>💬</span>
                 </div>
               </div>
 
-              <div style={{ borderTop: "1px solid #1E3A8A", paddingTop: "20px" }}>
+              <div style={{ borderTop: "1px solid rgba(139, 92, 246, 0.2)", paddingTop: "20px" }}>
                 <h3 style={{ color: "#FFFFFF", marginBottom: "14px", fontSize: "1.05rem" }}>Get Your Full Report</h3>
                 <form onSubmit={submitLead}>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "10px" }}>
@@ -184,7 +185,7 @@ export default function BIAuditEngine() {
                       value={leadName}
                       onChange={(e) => setLeadName(e.target.value)}
                       required
-                      style={{ background: "#060C1B", border: "1.5px solid #3B82F6", color: "#FFFFFF" }}
+                      style={{ background: "rgba(3, 7, 18, 0.8)", border: "1.5px solid rgba(139, 92, 246, 0.3)", color: "#FFFFFF" }}
                     />
                     <input
                       type="email"
@@ -192,7 +193,7 @@ export default function BIAuditEngine() {
                       value={leadEmail}
                       onChange={(e) => setLeadEmail(e.target.value)}
                       required
-                      style={{ background: "#060C1B", border: "1.5px solid #3B82F6", color: "#FFFFFF" }}
+                      style={{ background: "rgba(3, 7, 18, 0.8)", border: "1.5px solid rgba(139, 92, 246, 0.3)", color: "#FFFFFF" }}
                     />
                   </div>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "16px" }}>
@@ -201,14 +202,14 @@ export default function BIAuditEngine() {
                       placeholder="Phone Number"
                       value={leadPhone}
                       onChange={(e) => setLeadPhone(e.target.value)}
-                      style={{ background: "#060C1B", border: "1.5px solid #3B82F6", color: "#FFFFFF" }}
+                      style={{ background: "rgba(3, 7, 18, 0.8)", border: "1.5px solid rgba(139, 92, 246, 0.3)", color: "#FFFFFF" }}
                     />
                     <input
                       type="tel"
                       placeholder="WhatsApp Number"
                       value={leadWhatsapp}
                       onChange={(e) => setLeadWhatsapp(e.target.value)}
-                      style={{ background: "#060C1B", border: "1.5px solid #3B82F6", color: "#FFFFFF" }}
+                      style={{ background: "rgba(3, 7, 18, 0.8)", border: "1.5px solid rgba(139, 92, 246, 0.3)", color: "#FFFFFF" }}
                     />
                   </div>
                   <button
@@ -227,8 +228,8 @@ export default function BIAuditEngine() {
             <div style={{ textAlign: "center", padding: "30px 0" }}>
               <div style={{ fontSize: "3rem", marginBottom: "16px" }}>✅</div>
               <h3 style={{ color: "#FFFFFF", marginBottom: "10px" }}>Audit Complete!</h3>
-              <p style={{ color: "#94A3B8", fontSize: "0.9rem", marginBottom: "20px" }}>
-                Your full report has been sent to <strong style={{ color: "#60A5FA" }}>{leadEmail}</strong>.
+              <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", marginBottom: "20px" }}>
+                Your full report has been sent to <strong style={{ color: "#A855F7" }}>{leadEmail}</strong>.
                 Our team will reach out within 15 minutes.
               </p>
               <button

@@ -1,7 +1,12 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { getAdminInvoices } from "@/lib/actions/admin";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { getAdminInvoices, deleteInvoice } from "@/lib/actions/admin";
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
+import Pagination from "@/components/admin/Pagination";
+import { exportToCSV, INVOICE_EXPORT_COLUMNS } from "@/lib/utils/export";
 import type { AdminInvoice } from "@/lib/types";
 
 function CurrencyIcon() {
@@ -68,6 +73,10 @@ export default function AdminInvoicesPage() {
   const [invoices, setInvoices] = useState<AdminInvoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; invoiceNumber: string } | null>(null);
+  const [page, setPage] = useState(1);
+  const pageSize = 20;
+  const router = useRouter();
 
   useEffect(() => {
     getAdminInvoices()
@@ -86,6 +95,27 @@ export default function AdminInvoicesPage() {
       { label: "Overdue", value: formatCurrency(overdue), color: "var(--admin-error)", iconClass: "error" },
     ];
   }, [invoices]);
+
+  const filtered = invoices;
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+
+  const handleDelete = async (id: string, invoiceNumber: string) => {
+    setDeleteTarget({ id, invoiceNumber });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    const { id } = deleteTarget;
+    setDeleteTarget(null);
+    const result = await deleteInvoice(id);
+    if (result.success) {
+      setInvoices((prev) => prev.filter((inv) => inv.id !== id));
+      toast.success("Invoice deleted");
+    } else {
+      toast.error(result.error || "Failed to delete invoice");
+    }
+  };
 
   const kpiIcons = [CurrencyIcon, ClockIcon, AlertIcon];
 
@@ -127,6 +157,18 @@ export default function AdminInvoicesPage() {
             <h2 className="admin-card-title">All Invoices</h2>
             <p className="admin-card-subtitle">{loading ? "Loading..." : `${invoices.length} invoices in total`}</p>
           </div>
+          <button
+            onClick={() => exportToCSV(filtered , INVOICE_EXPORT_COLUMNS, "invoices")}
+            style={{
+              padding: "8px 16px", borderRadius: "8px", border: "1px solid var(--admin-border)",
+              background: "var(--admin-surface)", color: "var(--admin-text)", fontSize: "0.8125rem",
+              fontWeight: 600, cursor: "pointer", fontFamily: "var(--font-body)",
+              display: "inline-flex", alignItems: "center", gap: "6px",
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+            Export
+          </button>
         </div>
         {loading ? (
           <div style={{ textAlign: "center", padding: "48px 0", color: "var(--admin-text-muted)" }}>Loading invoices...</div>
@@ -141,11 +183,12 @@ export default function AdminInvoicesPage() {
                   <th scope="col">Amount</th>
                   <th scope="col">Due Date</th>
                   <th scope="col">Status</th>
+                  <th scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {invoices.map((inv) => (
-                  <tr key={inv.id}>
+                {paginated.map((inv) => (
+                  <tr key={inv.id} style={{ cursor: "pointer" }} onClick={() => router.push(`/admin/invoices/${inv.id}`)}>
                     <td>
                       <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
                         <span style={{ color: "var(--admin-accent)" }}>
@@ -163,11 +206,35 @@ export default function AdminInvoicesPage() {
                         {statusLabels[inv.status || "draft"] || inv.status}
                       </span>
                     </td>
+                    <td>
+                      <div style={{ display: "flex", gap: "6px" }}>
+                        <button
+                          onClick={() => router.push(`/admin/invoices/${inv.id}/edit`)}
+                          style={{
+                            padding: "5px 10px", borderRadius: "6px", border: "1px solid var(--admin-border)",
+                            background: "transparent", color: "#D1D5DB", fontSize: "0.75rem", fontWeight: 600,
+                            cursor: "pointer", fontFamily: "var(--font-body)",
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(inv.id, inv.invoice_number)}
+                          style={{
+                            padding: "5px 10px", borderRadius: "6px", border: "1px solid rgba(239,68,68,0.3)",
+                            background: "transparent", color: "#EF4444", fontSize: "0.75rem", fontWeight: 600,
+                            cursor: "pointer", fontFamily: "var(--font-body)",
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
                 {invoices.length === 0 && (
                   <tr>
-                    <td colSpan={6} style={{ textAlign: "center", padding: "48px 16px", color: "var(--admin-text-faint)" }}>
+                    <td colSpan={7} style={{ textAlign: "center", padding: "48px 16px", color: "var(--admin-text-faint)" }}>
                       No invoices yet.
                     </td>
                   </tr>
@@ -177,6 +244,18 @@ export default function AdminInvoicesPage() {
           </div>
         )}
       </div>
+      {!loading && filtered.length > 0 && (
+        <Pagination page={page} totalPages={totalPages} total={filtered.length} pageSize={pageSize} onPageChange={setPage} />
+      )}
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete Invoice"
+        message={`Are you sure you want to delete invoice "${deleteTarget?.invoiceNumber}"? This action cannot be undone.`}
+        danger
+        confirmLabel="Delete"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

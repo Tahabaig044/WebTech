@@ -2,33 +2,34 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
 
-    setLoading(false);
-
-    if (result?.error) {
-      setError("Invalid email or password");
-    } else {
-      router.push("/admin/dashboard");
-      router.refresh();
+      if (result?.error) {
+        setError("Invalid email or password");
+        setLoading(false);
+      } else {
+        window.location.href = "/admin/dashboard";
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
+      setLoading(false);
     }
   };
 
@@ -39,7 +40,7 @@ export default function AdminLoginPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "radial-gradient(ellipse at 50% 0%, rgba(37,99,235,0.04) 0%, #030712 60%)",
+        background: "radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.04) 0%, #030712 60%)",
         padding: "24px",
       }}
     >
@@ -59,11 +60,11 @@ export default function AdminLoginPage() {
               width: "48px",
               height: "48px",
               borderRadius: "12px",
-              background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
+              background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 8px 24px rgba(37,99,235,0.3)",
+              boxShadow: "0 8px 24px rgba(124,58,237,0.3)",
               marginBottom: "20px",
             }}
           >
@@ -83,7 +84,7 @@ export default function AdminLoginPage() {
               textTransform: "uppercase",
             }}
           >
-            Pixelwyre Admin
+            WebTech Admin
           </div>
 
           <h2
@@ -105,7 +106,7 @@ export default function AdminLoginPage() {
 
         {/* Error */}
         {error && (
-          <div style={{ background: "rgba(37,99,235,0.1)", border: "1px solid rgba(37,99,235,0.3)", borderRadius: "8px", padding: "12px 16px", marginBottom: "16px", color: "#2563EB", fontSize: "0.85rem", textAlign: "center" }}>
+          <div style={{ background: "rgba(124,58,237,0.1)", border: "1px solid rgba(124,58,237,0.3)", borderRadius: "8px", padding: "12px 16px", marginBottom: "16px", color: "#7C3AED", fontSize: "0.85rem", textAlign: "center" }}>
             {error}
           </div>
         )}
@@ -136,9 +137,10 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@pixelwyre.com"
+                placeholder="admin@webtechsolutionshub.com"
                 aria-label="Email"
                 autoComplete="email"
+                pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
                 required
               />
             </div>
@@ -255,7 +257,7 @@ export default function AdminLoginPage() {
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
             <span style={{ color: "var(--admin-text-faint)", fontSize: "0.75rem", fontWeight: 500 }}>
-              Secured by Pixelwyre Digital
+              Secured by WebTech Solutions Hub
             </span>
           </div>
         </div>

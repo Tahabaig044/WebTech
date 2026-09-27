@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "About Us",
-  description: "Learn about Pixelwyre Digital — a full-stack digital agency helping Pakistani businesses build, market, and scale online.",
+  description: "Learn about WebTech Solutions Hub — a full-stack digital agency helping Pakistani businesses build, market, and scale online.",
 };
 
 const team = [
-  { name: "Usman Tariq", role: "Founder & CEO", initials: "UT", color: "#2563EB", bio: "Serial entrepreneur with 12+ years in digital systems. Built Pixelwyre from a one-man shop to a 15-person team." },
+  { name: "Usman Tariq", role: "Founder & CEO", initials: "UT", color: "#7C3AED", bio: "Serial entrepreneur with 12+ years in digital systems. Built WebTech Solutions Hub from a one-man shop to a 15-person team." },
   { name: "Hassan Khan", role: "Lead Developer", initials: "HK", color: "#16A34A", bio: "Full-stack architect specializing in Next.js, TypeScript, and cloud infrastructure. 50+ production deployments." },
   { name: "Ayesha Noor", role: "SEO & Ads Manager", initials: "AN", color: "#7C3AED", bio: "Data-driven marketer who has managed ₨ 50M+ in ad spend across Google, Facebook, and Instagram." },
   { name: "Bilal Ahmed", role: "ERP Architect", initials: "BA", color: "#F59E0B", bio: "Built custom CRM and ERP systems for 40+ businesses. Expert in workflow automation and integration." },
@@ -36,12 +36,12 @@ const timeline = [
 export default function AboutPage() {
   return (
     <>
-      <section style={{ background: "linear-gradient(135deg, #0A1E3F 0%, #0F2B5C 50%, #1E40AF 100%)", padding: "80px 0" }}>
+      <section style={{ background: "linear-gradient(135deg, rgba(10, 18, 36, 0.8), rgba(13, 23, 48, 0.6), rgba(124, 58, 237, 0.3))", padding: "80px 0" }}>
         <div className="wrap">
-          <span className="eyebrow" style={{ background: "rgba(59, 130, 246, 0.2)", border: "1px solid #3B82F6" }}>
+          <span className="eyebrow" style={{ background: "rgba(124, 58, 237, 0.2)", border: "1px solid #7C3AED" }}>
             🏢 About Us
           </span>
-          <h1 style={{ color: "#FFFFFF", marginBottom: "16px" }}>The Team Behind Pixelwyre</h1>
+          <h1 style={{ color: "#F8FAFC", marginBottom: "16px" }}>The Team Behind WebTech Solutions Hub</h1>
           <p style={{ color: "#94A3B8", maxWidth: "560px", fontSize: "1.1rem" }}>
             A lean, senior team obsessed with building digital systems that actually work.
           </p>
@@ -61,31 +61,31 @@ export default function AboutPage() {
           </div>
 
           <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <span className="eyebrow" style={{ background: "rgba(59, 130, 246, 0.2)", border: "1px solid #3B82F6" }}>
+            <span className="eyebrow" style={{ background: "rgba(124, 58, 237, 0.2)", border: "1px solid #7C3AED" }}>
               📅 Our Journey
             </span>
             <h2 style={{ marginBottom: "12px" }}>From Freelancer to Full-Stack Agency</h2>
-            <p style={{ color: "#64748B", maxWidth: "520px", margin: "0 auto" }}>
+            <p style={{ color: "#94A3B8", maxWidth: "520px", margin: "0 auto" }}>
               12 years of building, learning, and scaling — one project at a time.
             </p>
           </div>
 
           <div style={{ position: "relative", maxWidth: "800px", margin: "0 auto 80px" }}>
-            <div style={{ position: "absolute", left: "24px", top: 0, bottom: 0, width: "2px", background: "linear-gradient(180deg, #2563EB, #7C3AED)" }} />
+            <div style={{ position: "absolute", left: "24px", top: 0, bottom: 0, width: "2px", background: "linear-gradient(180deg, #7C3AED, #A855F7)" }} />
             {timeline.map((item, i) => (
               <div key={item.year} style={{ display: "flex", gap: "24px", marginBottom: "36px", position: "relative" }}>
                 <div style={{
                   width: "50px",
                   height: "50px",
                   borderRadius: "50%",
-                  background: i === timeline.length - 1 ? "linear-gradient(135deg, #2563EB, #7C3AED)" : "#FFFFFF",
-                  border: "3px solid #2563EB",
+                  background: i === timeline.length - 1 ? "linear-gradient(135deg, #7C3AED, #A855F7)" : "rgba(10,18,36,0.65)",
+                  border: "3px solid #7C3AED",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   fontSize: "0.72rem",
                   fontWeight: 800,
-                  color: i === timeline.length - 1 ? "#FFFFFF" : "#2563EB",
+                  color: i === timeline.length - 1 ? "#F8FAFC" : "#A855F7",
                   flexShrink: 0,
                   zIndex: 1,
                 }}>
@@ -100,7 +100,7 @@ export default function AboutPage() {
           </div>
 
           <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <span className="eyebrow" style={{ background: "rgba(59, 130, 246, 0.2)", border: "1px solid #3B82F6" }}>
+            <span className="eyebrow" style={{ background: "rgba(124, 58, 237, 0.2)", border: "1px solid #7C3AED" }}>
               👥 Meet the Team
             </span>
             <h2 style={{ marginBottom: "12px" }}>The People Behind the Pixels</h2>
@@ -115,7 +115,7 @@ export default function AboutPage() {
                     height: "72px",
                     borderRadius: "50%",
                     background: t.color,
-                    color: "#FFFFFF",
+                    color: "#F8FAFC",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -128,17 +128,17 @@ export default function AboutPage() {
                 </div>
                 <h3 style={{ marginBottom: "4px", fontSize: "0.95rem" }}>{t.name}</h3>
                 <p style={{ margin: "0 0 12px 0", fontSize: "0.82rem", color: t.color, fontWeight: 700 }}>{t.role}</p>
-                <p style={{ margin: 0, fontSize: "0.84rem", color: "#64748B" }}>{t.bio}</p>
+                <p style={{ margin: 0, fontSize: "0.84rem", color: "#94A3B8" }}>{t.bio}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section style={{ padding: "60px 0", background: "#F8FAFC", borderTop: "1px solid #E2E8F0" }}>
+      <section style={{ padding: "60px 0", background: "rgba(10,18,36,0.65)", borderTop: "1px solid rgba(148,163,184,0.14)" }}>
         <div className="wrap" style={{ textAlign: "center" }}>
           <h2 style={{ marginBottom: "12px" }}>Want to Join Our Team?</h2>
-          <p style={{ color: "#64748B", maxWidth: "520px", margin: "0 auto 24px" }}>
+          <p style={{ color: "#94A3B8", maxWidth: "520px", margin: "0 auto 24px" }}>
             We&apos;re always looking for talented people who share our passion for building great digital products.
           </p>
           <a href="/careers" className="btn btn-primary" style={{ padding: "14px 32px", fontSize: "1rem" }}>

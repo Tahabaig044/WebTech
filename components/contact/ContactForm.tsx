@@ -4,8 +4,8 @@ import { useActionState } from "react";
 import { submitContactAction, type ContactFormState } from "@/app/contact/actions";
 
 const contactMethods = [
-  { icon: "📧", title: "Email", value: "hello@pixelwyre.com", desc: "For general inquiries and quotes", color: "#16A34A" },
-  { icon: "📱", title: "WhatsApp", value: "+92 311 2980115", desc: "Quick responses, typically < 30 min", color: "#2563EB" },
+  { icon: "📧", title: "Email", value: "hello@webtechsolutionshub.com", desc: "For general inquiries and quotes", color: "#16A34A" },
+  { icon: "📱", title: "WhatsApp", value: "+92 311 2980115", desc: "Quick responses, typically < 30 min", color: "#7C3AED" },
   { icon: "📞", title: "Phone", value: "+92 311 2980115", desc: "Mon–Sat, 9 AM – 7 PM PKT", color: "#7C3AED" },
   { icon: "📍", title: "Office", value: "Karachi, Pakistan", desc: "In-person meetings by appointment", color: "#F59E0B" },
 ];
@@ -29,12 +29,12 @@ export default function ContactForm({ categories }: { categories: string[] }) {
 
   return (
     <>
-      <section style={{ background: "linear-gradient(135deg, #0A1E3F 0%, #0F2B5C 50%, #1E40AF 100%)", padding: "80px 0" }}>
+      <section style={{ background: "linear-gradient(135deg, rgba(10, 18, 36, 0.8), rgba(13, 23, 48, 0.6), rgba(124, 58, 237, 0.3))", padding: "80px 0" }}>
         <div className="wrap">
-          <span className="eyebrow" style={{ background: "rgba(59, 130, 246, 0.2)", border: "1px solid #3B82F6" }}>
+          <span className="eyebrow" style={{ background: "rgba(124, 58, 237, 0.2)", border: "1px solid #7C3AED" }}>
             📞 Contact Us
           </span>
-          <h1 style={{ color: "#FFFFFF", marginBottom: "16px" }}>Let&apos;s Build Something Great</h1>
+          <h1 style={{ color: "#F8FAFC", marginBottom: "16px" }}>Let&apos;s Build Something Great</h1>
           <p style={{ color: "#94A3B8", maxWidth: "560px", fontSize: "1.1rem" }}>
             Tell us about your project and we&apos;ll get back to you within 2 hours during business hours.
           </p>
@@ -118,15 +118,15 @@ export default function ContactForm({ categories }: { categories: string[] }) {
                     <div style={{ fontSize: "1.5rem", flexShrink: 0 }}>{c.icon}</div>
                     <div>
                       <h3 style={{ marginBottom: "2px", fontSize: "1rem" }}>{c.title}</h3>
-                      <p style={{ margin: 0, fontSize: "0.92rem", fontWeight: 700, color: "#0F172A" }}>{c.value}</p>
+                      <p style={{ margin: 0, fontSize: "0.92rem", fontWeight: 700, color: "#F8FAFC" }}>{c.value}</p>
                       <p style={{ margin: 0, fontSize: "0.78rem", color: "#94A3B8" }}>{c.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div style={{ background: "linear-gradient(135deg, #060D19 0%, #0F2B5C 100%)", borderRadius: "12px", padding: "24px", border: "1px solid #1E3A8A" }}>
-                <h3 style={{ color: "#FFFFFF", marginBottom: "8px", fontSize: "1rem" }}>⚡ Quick Response Guarantee</h3>
+              <div style={{ background: "linear-gradient(135deg, #020617, rgba(10, 18, 36, 0.8))", borderRadius: "12px", padding: "24px", border: "1px solid rgba(139, 92, 246, 0.2)" }}>
+                <h3 style={{ color: "#F8FAFC", marginBottom: "8px", fontSize: "1rem" }}>⚡ Quick Response Guarantee</h3>
                 <p style={{ color: "#94A3B8", margin: 0, fontSize: "0.88rem" }}>
                   We respond to all inquiries within 2 hours during business hours (9 AM – 7 PM PKT, Mon–Sat). For urgent matters, WhatsApp is the fastest way to reach us.
                 </p>
@@ -136,17 +136,17 @@ export default function ContactForm({ categories }: { categories: string[] }) {
         </div>
       </section>
 
-      <section style={{ padding: "80px 0", background: "#F8FAFC", borderTop: "1px solid #E2E8F0" }}>
+      <section style={{ padding: "80px 0", background: "rgba(10,18,36,0.65)", borderTop: "1px solid rgba(148,163,184,0.14)" }}>
         <div className="wrap">
           <div style={{ textAlign: "center", marginBottom: "48px" }}>
             <h2 style={{ marginBottom: "12px" }}>Frequently Asked Questions</h2>
-            <p style={{ color: "#64748B", maxWidth: "520px", margin: "0 auto" }}>
+            <p style={{ color: "#94A3B8", maxWidth: "520px", margin: "0 auto" }}>
               Quick answers to common questions. Still have something? Reach out anytime.
             </p>
           </div>
           <div style={{ display: "grid", gap: "16px", maxWidth: "800px", margin: "0 auto" }}>
             {faqs.map((faq) => (
-              <div key={faq.q} className="card" style={{ borderTopColor: "#E2E8F0", padding: "24px 28px" }}>
+              <div key={faq.q} className="card" style={{ borderTopColor: "rgba(148,163,184,0.14)", padding: "24px 28px" }}>
                 <h3 style={{ marginBottom: "8px", fontSize: "1rem" }}>{faq.q}</h3>
                 <p style={{ margin: 0, fontSize: "0.88rem" }}>{faq.a}</p>
               </div>
@@ -155,9 +155,9 @@ export default function ContactForm({ categories }: { categories: string[] }) {
         </div>
       </section>
 
-      <section style={{ padding: "60px 0", background: "linear-gradient(135deg, #060D19 0%, #0F2B5C 100%)", borderTop: "1px solid #1E3A8A" }}>
+      <section style={{ padding: "60px 0", background: "linear-gradient(135deg, #020617, rgba(10, 18, 36, 0.8))", borderTop: "1px solid rgba(139, 92, 246, 0.2)" }}>
         <div className="wrap" style={{ textAlign: "center" }}>
-          <h2 style={{ color: "#FFFFFF", marginBottom: "12px" }}>Prefer a Quick Chat?</h2>
+          <h2 style={{ color: "#F8FAFC", marginBottom: "12px" }}>Prefer a Quick Chat?</h2>
           <p style={{ color: "#94A3B8", maxWidth: "520px", margin: "0 auto 24px" }}>
             Skip the form and message us directly on WhatsApp. We typically reply within 30 minutes.
           </p>

@@ -98,7 +98,7 @@ export default function PortalLoginPage() {
               P
             </div>
             <div>
-              <div style={{ color: "#F1F5F9", fontWeight: 800, fontSize: "1.3rem", fontFamily: "var(--font-heading)", letterSpacing: "-0.02em" }}>Pixelwyre</div>
+              <div style={{ color: "#F1F5F9", fontWeight: 800, fontSize: "1.3rem", fontFamily: "var(--font-heading)", letterSpacing: "-0.02em" }}>WebTech</div>
               <div style={{ color: "#8B5CF6", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase" }}>Digital Agency</div>
             </div>
           </div>
@@ -220,7 +220,7 @@ export default function PortalLoginPage() {
             >
               P
             </div>
-            <span style={{ color: "#F1F5F9", fontWeight: 700, fontSize: "1.1rem" }}>Pixelwyre Portal</span>
+            <span style={{ color: "#F1F5F9", fontWeight: 700, fontSize: "1.1rem" }}>WebTech Portal</span>
           </div>
 
           <h2
@@ -252,13 +252,17 @@ export default function PortalLoginPage() {
               e.preventDefault();
               setError("");
               setLoading(true);
-              const result = await signIn("credentials", { email, password, redirect: false });
-              setLoading(false);
-              if (result?.error) {
-                setError("Invalid email or password");
-              } else {
-                router.push("/portal/dashboard");
-                router.refresh();
+              try {
+                const result = await signIn("credentials", { email, password, redirect: false });
+                if (result?.error) {
+                  setError("Invalid email or password");
+                  setLoading(false);
+                } else {
+                  window.location.href = "/portal/dashboard";
+                }
+              } catch {
+                setError("Something went wrong. Please try again.");
+                setLoading(false);
               }
             }}
           >
@@ -316,10 +320,10 @@ export default function PortalLoginPage() {
 
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "28px" }}>
               <Link
-                href="/contact"
+                href="/portal/forgot-password"
                 style={{ color: "#8B5CF6", fontSize: "0.82rem", fontWeight: 600, textDecoration: "none" }}
               >
-                Need help? Contact Support
+                Forgot password?
               </Link>
             </div>
 
@@ -408,7 +412,7 @@ export default function PortalLoginPage() {
               href="/"
               style={{ color: "#4B5563", fontSize: "0.78rem", textDecoration: "none" }}
             >
-              ← Back to pixelwyre.com
+              ← Back to webtechsolutionshub.com
             </Link>
           </div>
         </div>

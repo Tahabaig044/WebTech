@@ -20,7 +20,7 @@ const modules = [
 const roles = [
   {
     name: "Parent",
-    color: "#16A34A",
+    color: "#10B981",
     cards: [
       { title: "Fee Status", detail: "Due: PKR 45,000 — Due Date: Jan 30", tag: "Pending" },
       { title: "Attendance", detail: "89% this month — 3 absences flagged", tag: "Average" },
@@ -29,7 +29,7 @@ const roles = [
   },
   {
     name: "Teacher",
-    color: "#2563EB",
+    color: "#7C3AED",
     cards: [
       { title: "Class Attendance", detail: "32/35 present — 3 auto-notified parents", tag: "Active" },
       { title: "Pending Grades", detail: "14 assignments awaiting marks entry", tag: "Attention" },
@@ -38,7 +38,7 @@ const roles = [
   },
   {
     name: "Admin",
-    color: "#7C3AED",
+    color: "#A855F7",
     cards: [
       { title: "Revenue Today", detail: "PKR 2.4M collected — 87 transactions", tag: "Strong" },
       { title: "Staff On Leave", detail: "6 teachers — 2 substitutes auto-assigned", tag: "Managed" },
@@ -51,12 +51,12 @@ export default function SchoolSMSGuite() {
   const [activeRole, setActiveRole] = useState(0);
 
   return (
-    <section style={{ padding: "80px 0", background: "#FFFFFF" }}>
+    <section style={{ padding: "80px 0", background: "var(--bg-page)" }}>
       <div className="wrap">
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
           <span className="eyebrow">🏫 School SMS Management Suite</span>
           <h2 style={{ marginBottom: "14px" }}>12 Modules. One Dashboard. Zero Chaos.</h2>
-          <p className="lede" style={{ maxWidth: "600px", margin: "0 auto" }}>
+          <p className="lede" style={{ maxWidth: "600px", margin: "0 auto", color: "var(--text-muted)" }}>
             Purpose-built school ERP covering every operational need — from admissions to transport tracking.
           </p>
         </div>
@@ -73,8 +73,8 @@ export default function SchoolSMSGuite() {
             <div
               key={m.name}
               style={{
-                background: "#F8FAFC",
-                border: "1px solid #E2E8F0",
+                background: "rgba(10, 18, 36, 0.65)",
+                border: "1px solid var(--border)",
                 borderRadius: "var(--radius-sm)",
                 padding: "20px",
                 textAlign: "center",
@@ -83,7 +83,7 @@ export default function SchoolSMSGuite() {
             >
               <div style={{ fontSize: "2rem", marginBottom: "10px" }}>{m.icon}</div>
               <h3 style={{ marginBottom: "6px", fontSize: "0.95rem" }}>{m.name}</h3>
-              <p style={{ fontSize: "0.78rem", margin: 0, lineHeight: 1.5 }}>{m.desc}</p>
+              <p style={{ fontSize: "0.78rem", margin: 0, lineHeight: 1.5, color: "var(--text-muted)" }}>{m.desc}</p>
             </div>
           ))}
         </div>
@@ -97,9 +97,9 @@ export default function SchoolSMSGuite() {
                 onClick={() => setActiveRole(i)}
                 className="btn"
                 style={{
-                  background: activeRole === i ? r.color : "#F8FAFC",
-                  color: activeRole === i ? "#FFFFFF" : "#0F172A",
-                  border: `1.5px solid ${activeRole === i ? r.color : "#E2E8F0"}`,
+                  background: activeRole === i ? r.color : "rgba(10, 18, 36, 0.65)",
+                  color: activeRole === i ? "#FFFFFF" : "var(--text-secondary)",
+                  border: `1.5px solid ${activeRole === i ? r.color : "var(--border)"}`,
                 }}
               >
                 {r.name === "Parent" ? "👨‍👩‍👧" : r.name === "Teacher" ? "👩‍🏫" : "🔧"} {r.name}
@@ -110,8 +110,8 @@ export default function SchoolSMSGuite() {
 
         <div
           style={{
-            background: "#F8FAFC",
-            border: "1px solid #E2E8F0",
+            background: "rgba(10, 18, 36, 0.65)",
+            border: "1px solid var(--border)",
             borderRadius: "var(--radius)",
             padding: "32px",
             marginBottom: "40px",
@@ -135,14 +135,14 @@ export default function SchoolSMSGuite() {
                       fontWeight: 700,
                       padding: "3px 10px",
                       borderRadius: "12px",
-                      background: `${roles[activeRole].color}15`,
+                      background: `${roles[activeRole].color}18`,
                       color: roles[activeRole].color,
                     }}
                   >
                     {c.tag}
                   </span>
                 </div>
-                <p style={{ margin: 0, fontSize: "0.88rem" }}>{c.detail}</p>
+                <p style={{ margin: 0, fontSize: "0.88rem", color: "var(--text-muted)" }}>{c.detail}</p>
               </div>
             ))}
           </div>

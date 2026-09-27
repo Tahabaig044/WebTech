@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createService, updateService } from "@/lib/actions/admin";
+import { serviceSchema } from "@/lib/validations/admin";
 import type { DBService } from "@/lib/types";
 
 const inputStyle: React.CSSProperties = {
@@ -15,6 +16,10 @@ const labelStyle: React.CSSProperties = {
   display: "block", color: "#9CA3AF", fontSize: "0.8rem", fontWeight: 600, marginBottom: "6px",
 };
 
+const fieldErrorStyle: React.CSSProperties = {
+  color: "#EF4444", fontSize: "0.78rem", marginTop: "4px",
+};
+
 interface ServiceFormProps {
   initial?: DBService;
   mode: "create" | "edit";
@@ -24,6 +29,7 @@ export default function ServiceForm({ initial, mode }: ServiceFormProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState({
     name: initial?.name || "",
     slug: initial?.slug || "",
@@ -38,7 +44,10 @@ export default function ServiceForm({ initial, mode }: ServiceFormProps) {
     sort_order: initial?.sort_order || 0,
   });
 
-  const set = (key: string, value: string | number | boolean) => setForm((f) => ({ ...f, [key]: value }));
+  const set = (key: string, value: string | number | boolean) => {
+    setForm((f) => ({ ...f, [key]: value }));
+    if (fieldErrors[key]) setFieldErrors((e) => ({ ...e, [key]: "" }));
+  };
 
   const autoSlug = (name: string) =>
     name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -54,9 +63,22 @@ export default function ServiceForm({ initial, mode }: ServiceFormProps) {
       features: form.features.split("\n").map((f) => f.trim()).filter(Boolean),
     };
 
+    const parsed = serviceSchema.safeParse(payload);
+    if (!parsed.success) {
+      const errors: Record<string, string> = {};
+      for (const issue of parsed.error.issues) {
+        const key = issue.path[0] as string;
+        if (!errors[key]) errors[key] = issue.message;
+      }
+      setFieldErrors(errors);
+      setSaving(false);
+      return;
+    }
+    setFieldErrors({});
+
     const result = mode === "create"
-      ? await createService(payload)
-      : await updateService(initial!.id, payload);
+      ? await createService(parsed.data)
+      : await updateService(initial!.id, parsed.data);
 
     setSaving(false);
     if (result.success) {
@@ -79,15 +101,18 @@ export default function ServiceForm({ initial, mode }: ServiceFormProps) {
         <div>
           <label htmlFor="service-name" style={labelStyle}>Name *</label>
           <input id="service-name" style={inputStyle} value={form.name} onChange={(e) => { set("name", e.target.value); if (mode === "create") set("slug", autoSlug(e.target.value)); }} required />
+          {fieldErrors.name && <p style={fieldErrorStyle}>{fieldErrors.name}</p>}
         </div>
         <div>
           <label htmlFor="service-slug" style={labelStyle}>Slug *</label>
           <input id="service-slug" style={inputStyle} value={form.slug} onChange={(e) => set("slug", e.target.value)} required />
+          {fieldErrors.slug && <p style={fieldErrorStyle}>{fieldErrors.slug}</p>}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div>
             <label htmlFor="service-category" style={labelStyle}>Category *</label>
             <input id="service-category" style={inputStyle} value={form.category} onChange={(e) => set("category", e.target.value)} required />
+            {fieldErrors.category && <p style={fieldErrorStyle}>{fieldErrors.category}</p>}
           </div>
           <div>
             <label htmlFor="service-icon" style={labelStyle}>Icon (emoji)</label>
@@ -98,6 +123,7 @@ export default function ServiceForm({ initial, mode }: ServiceFormProps) {
           <div>
             <label htmlFor="service-price" style={labelStyle}>Price</label>
             <input id="service-price" style={inputStyle} value={form.price} onChange={(e) => set("price", e.target.value)} placeholder="PKR 25,000" />
+            {fieldErrors.price && <p style={fieldErrorStyle}>{fieldErrors.price}</p>}
           </div>
           <div>
             <label htmlFor="service-price-period" style={labelStyle}>Price Period</label>
@@ -122,6 +148,7 @@ export default function ServiceForm({ initial, mode }: ServiceFormProps) {
             onChange={(e) => set("description", e.target.value)}
             required
           />
+          {fieldErrors.description && <p style={fieldErrorStyle}>{fieldErrors.description}</p>}
         </div>
         <div>
           <label htmlFor="service-features" style={labelStyle}>Features (one per line)</label>
@@ -153,7 +180,7 @@ export default function ServiceForm({ initial, mode }: ServiceFormProps) {
           disabled={saving}
           style={{
             padding: "10px 24px", borderRadius: "10px", border: "none",
-            background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
+            background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
             color: "#fff", fontSize: "0.875rem", fontWeight: 700, cursor: saving ? "not-allowed" : "pointer",
             opacity: saving ? 0.7 : 1,
           }}

@@ -30,17 +30,17 @@ export default function ServicesGrid({ services }: { services: ServiceItem[] }) 
 
   if (services.length === 0) {
     return (
-      <section style={{ padding: "80px 0", background: "linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)" }}>
+      <section style={{ padding: "80px 0", background: "var(--bg-page)" }}>
         <div className="wrap">
           <div style={{ textAlign: "center", marginBottom: "48px" }}>
             <span className="eyebrow">⚙️ Services & Pricing</span>
             <h2 style={{ marginBottom: "14px" }}>Find What You Need</h2>
-            <p className="lede" style={{ maxWidth: "560px", margin: "0 auto" }}>
+            <p className="lede" style={{ maxWidth: "560px", margin: "0 auto", color: "var(--text-muted)" }}>
               From quick micro-hooks to full-scale SaaS products — browse our available services.
             </p>
           </div>
           <div style={{ textAlign: "center", padding: "60px 0" }}>
-            <p style={{ fontSize: "1rem", color: "#64748B", marginBottom: "16px" }}>Services are being set up. Please check back soon.</p>
+            <p style={{ fontSize: "1rem", color: "var(--text-muted)", marginBottom: "16px" }}>Services are being set up. Please check back soon.</p>
             <Link href="/contact" className="btn btn-primary" style={{ fontSize: "0.88rem", padding: "10px 24px" }}>
               Contact Us →
             </Link>
@@ -51,12 +51,12 @@ export default function ServicesGrid({ services }: { services: ServiceItem[] }) 
   }
 
   return (
-    <section style={{ padding: "80px 0", background: "linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)" }}>
+    <section style={{ padding: "80px 0", background: "var(--bg-page)" }}>
       <div className="wrap">
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
           <span className="eyebrow">⚙️ Services & Pricing</span>
           <h2 style={{ marginBottom: "14px" }}>Find What You Need</h2>
-          <p className="lede" style={{ maxWidth: "560px", margin: "0 auto" }}>
+          <p className="lede" style={{ maxWidth: "560px", margin: "0 auto", color: "var(--text-muted)" }}>
             From quick micro-hooks to full-scale SaaS products — search, filter, and get instant pricing.
           </p>
         </div>
@@ -96,14 +96,14 @@ export default function ServicesGrid({ services }: { services: ServiceItem[] }) 
                       fontWeight: 700,
                       padding: "3px 10px",
                       borderRadius: "12px",
-                      background: "rgba(37, 99, 235, 0.1)",
-                      color: "#2563EB",
+                      background: "rgba(124, 58, 237, 0.1)",
+                      color: "#A855F7",
                     }}
                   >
                     {item.category || "Other"}
                   </span>
                 </div>
-                <p style={{ fontSize: "1.1rem", fontWeight: 800, color: "#0F2B5C", margin: "8px 0 16px" }}>
+                <p style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--secondary)", margin: "8px 0 16px" }}>
                   {item.price || "Contact Us"}
                 </p>
                 <Link href="/contact" className="btn btn-secondary" style={{ fontSize: "0.82rem", padding: "8px 16px" }}>
@@ -113,7 +113,7 @@ export default function ServicesGrid({ services }: { services: ServiceItem[] }) 
             ))
           ) : (
             <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "60px 0" }}>
-              <p style={{ fontSize: "1rem", color: "#64748B" }}>No services match your search. Try a different keyword.</p>
+              <p style={{ fontSize: "1rem", color: "var(--text-muted)" }}>No services match your search. Try a different keyword.</p>
             </div>
           )}
         </div>

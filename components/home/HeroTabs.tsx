@@ -48,8 +48,8 @@ export default function HeroTabs() {
         onKeyDown={handleKeyDown}
         style={{
           display: "flex",
-          borderBottom: "1px solid #1E3A8A",
-          background: "rgba(6,13,25,0.5)",
+          borderBottom: "1px solid rgba(139, 92, 246, 0.2)",
+          background: "rgba(3, 7, 18, 0.5)",
         }}
       >
         {tabs.map((tab) => (
@@ -70,8 +70,8 @@ export default function HeroTabs() {
               cursor: "pointer",
               transition: "all 0.2s ease",
               color: active === tab.id ? "#FFFFFF" : "#94A3B8",
-              background: active === tab.id ? "rgba(37,99,235,0.2)" : "transparent",
-              borderBottom: active === tab.id ? "2px solid #3B82F6" : "2px solid transparent",
+              background: active === tab.id ? "rgba(124, 58, 237, 0.2)" : "transparent",
+              borderBottom: active === tab.id ? "2px solid #7C3AED" : "2px solid transparent",
             }}
           >
             {tab.label}
@@ -83,18 +83,18 @@ export default function HeroTabs() {
         {active === "web" && (
           <div role="tabpanel" id="tabpanel-web" aria-labelledby="tab-web">
             <h3 style={{ marginBottom: "6px", fontSize: "1.1rem" }}>⚡ Mobile 90+ PageSpeed</h3>
-            <p style={{ fontSize: "0.88rem", marginBottom: "16px" }}>
+            <p style={{ fontSize: "0.88rem", marginBottom: "16px", color: "var(--text-muted)" }}>
               Lightning-fast websites that convert visitors into customers.
             </p>
             <div style={{ marginBottom: "18px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
-                <span style={{ fontSize: "0.82rem", color: "#CBD5E1" }}>Performance Score</span>
-                <span style={{ fontSize: "0.82rem", color: "#34D399", fontWeight: 700 }}>96/100</span>
+                <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Performance Score</span>
+                <span style={{ fontSize: "0.82rem", color: "#10B981", fontWeight: 700 }}>96/100</span>
               </div>
-              <div style={{ background: "#1E293B", borderRadius: "6px", height: "8px" }}>
+              <div style={{ background: "rgba(148, 163, 184, 0.1)", borderRadius: "6px", height: "8px" }}>
                 <div
                   style={{
-                    background: "linear-gradient(90deg, #16A34A, #34D399)",
+                    background: "linear-gradient(90deg, #10B981, #34D399)",
                     height: "100%",
                     width: "96%",
                     borderRadius: "6px",
@@ -104,8 +104,8 @@ export default function HeroTabs() {
             </div>
             <div
               style={{
-                background: "rgba(30,58,138,0.3)",
-                border: "1px solid #1E40AF",
+                background: "rgba(124, 58, 237, 0.1)",
+                border: "1px solid rgba(139, 92, 246, 0.25)",
                 borderRadius: "10px",
                 padding: "16px",
                 display: "flex",
@@ -116,7 +116,7 @@ export default function HeroTabs() {
               <span aria-hidden="true" style={{ fontSize: "1.5rem" }}>🚀</span>
               <div>
                 <p style={{ color: "#FFFFFF", margin: 0, fontWeight: 700, fontSize: "0.9rem" }}>Conversion-Optimized Layout</p>
-                <p style={{ color: "#94A3B8", margin: 0, fontSize: "0.8rem" }}>90+ speed on all devices</p>
+                <p style={{ color: "var(--text-muted)", margin: 0, fontSize: "0.8rem" }}>90+ speed on all devices</p>
               </div>
             </div>
           </div>
@@ -129,44 +129,44 @@ export default function HeroTabs() {
               <div style={{ textAlign: "center" }}>
                 <div
                   style={{
-                    background: "rgba(37,99,235,0.15)",
-                    border: "1px solid #2563EB",
+                    background: "rgba(124, 58, 237, 0.15)",
+                    border: "1px solid rgba(139, 92, 246, 0.3)",
                     borderRadius: "10px",
                     padding: "18px 10px",
                   }}
                 >
-                  <div style={{ fontSize: "1.6rem", fontWeight: 800, color: "#60A5FA" }}>#1</div>
-                  <div style={{ fontSize: "0.72rem", color: "#94A3B8", marginTop: "4px" }}>Google Maps Rank</div>
+                  <div style={{ fontSize: "1.6rem", fontWeight: 800, color: "#A855F7" }}>#1</div>
+                  <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: "4px" }}>Google Maps Rank</div>
                 </div>
               </div>
               <div style={{ textAlign: "center" }}>
                 <div
                   style={{
-                    background: "rgba(22,163,74,0.15)",
-                    border: "1px solid #16A34A",
+                    background: "rgba(16, 185, 129, 0.15)",
+                    border: "1px solid rgba(16, 185, 129, 0.3)",
                     borderRadius: "10px",
                     padding: "18px 10px",
                   }}
                 >
                   <div style={{ fontSize: "1.6rem", fontWeight: 800, color: "#34D399" }}>+450%</div>
-                  <div style={{ fontSize: "0.72rem", color: "#94A3B8", marginTop: "4px" }}>Lead Growth</div>
+                  <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: "4px" }}>Lead Growth</div>
                 </div>
               </div>
               <div style={{ textAlign: "center" }}>
                 <div
                   style={{
-                    background: "rgba(245,158,11,0.15)",
-                    border: "1px solid #F59E0B",
+                    background: "rgba(245, 158, 11, 0.15)",
+                    border: "1px solid rgba(245, 158, 11, 0.3)",
                     borderRadius: "10px",
                     padding: "18px 10px",
                   }}
                 >
                   <div style={{ fontSize: "1.6rem", fontWeight: 800, color: "#FBBF24" }}>4.9★</div>
-                  <div style={{ fontSize: "0.72rem", color: "#94A3B8", marginTop: "4px" }}>Avg Review Score</div>
+                  <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: "4px" }}>Avg Review Score</div>
                 </div>
               </div>
             </div>
-            <p style={{ fontSize: "0.85rem", marginTop: "16px", marginBottom: 0 }}>
+            <p style={{ fontSize: "0.85rem", marginTop: "16px", marginBottom: 0, color: "var(--text-muted)" }}>
               We optimize your Google Business Profile for maximum local visibility.
             </p>
           </div>
@@ -176,34 +176,34 @@ export default function HeroTabs() {
           <div role="tabpanel" id="tabpanel-hosting" aria-labelledby="tab-hosting" className="hero-tabs-grid-2">
             <div
               style={{
-                background: "rgba(16,185,129,0.1)",
-                border: "1px solid rgba(16,185,129,0.4)",
+                background: "rgba(16, 185, 129, 0.1)",
+                border: "1px solid rgba(16, 185, 129, 0.25)",
                 borderRadius: "10px",
                 padding: "18px",
               }}
             >
               <div aria-hidden="true" style={{ fontSize: "1.2rem", marginBottom: "8px" }}>🔒</div>
               <h3 style={{ fontSize: "0.92rem", marginBottom: "4px" }}>256-Bit SSL</h3>
-              <p style={{ fontSize: "0.8rem", color: "#94A3B8", margin: 0 }}>
+              <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: 0 }}>
                 Free with every hosting plan
               </p>
             </div>
             <div
               style={{
-                background: "rgba(37,99,235,0.1)",
-                border: "1px solid rgba(37,99,235,0.4)",
+                background: "rgba(124, 58, 237, 0.1)",
+                border: "1px solid rgba(139, 92, 246, 0.25)",
                 borderRadius: "10px",
                 padding: "18px",
               }}
             >
               <div aria-hidden="true" style={{ fontSize: "1.2rem", marginBottom: "8px" }}>💰</div>
               <h3 style={{ fontSize: "0.92rem", marginBottom: "4px" }}>From ₨1,499/mo</h3>
-              <p style={{ fontSize: "0.8rem", color: "#94A3B8", margin: 0 }}>
+              <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: 0 }}>
                 Managed cloud hosting in PKR
               </p>
             </div>
             <div style={{ gridColumn: "1 / -1" }}>
-              <p style={{ fontSize: "0.85rem", marginBottom: 0 }}>
+              <p style={{ fontSize: "0.85rem", marginBottom: 0, color: "var(--text-muted)" }}>
                 99.99% uptime SLA with daily backups and Cloudflare CDN included.
               </p>
             </div>
@@ -213,14 +213,14 @@ export default function HeroTabs() {
         {active === "erp" && (
           <div role="tabpanel" id="tabpanel-erp" aria-labelledby="tab-erp">
             <h3 style={{ marginBottom: "8px", fontSize: "1.1rem" }}>🧠 Central ERP Intelligence Suite</h3>
-            <p style={{ fontSize: "0.88rem", marginBottom: "18px" }}>
+            <p style={{ fontSize: "0.88rem", marginBottom: "18px", color: "var(--text-muted)" }}>
               One dashboard to manage clients, invoicing, tasks, and automations across every service your business offers.
             </p>
             <ul style={{ listStyle: "none", padding: 0, marginBottom: "18px" }}>
               {["Client CRM & Lead Pipeline", "Invoice & Payment Tracking", "Automated Task Assignments"].map(
                 (item) => (
-                  <li key={item} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px", color: "#CBD5E1", fontSize: "0.88rem" }}>
-                    <span aria-hidden="true" style={{ color: "#34D399" }}>✓</span> {item}
+                  <li key={item} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px", color: "var(--text-secondary)", fontSize: "0.88rem" }}>
+                    <span aria-hidden="true" style={{ color: "#10B981" }}>✓</span> {item}
                   </li>
                 )
               )}

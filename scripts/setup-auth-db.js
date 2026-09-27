@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const bcryptjs = require('bcryptjs');
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
@@ -6,9 +7,20 @@ if (!connectionString) {
   process.exit(1);
 }
 
+const adminEmail = process.env.ADMIN_EMAIL || 'admin@webtechsolutionshub.com';
+const adminPassword = process.env.ADMIN_PASSWORD;
+if (!adminPassword) {
+  console.error('ADMIN_PASSWORD environment variable is required');
+  process.exit(1);
+}
+
 const p = new Pool({
   connectionString,
-  ssl: { rejectUnauthorized: false },
+  // See lib/auth.ts: the Supabase pooler's certificate is not in Node's default
+  // trust store. Set DATABASE_SSL_CA to re-enable full verification.
+  ssl: process.env.DATABASE_SSL_CA
+    ? { rejectUnauthorized: true, ca: process.env.DATABASE_SSL_CA }
+    : { rejectUnauthorized: false },
 });
 
 const sql = `
@@ -71,16 +83,14 @@ async function main() {
     await p.query(sql);
     console.log('Tables created!');
 
-    const bcryptjs = require('bcryptjs');
-    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-    const hashedPassword = await bcryptjs.hash(adminPassword, 10);
+    const hashedPassword = await bcryptjs.hash(adminPassword, 12);
 
     const result = await p.query(
       `INSERT INTO users (name, email, password, role, email_verified)
        VALUES ($1, $2, $3, $4, now())
-       ON CONFLICT (email) DO UPDATE SET password = $3, role = $4
+       ON CONFLICT (email) DO UPDATE SET password = $3, role = $4, updated_at = now()
        RETURNING id, email, role`,
-      ['Super Admin', 'admin@pixelwyre.com', hashedPassword, 'admin']
+      ['Admin', adminEmail, hashedPassword, 'admin']
     );
     console.log('Admin user:', JSON.stringify(result.rows));
   } catch (e) {

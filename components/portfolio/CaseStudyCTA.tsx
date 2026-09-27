@@ -4,7 +4,7 @@ export default function CaseStudyCTA() {
   return (
     <section
       style={{
-        background: "linear-gradient(135deg, #0A1E3F 0%, #0F2B5C 100%)",
+        background: "linear-gradient(135deg, #020617, rgba(10, 18, 36, 0.8))",
         padding: "60px 0",
         textAlign: "center",
       }}

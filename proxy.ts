@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { checkRateLimit } from "@/lib/utils/rate-limit";
 
 const PUBLIC_PATHS = [
   "/",
@@ -19,82 +21,84 @@ function isPublicPath(pathname: string): boolean {
   );
 }
 
-function decodeJwtPayload(token: string): Record<string, unknown> | null {
-  try {
-    const parts = token.split(".");
-    if (parts.length !== 3) return null;
-    const payload = parts[1];
-    const decoded = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
-    return JSON.parse(decoded);
-  } catch {
-    return null;
-  }
+function isLoginPage(pathname: string): boolean {
+  return pathname === "/admin" || pathname === "/crm" || pathname === "/portal";
 }
 
-function getSessionToken(request: NextRequest): string | undefined {
+function isAuthPage(pathname: string): boolean {
+  return pathname === "/portal" || pathname === "/portal/forgot-password" || pathname === "/portal/reset-password";
+}
+
+/**
+ * Auth.js only sets the `__Secure-` cookie prefix on secure origins. Decoding
+ * must therefore use the same flag, otherwise the token is read from the wrong
+ * cookie name and every protected route redirects to the login page.
+ */
+function isSecureRequest(request: NextRequest): boolean {
   return (
-    request.cookies.get("authjs.session-token")?.value ||
-    request.cookies.get("__Secure-authjs.session-token")?.value
+    request.nextUrl.protocol === "https:" ||
+    request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim() === "https"
   );
 }
 
-function getUserRole(token: string): string | null {
-  const payload = decodeJwtPayload(token);
-  if (!payload) return null;
-  return (payload.role as string) || null;
-}
-
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (isPublicPath(pathname)) {
+  // Rate limit login attempts
+  if (pathname === "/api/auth/callback/credentials" && request.method === "POST") {
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
+    const { allowed, remaining } = checkRateLimit(`login:${ip}`);
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many login attempts. Please try again later." },
+        { status: 429 }
+      );
+    }
+
+    const response = NextResponse.next();
+    response.headers.set("X-RateLimit-Remaining", String(remaining));
+    return response;
+  }
+
+  if (isPublicPath(pathname) || isLoginPage(pathname)) {
     return NextResponse.next();
   }
 
-  const sessionToken = getSessionToken(request);
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+    secureCookie: isSecureRequest(request),
+  });
 
-  // --- /admin routes: require admin or agent role ---
+  const role = token?.role as string | undefined;
+
+  // Redirect authenticated clients away from auth pages
+  if (isAuthPage(pathname) && token && role === "client") {
+    return NextResponse.redirect(new URL("/portal/dashboard", request.url));
+  }
+
   if (pathname.startsWith("/admin")) {
-    if (pathname === "/admin") return NextResponse.next();
-    if (!sessionToken) {
+    if (!token || (role !== "admin" && role !== "agent")) {
       return NextResponse.redirect(new URL("/admin", request.url));
     }
-    const role = getUserRole(sessionToken);
-    if (role !== "admin" && role !== "agent") {
-      return NextResponse.redirect(new URL("/admin", request.url));
-    }
-    return NextResponse.next();
   }
 
-  // --- /crm routes: require agent role ---
   if (pathname.startsWith("/crm")) {
-    if (pathname === "/crm") return NextResponse.next();
-    if (!sessionToken) {
+    if (!token || (role !== "agent" && role !== "admin")) {
       return NextResponse.redirect(new URL("/crm", request.url));
     }
-    const role = getUserRole(sessionToken);
-    if (role !== "agent" && role !== "admin") {
-      return NextResponse.redirect(new URL("/crm", request.url));
-    }
-    return NextResponse.next();
   }
 
-  // --- /portal routes: require client role ---
   if (pathname.startsWith("/portal")) {
-    if (pathname === "/portal") return NextResponse.next();
-    if (!sessionToken) {
+    if (!token || role !== "client") {
       return NextResponse.redirect(new URL("/portal", request.url));
     }
-    const role = getUserRole(sessionToken);
-    if (role !== "client") {
-      return NextResponse.redirect(new URL("/portal", request.url));
-    }
-    return NextResponse.next();
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/crm/:path*", "/portal/:path*"],
+  matcher: ["/admin/:path*", "/crm/:path*", "/portal/:path*", "/api/auth/callback/:path*"],
 };

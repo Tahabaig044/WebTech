@@ -2,62 +2,70 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { getPortalTickets, createSupportTicket } from "@/lib/actions/portal";
+import StatusBadge from "@/components/portal/StatusBadge";
+import LoadingSkeleton from "@/components/portal/LoadingSkeleton";
+import EmptyState from "@/components/portal/EmptyState";
+import PortalPagination from "@/components/portal/PortalPagination";
+import { validatePortal, supportTicketSchema } from "@/lib/validations/portal";
+import { toast } from "sonner";
 import type { SupportTicket } from "@/lib/types";
-
-const getStatusStyle = (status: string) => {
-  switch (status) {
-    case "open": return { color: "#3B82F6", bg: "rgba(59,130,246,0.12)", border: "rgba(59,130,246,0.3)" };
-    case "in_progress": return { color: "#F59E0B", bg: "rgba(245,158,11,0.12)", border: "rgba(245,158,11,0.3)" };
-    case "resolved": return { color: "#10B981", bg: "rgba(16,185,129,0.12)", border: "rgba(16,185,129,0.3)" };
-    default: return { color: "#6B7280", bg: "rgba(107,114,128,0.12)", border: "rgba(107,114,128,0.3)" };
-  }
-};
-
-const getPriorityStyle = (priority: string) => {
-  switch (priority) {
-    case "high": return { color: "#EF4444", bg: "rgba(239,68,68,0.12)", border: "rgba(239,68,68,0.3)" };
-    case "medium": return { color: "#F59E0B", bg: "rgba(245,158,11,0.12)", border: "rgba(245,158,11,0.3)" };
-    case "low": return { color: "#6B7280", bg: "rgba(107,114,128,0.12)", border: "rgba(107,114,128,0.3)" };
-    default: return { color: "#6B7280", bg: "rgba(107,114,128,0.12)", border: "rgba(107,114,128,0.3)" };
-  }
-};
 
 export default function SupportPage() {
   const { data: session } = useSession();
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [loading, setLoading] = useState(true);
   const [showNewTicket, setShowNewTicket] = useState(false);
-  const [selectedTicket, setSelectedTicket] = useState<string | null>(null);
   const [form, setForm] = useState({ subject: "", message: "", priority: "medium" });
   const [submitting, setSubmitting] = useState(false);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [error, setError] = useState("");
+
+  const fetchTickets = (p: number) => {
+    setLoading(true);
+    setError("");
+    getPortalTickets({ page: p })
+      .then((res) => {
+        setTickets(res.data);
+        setTotalPages(res.totalPages);
+        setTotal(res.total);
+      })
+      .catch((e) => setError(e instanceof Error ? e.message : "Failed to load tickets"))
+      .finally(() => setLoading(false));
+  };
 
   useEffect(() => {
     if (!session?.user?.email) return;
-    getPortalTickets()
-      .then(setTickets)
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, [session?.user?.email]);
+    fetchTickets(page);
+  }, [session?.user?.email, page]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!session?.user?.email) return;
+
+    const validation = validatePortal(supportTicketSchema, form);
+    if (!validation.success) {
+      setFormErrors(validation.errors);
+      return;
+    }
+    setFormErrors([]);
     setSubmitting(true);
-    const result = await createSupportTicket({
-      subject: form.subject,
-      message: form.message,
-      priority: form.priority,
-    });
+    const result = await createSupportTicket(form);
     setSubmitting(false);
     if (result.success) {
+      toast.success("Ticket submitted", { description: "Our team will respond shortly." });
       setShowNewTicket(false);
       setForm({ subject: "", message: "", priority: "medium" });
-      getPortalTickets().then(setTickets);
+      fetchTickets(1);
+      setPage(1);
+    } else {
+      toast.error("Failed to submit ticket", { description: result.error });
     }
   };
-
-  const selected = tickets.find((t) => t.id === selectedTicket);
 
   return (
     <div>
@@ -69,6 +77,10 @@ export default function SupportPage() {
         <button onClick={() => setShowNewTicket(true)} style={{ padding: "10px 20px", borderRadius: "10px", border: "none", background: "linear-gradient(135deg, #8B5CF6, #6D28D9)", color: "#fff", fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 14px rgba(139,92,246,0.35)", fontFamily: "var(--font-heading)" }}>+ New Ticket</button>
       </div>
 
+      {error && (
+        <div style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "12px", padding: "14px 18px", marginBottom: "20px", color: "#F87171", fontSize: "0.85rem" }}>{error}</div>
+      )}
+
       <div className="portal-table-wrap" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(139,92,246,0.12)", borderRadius: "16px", overflow: "hidden" }}>
         <div className="portal-table-grid" style={{ gridTemplateColumns: "0.8fr 2fr 1fr 0.8fr 0.8fr", padding: "14px 20px", background: "rgba(139,92,246,0.06)", borderBottom: "1px solid rgba(139,92,246,0.12)", minWidth: "560px" }}>
           {["#", "Subject", "Date", "Status", "Priority"].map((h) => (
@@ -77,36 +89,34 @@ export default function SupportPage() {
         </div>
 
         {loading ? (
-          <div style={{ padding: "40px", textAlign: "center", color: "#6B7280" }}>Loading tickets...</div>
+          <div style={{ padding: "40px" }}><LoadingSkeleton rows={5} /></div>
         ) : tickets.length === 0 ? (
-          <div style={{ padding: "40px", textAlign: "center", color: "#6B7280" }}>No support tickets yet</div>
-        ) : tickets.map((t, i) => {
-          const st = getStatusStyle(t.status);
-          const pr = getPriorityStyle(t.priority);
-          const isSelected = selectedTicket === t.id;
-          return (
-            <div key={t.id} onClick={() => setSelectedTicket(isSelected ? null : t.id)} className="portal-table-grid" style={{ gridTemplateColumns: "0.8fr 2fr 1fr 0.8fr 0.8fr", padding: "14px 20px", borderBottom: i < tickets.length - 1 ? "1px solid rgba(139,92,246,0.06)" : "none", background: isSelected ? "rgba(139,92,246,0.06)" : "transparent", cursor: "pointer", minWidth: "560px" }}>
-              <div style={{ color: "#C4B5FD", fontWeight: 600, fontSize: "0.85rem", fontFamily: "var(--font-mono)" }}>TK-{String(i + 1).padStart(3, "0")}</div>
-              <div style={{ color: "#E5E7EB", fontWeight: 600, fontSize: "0.88rem" }}>{t.subject}</div>
-              <div style={{ color: "#9CA3AF", fontSize: "0.82rem" }}>{new Date(t.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</div>
-              <div><span style={{ padding: "3px 10px", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700, color: st.color, background: st.bg, border: `1px solid ${st.border}`, textTransform: "capitalize" }}>{t.status.replace("_", " ")}</span></div>
-              <div><span style={{ padding: "3px 10px", borderRadius: "6px", fontSize: "0.72rem", fontWeight: 700, color: pr.color, background: pr.bg, border: `1px solid ${pr.border}`, textTransform: "capitalize" }}>{t.priority}</span></div>
-            </div>
-          );
-        })}
+          <EmptyState icon="⊘" title="No support tickets" description="Submit a ticket and our team will help you out." />
+        ) : tickets.map((t, i) => (
+          <Link
+            key={t.id}
+            href={`/portal/dashboard/support/${t.id}`}
+            className="portal-table-grid"
+            style={{
+              gridTemplateColumns: "0.8fr 2fr 1fr 0.8fr 0.8fr",
+              padding: "14px 20px",
+              borderBottom: i < tickets.length - 1 ? "1px solid rgba(139,92,246,0.06)" : "none",
+              textDecoration: "none",
+              transition: "background 0.15s",
+              minWidth: "560px",
+            }}
+          >
+            <div style={{ color: "#C4B5FD", fontWeight: 600, fontSize: "0.85rem", fontFamily: "var(--font-mono)" }}>{t.ticket_number}</div>
+            <div style={{ color: "#E5E7EB", fontWeight: 600, fontSize: "0.88rem" }}>{t.subject}</div>
+            <div style={{ color: "#9CA3AF", fontSize: "0.82rem" }}>{new Date(t.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</div>
+            <div><StatusBadge status={t.status} /></div>
+            <div><StatusBadge status={t.priority} variant="priority" /></div>
+          </Link>
+        ))}
       </div>
 
-      {selected && (
-        <div style={{ marginTop: "24px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(139,92,246,0.15)", borderRadius: "16px", padding: "28px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
-            <span style={{ color: "#F1F5F9", fontSize: "1.1rem", fontFamily: "var(--font-heading)", fontWeight: 700 }}>{selected.subject}</span>
-            <span style={{ padding: "2px 8px", borderRadius: "5px", fontSize: "0.7rem", fontWeight: 700, color: getStatusStyle(selected.status).color, background: getStatusStyle(selected.status).bg, border: `1px solid ${getStatusStyle(selected.status).border}`, textTransform: "capitalize" }}>{selected.status.replace("_", " ")}</span>
-          </div>
-          <div style={{ padding: "16px", borderRadius: "10px", background: "rgba(139,92,246,0.04)", border: "1px solid rgba(139,92,246,0.1)", marginBottom: "12px" }}>
-            <div style={{ color: "#6B7280", fontSize: "0.72rem", fontWeight: 600, marginBottom: "6px" }}>{new Date(selected.created_at).toLocaleString()}</div>
-            <p style={{ color: "#CBD5E1", fontSize: "0.85rem", margin: 0, lineHeight: 1.6 }}>{selected.message}</p>
-          </div>
-        </div>
+      {!loading && totalPages > 1 && (
+        <PortalPagination page={page} totalPages={totalPages} total={total} pageSize={20} onPageChange={setPage} />
       )}
 
       {showNewTicket && (
@@ -114,6 +124,15 @@ export default function SupportPage() {
           <div style={{ background: "#111827", border: "1px solid rgba(139,92,246,0.2)", borderRadius: "16px", padding: "32px", maxWidth: "500px", width: "100%", position: "relative" }} onClick={(e) => e.stopPropagation()}>
             <button onClick={() => setShowNewTicket(false)} style={{ position: "absolute", top: "16px", right: "16px", background: "rgba(255,255,255,0.06)", border: "none", color: "#9CA3AF", width: "32px", height: "32px", borderRadius: "8px", cursor: "pointer", fontSize: "1rem", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
             <h2 style={{ color: "#F1F5F9", fontSize: "1.2rem", fontFamily: "var(--font-heading)", fontWeight: 700, marginBottom: "20px" }}>Submit New Ticket</h2>
+
+            {formErrors.length > 0 && (
+              <div style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)", borderRadius: "8px", padding: "12px", marginBottom: "16px" }}>
+                {formErrors.map((err, i) => (
+                  <div key={i} style={{ color: "#F87171", fontSize: "0.82rem" }}>• {err}</div>
+                ))}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               <div>
                 <label style={{ display: "block", color: "#9CA3AF", fontSize: "0.78rem", fontWeight: 600, marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.5px" }}>Subject</label>
@@ -125,6 +144,7 @@ export default function SupportPage() {
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
                   <option value="high">High</option>
+                  <option value="urgent">Urgent</option>
                 </select>
               </div>
               <div>

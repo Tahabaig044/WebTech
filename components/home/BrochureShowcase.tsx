@@ -24,7 +24,7 @@ const docs = [
 
 export default function BrochureShowcase() {
   return (
-    <section style={{ padding: "80px 0", background: "#FFFFFF" }}>
+    <section style={{ padding: "80px 0", background: "var(--bg-page)" }}>
       <div className="wrap">
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
           <span className="eyebrow">📑 Collateral & Proposals</span>
@@ -45,8 +45,8 @@ export default function BrochureShowcase() {
                     fontWeight: 700,
                     padding: "3px 10px",
                     borderRadius: "12px",
-                    background: "rgba(37, 99, 235, 0.1)",
-                    color: "#2563EB",
+                    background: "rgba(124, 58, 237, 0.1)",
+                    color: "#A855F7",
                   }}
                 >
                   {doc.tag}
@@ -55,7 +55,7 @@ export default function BrochureShowcase() {
               <h3 style={{ marginBottom: "8px", fontSize: "1rem" }}>{doc.title}</h3>
               <p style={{ fontSize: "0.88rem", marginBottom: "16px" }}>{doc.desc}</p>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: "0.78rem", color: "#64748B" }}>{doc.format}</span>
+                <span style={{ fontSize: "0.78rem", color: "#94A3B8" }}>{doc.format}</span>
                 <button className="btn btn-secondary" style={{ fontSize: "0.82rem", padding: "8px 16px" }}>
                   Download →
                 </button>

@@ -41,7 +41,7 @@ export default async function CaseStudyDetailPage({ params }: PageProps) {
       {/* Hero */}
       <section
         style={{
-          background: "linear-gradient(135deg, #0A1E3F 0%, #0F2B5C 50%, #1E40AF 100%)",
+          background: "linear-gradient(135deg, rgba(10, 18, 36, 0.8), rgba(13, 23, 48, 0.6), rgba(124, 58, 237, 0.3))",
           padding: "80px 0 60px",
         }}
       >
@@ -63,9 +63,9 @@ export default async function CaseStudyDetailPage({ params }: PageProps) {
                 fontWeight: 700,
                 padding: "4px 14px",
                 borderRadius: "12px",
-                background: "rgba(59,130,246,0.2)",
-                color: "#60A5FA",
-                border: "1px solid rgba(59,130,246,0.3)",
+                background: "rgba(124, 58, 237, 0.2)",
+                color: "#A855F7",
+                border: "1px solid rgba(124, 58, 237, 0.3)",
               }}
             >
               {study.industry}
@@ -76,7 +76,7 @@ export default async function CaseStudyDetailPage({ params }: PageProps) {
           </div>
 
           <h1 style={{ color: "#FFFFFF", marginBottom: "12px" }}>{study.client_name}</h1>
-          <p style={{ color: "#60A5FA", fontSize: "1.2rem", fontWeight: 700, maxWidth: "600px" }}>
+          <p style={{ color: "#A855F7", fontSize: "1.2rem", fontWeight: 700, maxWidth: "600px" }}>
             {study.result_summary}
           </p>
         </div>
@@ -84,7 +84,7 @@ export default async function CaseStudyDetailPage({ params }: PageProps) {
 
       {/* Metrics */}
       {study.metrics && study.metrics.length > 0 && (
-        <section style={{ padding: "48px 0", background: "#F8FAFC", borderBottom: "1px solid #E2E8F0" }}>
+        <section style={{ padding: "48px 0", background: "var(--bg-surface)", borderBottom: "1px solid var(--border)" }}>
           <div className="wrap">
             <h2 style={{ marginBottom: "20px" }}>Key Results</h2>
             <MetricsGrid metrics={study.metrics} />

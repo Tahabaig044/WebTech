@@ -23,12 +23,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${service.name}`,
     description:
       service.short_description ||
-      `${service.name} — professional ${service.category.toLowerCase()} service from Pixelwyre Digital. ${service.price}.`,
+      `${service.name} — professional ${service.category.toLowerCase()} service from WebTech Solutions Hub. ${service.price}.`,
     openGraph: {
       title: service.name,
       description:
         service.short_description ||
-        `${service.name} — ${service.category} service from Pixelwyre Digital`,
+        `${service.name} — ${service.category} service from WebTech Solutions Hub`,
       type: "website",
     },
   };
@@ -52,18 +52,18 @@ export default async function ServiceDetailPage({ params }: PageProps) {
   return (
     <>
       {/* Breadcrumb */}
-      <section style={{ padding: "20px 0", background: "#F8FAFC", borderBottom: "1px solid #E2E8F0" }}>
+      <section style={{ padding: "20px 0", background: "var(--bg-surface)", borderBottom: "1px solid var(--border)" }}>
         <div className="wrap">
-          <nav style={{ fontSize: "0.84rem", color: "#64748B" }}>
-            <Link href="/" style={{ color: "#64748B" }}>Home</Link>
+          <nav style={{ fontSize: "0.84rem", color: "var(--text-muted)" }}>
+            <Link href="/" style={{ color: "var(--text-muted)" }}>Home</Link>
             <span style={{ margin: "0 8px" }}>/</span>
-            <Link href="/services" style={{ color: "#64748B" }}>Services</Link>
+            <Link href="/services" style={{ color: "var(--text-muted)" }}>Services</Link>
             <span style={{ margin: "0 8px" }}>/</span>
-            <Link href={`/services?category=${encodeURIComponent(service.category)}`} style={{ color: "#64748B" }}>
+            <Link href={`/services?category=${encodeURIComponent(service.category)}`} style={{ color: "var(--text-muted)" }}>
               {service.category}
             </Link>
             <span style={{ margin: "0 8px" }}>/</span>
-            <span style={{ color: "#0F172A", fontWeight: 600 }}>{service.name}</span>
+            <span style={{ color: "var(--text-primary)", fontWeight: 600 }}>{service.name}</span>
           </nav>
         </div>
       </section>
@@ -72,13 +72,13 @@ export default async function ServiceDetailPage({ params }: PageProps) {
       <section
         style={{
           padding: "60px 0 50px",
-          background: "linear-gradient(135deg, #0A1E3F 0%, #0F2B5C 50%, #1E40AF 100%)",
+          background: "linear-gradient(135deg, rgba(10, 18, 36, 0.8), rgba(13, 23, 48, 0.6), rgba(124, 58, 237, 0.3))",
         }}
       >
         <div className="wrap">
           <span
             className="eyebrow"
-            style={{ background: "rgba(59, 130, 246, 0.2)", border: "1px solid #3B82F6" }}
+            style={{ background: "rgba(124, 58, 237, 0.15)", border: "1px solid #7C3AED" }}
           >
             {service.icon && <span>{service.icon}</span>}
             {service.category}
@@ -90,7 +90,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
             </p>
           )}
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "28px" }}>
-            <span style={{ fontSize: "2rem", fontWeight: 800, color: "#60A5FA" }}>{service.price}</span>
+            <span style={{ fontSize: "2rem", fontWeight: 800, color: "#A855F7" }}>{service.price}</span>
             {service.price_period && (
               <span style={{ fontSize: "0.95rem", color: "#94A3B8" }}>/{service.price_period}</span>
             )}
@@ -129,7 +129,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
                 style={{
                   fontSize: "0.95rem",
                   lineHeight: 1.8,
-                  color: "#475569",
+                  color: "var(--text-muted)",
                   marginBottom: "36px",
                 }}
               >
@@ -152,15 +152,15 @@ export default async function ServiceDetailPage({ params }: PageProps) {
                           alignItems: "flex-start",
                           gap: "10px",
                           padding: "14px 16px",
-                          background: "#F8FAFC",
-                          border: "1px solid #E2E8F0",
+                          background: "rgba(10, 18, 36, 0.65)",
+                          border: "1px solid var(--border)",
                           borderRadius: "10px",
                         }}
                       >
                         <span style={{ color: "#16A34A", fontWeight: 700, fontSize: "1.1rem", flexShrink: 0, marginTop: "1px" }}>
                           ✓
                         </span>
-                        <span style={{ fontSize: "0.88rem", color: "#334155" }}>{feature}</span>
+                        <span style={{ fontSize: "0.88rem", color: "var(--text-muted)" }}>{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -173,9 +173,9 @@ export default async function ServiceDetailPage({ params }: PageProps) {
               {/* Price card */}
               <div
                 style={{
-                  background: "#FFFFFF",
-                  border: "1px solid #E2E8F0",
-                  borderTop: "4px solid #2563EB",
+                  background: "rgba(10, 18, 36, 0.65)",
+                  border: "1px solid var(--border)",
+                  borderTop: "4px solid #7C3AED",
                   borderRadius: "var(--radius)",
                   padding: "32px",
                   boxShadow: "var(--shadow-sm)",
@@ -185,12 +185,12 @@ export default async function ServiceDetailPage({ params }: PageProps) {
                   Starting at
                 </p>
                 <div style={{ display: "flex", alignItems: "baseline", gap: "6px", marginBottom: "8px" }}>
-                  <span style={{ fontSize: "2.2rem", fontWeight: 800, color: "#2563EB" }}>{service.price}</span>
+                  <span style={{ fontSize: "2.2rem", fontWeight: 800, color: "#7C3AED" }}>{service.price}</span>
                   {service.price_period && (
                     <span style={{ fontSize: "0.88rem", color: "#94A3B8" }}>/{service.price_period}</span>
                   )}
                 </div>
-                <p style={{ fontSize: "0.86rem", color: "#64748B", marginBottom: "24px", margin: "0 0 24px" }}>
+                <p style={{ fontSize: "0.86rem", color: "var(--text-muted)", marginBottom: "24px", margin: "0 0 24px" }}>
                   All-inclusive pricing. No hidden fees.
                 </p>
 
@@ -222,7 +222,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
               </div>
 
               {/* Trust signals */}
-              <div style={{ marginTop: "20px", padding: "20px", background: "#F8FAFC", borderRadius: "10px", border: "1px solid #E2E8F0" }}>
+              <div style={{ marginTop: "20px", padding: "20px", background: "rgba(10, 18, 36, 0.65)", borderRadius: "10px", border: "1px solid var(--border)" }}>
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                   {[
                     { icon: "⚡", text: "Fast delivery" },
@@ -232,7 +232,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
                   ].map((item) => (
                     <div key={item.text} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                       <span style={{ fontSize: "1.1rem" }}>{item.icon}</span>
-                      <span style={{ fontSize: "0.86rem", color: "#475569", fontWeight: 500 }}>{item.text}</span>
+                      <span style={{ fontSize: "0.86rem", color: "var(--text-muted)", fontWeight: 500 }}>{item.text}</span>
                     </div>
                   ))}
                 </div>
@@ -252,7 +252,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
       <section
         style={{
           padding: "70px 0",
-          background: "linear-gradient(135deg, #0A1E3F 0%, #0F2B5C 50%, #1E40AF 100%)",
+          background: "linear-gradient(135deg, rgba(10, 18, 36, 0.8), rgba(13, 23, 48, 0.6), rgba(124, 58, 237, 0.3))",
           textAlign: "center",
         }}
       >

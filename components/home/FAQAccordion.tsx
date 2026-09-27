@@ -25,7 +25,7 @@ export default function FAQAccordion() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section style={{ padding: "80px 0", background: "#FFFFFF" }}>
+    <section style={{ padding: "80px 0", background: "var(--bg-page)" }}>
       <div className="wrap">
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
           <span className="eyebrow">❓ Frequently Asked Questions</span>
@@ -41,7 +41,7 @@ export default function FAQAccordion() {
               <div
                 key={i}
                 style={{
-                  borderBottom: "1px solid #E2E8F0",
+                  borderBottom: "1px solid rgba(148,163,184,0.14)",
                 }}
               >
                 <h3 style={{ margin: 0 }}>
@@ -66,7 +66,7 @@ export default function FAQAccordion() {
                       style={{
                         fontSize: "1rem",
                         fontWeight: 700,
-                        color: isExpanded ? "#2563EB" : "#0F172A",
+                        color: isExpanded ? "#A855F7" : "#F8FAFC",
                         transition: "color 0.2s ease",
                       }}
                     >
@@ -76,7 +76,7 @@ export default function FAQAccordion() {
                       aria-hidden="true"
                       style={{
                         fontSize: "1.3rem",
-                        color: "#64748B",
+                        color: "#94A3B8",
                         transition: "transform 0.25s ease",
                         transform: isExpanded ? "rotate(45deg)" : "rotate(0deg)",
                         flexShrink: 0,

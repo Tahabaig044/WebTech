@@ -265,7 +265,16 @@ export interface Lead {
   value: string | null;
   status: string;
   notes: string | null;
+  assigned_to: string | null;
+  converted_client_id: string | null;
   created_at: string;
+}
+
+export interface LeadWithAssignee extends Lead {
+  assignee_name?: string | null;
+  assignee_email?: string | null;
+  converted_client_name?: string | null;
+  converted_client_email?: string | null;
 }
 
 export interface LeadInsert {
@@ -276,6 +285,80 @@ export interface LeadInsert {
   value?: string | null;
   status?: string;
   notes?: string | null;
+  assigned_to?: string | null;
+}
+
+export interface LeadFollowup {
+  id: string;
+  lead_id: string;
+  title: string;
+  description: string | null;
+  assigned_to: string | null;
+  due_date: string;
+  status: string;
+  completed_at: string | null;
+  created_at: string;
+}
+
+export interface LeadFollowupWithAssignee extends LeadFollowup {
+  assignee_name?: string | null;
+  assignee_email?: string | null;
+}
+
+export interface AdminUser {
+  id: string;
+  name: string | null;
+  email: string | null;
+  role: string;
+}
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  type: string;
+  title: string;
+  message: string | null;
+  link: string | null;
+  is_read: boolean;
+  created_at: string;
+}
+
+export interface CRMAnalytics {
+  dateRange: string;
+  leads: {
+    total: number;
+    new: number;
+    contacted: number;
+    proposalSent: number;
+    closedWon: number;
+    closedLost: number;
+    converted: number;
+    byService: Array<{ service: string; count: number }>;
+    byAssignee: Array<{ name: string; count: number }>;
+  };
+  conversion: {
+    totalConverted: number;
+    conversionRate: number;
+    lostRate: number;
+  };
+  followups: {
+    pending: number;
+    completed: number;
+    overdue: number;
+    dueToday: number;
+    byAssignee: Array<{ name: string; pending: number; completed: number }>;
+  };
+  revenue: {
+    totalPipeline: number;
+    convertedValue: number;
+    lostValue: number;
+  };
+  support: {
+    open: number;
+    closed: number;
+    pending: number;
+    byPriority: Array<{ priority: string; count: number }>;
+  };
 }
 
 // ============================================================
@@ -294,6 +377,15 @@ export interface Project {
   updated_at: string;
 }
 
+export interface ProjectInsert {
+  client_email: string;
+  name: string;
+  category?: string;
+  description?: string;
+  progress?: number;
+  status?: string;
+}
+
 export interface Invoice {
   id: string;
   client_email: string;
@@ -302,20 +394,44 @@ export interface Invoice {
   currency: string;
   status: string;
   description: string;
+  project_id: string | null;
   due_date: string | null;
   paid_at: string | null;
+  created_at: string;
+}
+
+export interface InvoicePayment {
+  id: string;
+  invoice_id: string;
+  receipt_number: string;
+  amount: number;
+  payment_date: string;
+  payment_mode: string;
+  reference_number: string | null;
+  notes: string | null;
   created_at: string;
 }
 
 export interface SupportTicket {
   id: string;
   client_email: string;
+  ticket_number: string;
   subject: string;
   message: string;
   status: string;
   priority: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface TicketMessage {
+  id: string;
+  ticket_id: string;
+  sender_email: string;
+  sender_role: "client" | "agent" | "admin";
+  message: string;
+  is_internal_note: boolean;
+  created_at: string;
 }
 
 // ============================================================
@@ -341,6 +457,7 @@ export interface AdminInvoice {
   currency: string | null;
   status: string | null;
   description: string | null;
+  project_id: string | null;
   due_date: string | null;
   paid_at: string | null;
   created_at: string;

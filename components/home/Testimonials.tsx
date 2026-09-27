@@ -3,7 +3,7 @@ const highlights = [
     title: "E-Commerce Transformation",
     metric: "340% more online orders",
     desc: "Full-stack web development with payment integration, Google Shopping feed, and automated WhatsApp order confirmations.",
-    color: "#2563EB",
+    color: "#A855F7",
     icon: "🛒",
   },
   {
@@ -24,7 +24,7 @@ const highlights = [
 
 export default function Testimonials() {
   return (
-    <section style={{ padding: "80px 0", background: "linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)" }}>
+    <section style={{ padding: "80px 0", background: "linear-gradient(180deg, #020617 0%, #0A1224 100%)" }}>
       <div className="wrap">
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
           <span className="eyebrow">⭐ Case Study Highlights</span>
@@ -42,7 +42,7 @@ export default function Testimonials() {
               <p style={{ fontSize: "1.1rem", fontWeight: 800, color: h.color, margin: "0 0 12px" }}>
                 {h.metric}
               </p>
-              <p style={{ fontSize: "0.88rem", color: "#64748B", margin: 0 }}>
+              <p style={{ fontSize: "0.88rem", color: "#94A3B8", margin: 0 }}>
                 {h.desc}
               </p>
             </div>

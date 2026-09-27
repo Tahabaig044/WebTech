@@ -21,7 +21,7 @@ export async function generateMetadata({
 
   return {
     title: post.title,
-    description: post.excerpt || `Read ${post.title} on the Pixelwyre Digital blog.`,
+    description: post.excerpt || `Read ${post.title} on the WebTech Solutions Hub blog.`,
     openGraph: {
       title: post.title,
       description: post.excerpt || "",
@@ -43,7 +43,7 @@ function formatDate(dateString: string | null): string {
 }
 
 function ShareButtons({ title, slug }: { title: string; slug: string }) {
-  const url = `https://pixelwyre.com/blog/${slug}`;
+  const url = `https://webtechsolutionshub.com/blog/${slug}`;
   const encodedUrl = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
 
@@ -93,11 +93,11 @@ function ShareButtons({ title, slug }: { title: string; slug: string }) {
             width: "36px",
             height: "36px",
             borderRadius: "8px",
-            border: "1px solid #E2E8F0",
+            border: "1px solid var(--border)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#64748B",
+            color: "#94A3B8",
             transition: "all 0.2s ease",
           }}
         >
@@ -127,7 +127,7 @@ function RelatedPostCard({
         className="card"
         style={{
           height: "100%",
-          borderTopColor: "#E2E8F0",
+          borderTopColor: "var(--border)",
         }}
       >
         <div
@@ -144,8 +144,8 @@ function RelatedPostCard({
               fontWeight: 700,
               padding: "3px 10px",
               borderRadius: "12px",
-              background: "rgba(37, 99, 235, 0.1)",
-              color: "#2563EB",
+              background: "rgba(124, 58, 237, 0.1)",
+              color: "#7C3AED",
             }}
           >
             {category}
@@ -179,7 +179,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     <>
       <style>{`
         .blog-hero-section {
-          background: linear-gradient(135deg, #0A1E3F 0%, #0F2B5C 50%, #1E40AF 100%);
+          background: linear-gradient(135deg, rgba(10, 18, 36, 0.8), rgba(13, 23, 48, 0.6), rgba(124, 58, 237, 0.3));
           padding: 60px 0 50px;
         }
         .blog-breadcrumb {
@@ -199,7 +199,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           color: #FFFFFF;
         }
         .blog-breadcrumb span {
-          color: #64748B;
+          color: #94A3B8;
           font-size: 0.82rem;
         }
         .blog-hero-title {
@@ -243,21 +243,21 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         }
         .blog-share-section {
           padding: 24px;
-          background: #F8FAFC;
-          border: 1px solid #E2E8F0;
+          background: var(--bg-surface);
+          border: 1px solid var(--border);
           border-radius: 12px;
         }
         .blog-cta-section {
           padding: 60px 0;
-          background: #F8FAFC;
-          border-top: 1px solid #E2E8F0;
+          background: var(--bg-page);
+          border-top: 1px solid var(--border);
         }
         .blog-cta-card {
-          background: linear-gradient(135deg, #0A1E3F 0%, #0F2B5C 50%, #1E40AF 100%);
+          background: linear-gradient(135deg, rgba(10, 18, 36, 0.8), rgba(13, 23, 48, 0.6), rgba(124, 58, 237, 0.3));
           border-radius: 16px;
           padding: 48px;
           text-align: center;
-          border: 1px solid #1E3A8A;
+          border: 1px solid rgba(139, 92, 246, 0.25);
         }
         @media (max-width: 960px) {
           .blog-layout {
@@ -292,9 +292,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 fontWeight: 700,
                 padding: "4px 12px",
                 borderRadius: "16px",
-                background: "rgba(59, 130, 246, 0.2)",
-                border: "1px solid #3B82F6",
-                color: "#60A5FA",
+                background: "rgba(124, 58, 237, 0.2)",
+                border: "1px solid #7C3AED",
+                color: "#A855F7",
                 textTransform: "uppercase",
                 letterSpacing: "0.05em",
               }}
@@ -371,7 +371,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     height: "auto",
                     borderRadius: "12px",
                     marginBottom: "32px",
-                    border: "1px solid #E2E8F0",
+                    border: "1px solid var(--border)",
                   }}
                 />
               )}
@@ -382,7 +382,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 style={{
                   marginTop: "48px",
                   paddingTop: "24px",
-                  borderTop: "1px solid #E2E8F0",
+                  borderTop: "1px solid var(--border)",
                 }}
               >
                 <ShareButtons title={post.title} slug={post.slug} />
@@ -401,7 +401,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
-        <section style={{ padding: "60px 0", borderTop: "1px solid #E2E8F0" }}>
+        <section style={{ padding: "60px 0", borderTop: "1px solid var(--border)" }}>
           <div className="wrap">
             <div style={{ textAlign: "center", marginBottom: "40px" }}>
               <span
@@ -410,8 +410,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   fontWeight: 700,
                   padding: "4px 12px",
                   borderRadius: "16px",
-                  background: "rgba(37, 99, 235, 0.1)",
-                  color: "#2563EB",
+                  background: "rgba(124, 58, 237, 0.1)",
+                  color: "#7C3AED",
                   textTransform: "uppercase",
                   letterSpacing: "0.05em",
                 }}
@@ -421,7 +421,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <h2 style={{ marginTop: "12px", marginBottom: "8px" }}>
                 You Might Also Like
               </h2>
-              <p style={{ color: "#64748B", maxWidth: "480px", margin: "0 auto" }}>
+              <p style={{ color: "#94A3B8", maxWidth: "480px", margin: "0 auto" }}>
                 More insights on {post.category.toLowerCase()} from our team.
               </p>
             </div>

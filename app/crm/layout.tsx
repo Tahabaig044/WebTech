@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import Logo from "@/components/layout/Logo";
 
 const navItems = [
   { label: "Dashboard", href: "/crm/dashboard", icon: "◈" },
@@ -56,26 +57,10 @@ export default function CRMLayout({ children }: { children: React.ReactNode }) {
       >
         <div style={{ padding: "24px 20px", borderBottom: "1px solid rgba(6,182,212,0.1)" }}>
           <Link href="/crm/dashboard" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "10px" }}>
-            <div
-              style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "10px",
-                background: "linear-gradient(135deg, #06B6D4, #0891B2)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "1rem",
-                color: "#fff",
-                fontWeight: 800,
-                boxShadow: "0 4px 14px rgba(6,182,212,0.4)",
-              }}
-            >
-              ◈
-            </div>
+            <Logo size={36} />
             <div>
-              <div style={{ color: "#F1F5F9", fontWeight: 700, fontSize: "0.95rem", fontFamily: "var(--font-heading)" }}>ERP Suite</div>
-              <div style={{ color: "#06B6D4", fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>Intelligence CRM</div>
+              <div style={{ color: "#F1F5F9", fontWeight: 700, fontSize: "0.95rem", fontFamily: "var(--font-heading)" }}>WebTech CRM</div>
+              <div style={{ color: "#06B6D4", fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>Solutions Hub</div>
             </div>
           </Link>
         </div>
@@ -138,7 +123,7 @@ export default function CRMLayout({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      <div style={{ flex: 1, marginLeft: "0", display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <div className="crm-content" style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: "100vh", minWidth: 0 }}>
         <header
           style={{
             position: "sticky",
@@ -210,6 +195,7 @@ export default function CRMLayout({ children }: { children: React.ReactNode }) {
       <style>{`
         @media (min-width: 768px) {
           aside { left: 0 !important; }
+          .crm-content { margin-left: 260px; }
           .md-show { display: block !important; }
         }
       `}</style>

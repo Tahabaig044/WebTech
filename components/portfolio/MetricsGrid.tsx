@@ -9,8 +9,8 @@ export default function MetricsGrid({ metrics }: { metrics: CaseMetric[] }) {
         <div
           key={m.label}
           style={{
-            background: "#FFFFFF",
-            border: "1px solid #E2E8F0",
+            background: "rgba(10, 18, 36, 0.65)",
+            border: "1px solid var(--border)",
             borderRadius: "12px",
             padding: "20px",
             textAlign: "center",

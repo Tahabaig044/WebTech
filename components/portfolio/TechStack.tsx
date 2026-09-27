@@ -14,9 +14,9 @@ export default function TechStack({ tech }: { tech: string[] }) {
               fontWeight: 600,
               padding: "5px 14px",
               borderRadius: "6px",
-              background: "#F1F5F9",
-              border: "1px solid #E2E8F0",
-              color: "#475569",
+              background: "rgba(139, 92, 246, 0.1)",
+              border: "1px solid rgba(139, 92, 246, 0.25)",
+              color: "#CBD5E1",
             }}
           >
             {t}

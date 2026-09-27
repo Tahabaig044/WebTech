@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function WhatsAppFloat() {
   return (
     <Link
-      href="https://wa.me/923112980115?text=Hi%20Pixelwyre%20team!%20I%20want%20to%20discuss%20a%20project%20for%20my%20business."
+      href="https://wa.me/923112980115?text=Hi%20WebTech%20team!%20I%20want%20to%20discuss%20a%20project%20for%20my%20business."
       target="_blank"
       rel="noopener noreferrer"
       className="whatsapp-float"

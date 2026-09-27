@@ -55,7 +55,7 @@ export default function TableOfContents({ content }: { content: string }) {
           display: block;
           padding: 6px 0;
           font-size: 0.85rem;
-          color: #64748B;
+          color: #94A3B8;
           text-decoration: none;
           line-height: 1.4;
           transition: color 0.2s ease;
@@ -63,8 +63,8 @@ export default function TableOfContents({ content }: { content: string }) {
           padding-left: 12px;
         }
         .blog-toc-link:hover {
-          color: #2563EB;
-          border-left-color: #2563EB;
+          color: #7C3AED;
+          border-left-color: #7C3AED;
         }
         .blog-toc-link.level-3 {
           padding-left: 24px;
