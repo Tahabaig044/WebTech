@@ -7,11 +7,11 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Services",
-  description: "Explore 100+ digital services — web development, SEO, Google Ads, managed hosting, and custom ERP automation from Pixelwyre Digital.",
+  description: "Explore 100+ digital services — web development, SEO, Google Ads, managed hosting, and custom ERP automation from WebTech Solutions Hub.",
 };
 
 const categoryMeta: Record<string, { icon: string; color: string }> = {
-  "Web Development": { icon: "🌐", color: "#2563EB" },
+  "Web Development": { icon: "🌐", color: "#A855F7" },
   "SEO": { icon: "🔍", color: "#16A34A" },
   "Search Engine Optimization": { icon: "🔍", color: "#16A34A" },
   "Paid Advertising": { icon: "📈", color: "#F59E0B" },
@@ -26,7 +26,7 @@ const categoryMeta: Record<string, { icon: string; color: string }> = {
 };
 
 const fallbackPricing = [
-  { name: "Starter", price: "₨ 25,000", period: "one-time", desc: "Perfect for new businesses launching their first digital presence.", color: "#2563EB", features: ["5-Page Business Website", "Mobile Responsive Design", "Basic SEO Setup", "SSL Certificate", "1 Month Managed Hosting", "WhatsApp Business Integration"], popular: false },
+  { name: "Starter", price: "₨ 25,000", period: "one-time", desc: "Perfect for new businesses launching their first digital presence.", color: "#7C3AED", features: ["5-Page Business Website", "Mobile Responsive Design", "Basic SEO Setup", "SSL Certificate", "1 Month Managed Hosting", "WhatsApp Business Integration"], popular: false },
   { name: "Growth", price: "₨ 65,000", period: "one-time", desc: "For businesses ready to generate leads and rank on Google Maps.", color: "#16A34A", features: ["10-Page Website + Blog", "Google Maps SEO (Top 3 Rank)", "Landing Page for Ads", "WhatsApp Chatbot Setup", "3 Months Managed Hosting", "Monthly Performance Report", "Google Ads Campaign Setup"], popular: true },
   { name: "Scale", price: "₨ 150,000+", period: "project-based", desc: "Full-stack digital transformation with custom ERP and automation.", color: "#7C3AED", features: ["Custom Web Application", "Full ERP + CRM Dashboard", "Multi-Channel Ad Campaigns", "Advanced Analytics & BI", "12 Months Managed Hosting", "Dedicated Account Manager", "Priority 24/7 Support", "Quarterly Strategy Sessions"], popular: false },
 ];
@@ -57,19 +57,19 @@ export default async function ServicesPage() {
     title,
     desc: `Explore our ${title.toLowerCase()} services.`,
     icon: (categoryMeta[title] || { icon: "⚙️" }).icon,
-    color: (categoryMeta[title] || { color: "#64748B" }).color,
+    color: (categoryMeta[title] || { color: "#94A3B8" }).color,
     services: svcList.map((s) => s.name),
     startingAt: svcList[0]?.price || "Contact Us",
   }));
 
   return (
     <>
-      <section style={{ background: "linear-gradient(135deg, #0A1E3F 0%, #0F2B5C 50%, #1E40AF 100%)", padding: "80px 0" }}>
+      <section style={{ background: "linear-gradient(135deg, rgba(10, 18, 36, 0.8), rgba(13, 23, 48, 0.6), rgba(124, 58, 237, 0.3))", padding: "80px 0" }}>
         <div className="wrap">
-          <span className="eyebrow" style={{ background: "rgba(59, 130, 246, 0.2)", border: "1px solid #3B82F6" }}>
+          <span className="eyebrow" style={{ background: "rgba(124, 58, 237, 0.2)", border: "1px solid #7C3AED" }}>
             ⚙️ Our Services
           </span>
-          <h1 style={{ color: "#FFFFFF", marginBottom: "16px" }}>100+ Digital Services</h1>
+          <h1 style={{ color: "#F8FAFC", marginBottom: "16px" }}>100+ Digital Services</h1>
           <p style={{ color: "#94A3B8", maxWidth: "560px", fontSize: "1.1rem" }}>
             Everything you need to build, market, and scale your business online — delivered by one team, managed through our ERP.
           </p>
@@ -91,7 +91,7 @@ export default async function ServicesPage() {
                 <p style={{ fontSize: "0.9rem", marginBottom: "16px" }}>{cat.desc}</p>
                 <ul style={{ listStyle: "none", padding: 0, margin: "0 0 20px 0", display: "flex", flexDirection: "column", gap: "6px" }}>
                   {cat.services.map((s) => (
-                    <li key={s} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.84rem", color: "#475569" }}>
+                    <li key={s} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.84rem", color: "#94A3B8" }}>
                       <span style={{ color: cat.color, fontWeight: 700 }}>✓</span> {s}
                     </li>
                   ))}
@@ -102,7 +102,7 @@ export default async function ServicesPage() {
               </div>
             )) : (
               <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "60px 0" }}>
-                <p style={{ fontSize: "1rem", color: "#64748B", marginBottom: "16px" }}>Services are being set up. Please check back soon.</p>
+                <p style={{ fontSize: "1rem", color: "#94A3B8", marginBottom: "16px" }}>Services are being set up. Please check back soon.</p>
                 <Link href="/contact" className="btn btn-primary" style={{ fontSize: "0.88rem", padding: "10px 24px" }}>
                   Contact Us →
                 </Link>
@@ -112,14 +112,14 @@ export default async function ServicesPage() {
         </div>
       </section>
 
-      <section style={{ padding: "80px 0", background: "#F8FAFC", borderTop: "1px solid #E2E8F0" }}>
+      <section style={{ padding: "80px 0", background: "rgba(10,18,36,0.65)", borderTop: "1px solid rgba(148,163,184,0.14)" }}>
         <div className="wrap">
           <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <span className="eyebrow" style={{ background: "rgba(59, 130, 246, 0.2)", border: "1px solid #3B82F6" }}>
+            <span className="eyebrow" style={{ background: "rgba(124, 58, 237, 0.2)", border: "1px solid #7C3AED" }}>
               💰 Pricing Tiers
             </span>
             <h2 style={{ marginBottom: "12px" }}>Choose Your Growth Plan</h2>
-            <p style={{ color: "#64748B", maxWidth: "520px", margin: "0 auto" }}>
+            <p style={{ color: "#94A3B8", maxWidth: "520px", margin: "0 auto" }}>
               Transparent pricing, no hidden fees. Every plan includes our quality guarantee.
             </p>
           </div>
@@ -133,7 +133,7 @@ export default async function ServicesPage() {
                   borderTopColor: tier.color,
                   position: "relative",
                   padding: tier.popular ? "40px 32px" : "32px",
-                  boxShadow: tier.popular ? "0 18px 45px rgba(22, 163, 74, 0.2)" : undefined,
+                  boxShadow: tier.popular ? "0 18px 45px rgba(124, 58, 237, 0.2)" : undefined,
                 }}
               >
                 {tier.popular && (
@@ -142,7 +142,7 @@ export default async function ServicesPage() {
                     top: "-1px",
                     right: "24px",
                     background: tier.color,
-                    color: "#FFFFFF",
+                    color: "#F8FAFC",
                     fontSize: "0.72rem",
                     fontWeight: 800,
                     padding: "4px 14px",
@@ -160,7 +160,7 @@ export default async function ServicesPage() {
                 </div>
                 <ul style={{ listStyle: "none", padding: 0, margin: "0 0 24px 0", display: "flex", flexDirection: "column", gap: "8px" }}>
                   {tier.features.map((f) => (
-                    <li key={f} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.88rem", color: "#475569" }}>
+                    <li key={f} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.88rem", color: "#94A3B8" }}>
                       <span style={{ color: tier.color, fontWeight: 700 }}>✓</span> {f}
                     </li>
                   ))}
@@ -178,10 +178,10 @@ export default async function ServicesPage() {
         </div>
       </section>
 
-      <section style={{ padding: "60px 0", background: "#FFFFFF", borderTop: "1px solid #E2E8F0" }}>
+      <section style={{ padding: "60px 0", background: "var(--bg-page)", borderTop: "1px solid rgba(148,163,184,0.14)" }}>
         <div className="wrap" style={{ textAlign: "center" }}>
           <h2 style={{ marginBottom: "12px" }}>Need a Custom Solution?</h2>
-          <p style={{ color: "#64748B", maxWidth: "520px", margin: "0 auto 24px" }}>
+          <p style={{ color: "#94A3B8", maxWidth: "520px", margin: "0 auto 24px" }}>
             We build custom ERPs, CRMs, and automation workflows tailored to your exact business needs.
           </p>
           <Link href="/contact" className="btn btn-primary" style={{ padding: "14px 32px", fontSize: "1rem" }}>

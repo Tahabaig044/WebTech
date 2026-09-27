@@ -16,19 +16,22 @@ export default function CRMLoginPage() {
     setError("");
     setLoading(true);
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
 
-    setLoading(false);
-
-    if (result?.error) {
-      setError("Invalid email or password");
-    } else {
-      router.push("/crm/dashboard");
-      router.refresh();
+      if (result?.error) {
+        setError("Invalid email or password");
+        setLoading(false);
+      } else {
+        window.location.href = "/crm/dashboard";
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
+      setLoading(false);
     }
   };
 
@@ -115,7 +118,7 @@ export default function CRMLoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="agent@pixelwyre.com"
+              placeholder="agent@webtechsolutionshub.com"
               required
               style={{
                 width: "100%",
@@ -184,7 +187,7 @@ export default function CRMLoginPage() {
 
         <div style={{ textAlign: "center", marginTop: "24px" }}>
           <span style={{ color: "#4B5563", fontSize: "0.8rem" }}>
-            Powered by Pixelwyre Intelligence
+            Powered by WebTech Solutions Hub
           </span>
         </div>
       </div>

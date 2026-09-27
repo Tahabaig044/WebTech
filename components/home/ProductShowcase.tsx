@@ -2,32 +2,32 @@ const products = [
   {
     icon: "🧠",
     badge: "Core",
-    badgeColor: "#2563EB",
+    badgeColor: "#7C3AED",
     title: "ERP Suite",
     description: "Central dashboard to manage all clients, invoicing, tasks, and automations.",
     ctaText: "Explore ERP",
     ctaLink: "/services#erp",
-    borderColor: "#2563EB",
+    borderColor: "#7C3AED",
   },
   {
     icon: "👥",
     badge: "Client",
-    badgeColor: "#7C3AED",
+    badgeColor: "#A855F7",
     title: "Client Portal",
     description: "Dedicated login for your clients to track projects, invoices, and tickets.",
     ctaText: "View Portal",
     ctaLink: "/services#portal",
-    borderColor: "#7C3AED",
+    borderColor: "#A855F7",
   },
   {
     icon: "📊",
     badge: "Analytics",
-    badgeColor: "#0284C7",
+    badgeColor: "#06B6D4",
     title: "BI Audit Engine",
     description: "Automated business intelligence audits with AI-powered recommendations.",
     ctaText: "Run Audit",
     ctaLink: "/services#bi-audit",
-    borderColor: "#0284C7",
+    borderColor: "#06B6D4",
   },
   {
     icon: "☁️",
@@ -42,12 +42,12 @@ const products = [
   {
     icon: "🏪",
     badge: "Micro SaaS",
-    badgeColor: "#16A34A",
+    badgeColor: "#10B981",
     title: "PKR Store",
     description: "E-commerce storefront optimized for Pakistani COD and bank transfer payments.",
     ctaText: "Launch Store",
     ctaLink: "/services#pkr-store",
-    borderColor: "#16A34A",
+    borderColor: "#10B981",
   },
   {
     icon: "🏫",
@@ -128,7 +128,7 @@ export default function ProductShowcase() {
         <div style={{ textAlign: "center", marginBottom: "36px" }}>
           <span className="eyebrow">🛠️ Our Products</span>
           <h2>Everything Your Business Needs</h2>
-          <p style={{ maxWidth: "560px", margin: "0 auto" }}>
+          <p style={{ maxWidth: "560px", margin: "0 auto", color: "var(--text-muted)" }}>
             From websites to ERP systems, we build the complete digital infrastructure for your business.
           </p>
         </div>
@@ -155,9 +155,9 @@ export default function ProductShowcase() {
                   <span
                     style={{
                       display: "inline-block",
-                      background: `${p.badgeColor}22`,
+                      background: `${p.badgeColor}18`,
                       color: p.badgeColor,
-                      border: `1px solid ${p.badgeColor}55`,
+                      border: `1px solid ${p.badgeColor}40`,
                       fontSize: "0.7rem",
                       fontWeight: 700,
                       padding: "2px 8px",
@@ -179,7 +179,7 @@ export default function ProductShowcase() {
                 style={{
                   fontSize: "0.85rem",
                   fontWeight: 700,
-                  color: "var(--brand-blue)",
+                  color: "var(--secondary)",
                 }}
               >
                 {p.ctaText} →

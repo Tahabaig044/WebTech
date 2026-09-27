@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { getCRMLeads } from "@/lib/actions/admin";
 import type { Lead } from "@/lib/types";
 
 export default function CRMDashboardPage() {
@@ -9,14 +9,9 @@ export default function CRMDashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase
-      .from("leads")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(50)
-      .then(({ data }: { data: Lead[] | null }) => {
-        setLeads(data || []);
+    getCRMLeads()
+      .then((data) => {
+        setLeads(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));

@@ -1,6 +1,7 @@
 "use server";
 
 import { submitContactForm } from "@/lib/supabase/queries";
+import { checkRateLimit } from "@/lib/utils/rate-limit";
 import type { ContactSubmissionInsert } from "@/lib/types";
 
 export interface ContactFormState {
@@ -23,13 +24,28 @@ export async function submitContactAction(
     return { success: false, error: "Name, email, and message are required." };
   }
 
+  if (name.length > 200) {
+    return { success: false, error: "Name is too long." };
+  }
+  if (email.length > 254) {
+    return { success: false, error: "Email is too long." };
+  }
+  if (message.length > 5000) {
+    return { success: false, error: "Message is too long." };
+  }
+
+  const { allowed } = checkRateLimit(`contact:${email.toLowerCase()}`);
+  if (!allowed) {
+    return { success: false, error: "Too many submissions. Please try again later." };
+  }
+
   const submission: ContactSubmissionInsert = {
-    name,
-    email,
-    phone: phone || null,
-    service: service || null,
-    budget: budget || null,
-    message,
+    name: name.trim(),
+    email: email.trim().toLowerCase(),
+    phone: phone?.trim() || null,
+    service: service?.trim() || null,
+    budget: budget?.trim() || null,
+    message: message.trim(),
   };
 
   try {

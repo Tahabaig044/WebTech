@@ -106,12 +106,12 @@ export default function IndustryHub() {
   const active = industries.find((i) => i.id === activeId) || industries[0];
 
   return (
-    <section style={{ padding: "60px 0", background: "var(--bg-panel)" }}>
+    <section style={{ padding: "60px 0", background: "var(--bg-surface)" }}>
       <div className="wrap">
         <div style={{ textAlign: "center", marginBottom: "32px" }}>
           <span className="eyebrow">🏢 Industry Solutions</span>
           <h2>Packages Built for Your Industry</h2>
-          <p style={{ maxWidth: "500px", margin: "0 auto" }}>
+          <p style={{ maxWidth: "500px", margin: "0 auto", color: "var(--text-muted)" }}>
             Select your industry to see the tailored digital growth suite.
           </p>
         </div>
@@ -142,9 +142,9 @@ export default function IndustryHub() {
             <span
               style={{
                 display: "inline-block",
-                background: `${active.badgeColor}22`,
+                background: `${active.badgeColor}18`,
                 color: active.badgeColor,
-                border: `1px solid ${active.badgeColor}55`,
+                border: `1px solid ${active.badgeColor}40`,
                 fontSize: "0.72rem",
                 fontWeight: 700,
                 padding: "3px 10px",
@@ -161,7 +161,7 @@ export default function IndustryHub() {
           </p>
           <ul style={{ listStyle: "none", padding: 0, marginBottom: "18px" }}>
             {active.features.map((f) => (
-              <li key={f} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px", fontSize: "0.88rem", color: "var(--text-dark)" }}>
+              <li key={f} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px", fontSize: "0.88rem", color: "var(--text-secondary)" }}>
                 {f}
               </li>
             ))}
@@ -169,7 +169,7 @@ export default function IndustryHub() {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
             <div>
               <div style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>Starting from</div>
-              <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "var(--brand-blue)" }}>{active.price}</div>
+              <div style={{ fontSize: "1.5rem", fontWeight: 800, color: "var(--secondary)" }}>{active.price}</div>
             </div>
             <a href="/contact" className="btn btn-primary" style={{ padding: "12px 28px" }}>
               Get Started →

@@ -3,7 +3,9 @@
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import Logo from "@/components/layout/Logo";
+import NotificationBell from "@/components/admin/NotificationBell";
 
 /* ── SVG Icons (consistent size, stroke) ───────────────────── */
 const iconProps = { width: 18, height: 18, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -15,7 +17,10 @@ const NavIcons = {
   blog: <svg {...iconProps}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>,
   services: <svg {...iconProps}><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>,
   caseStudies: <svg {...iconProps}><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></svg>,
+  projects: <svg {...iconProps}><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>,
   invoices: <svg {...iconProps}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>,
+  settings: <svg {...iconProps}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>,
+  activity: <svg {...iconProps}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg>,
 };
 
 const UIIcons = {
@@ -28,21 +33,42 @@ const UIIcons = {
 };
 
 /* ── Nav Items ──────────────────────────────────────────────── */
+// Pages backed by admin-only server actions. Agents must not see or reach these.
+const ADMIN_ONLY_HREFS = ["/admin/users", "/admin/settings"];
+
 const navItems = [
   { label: "Dashboard", href: "/admin/dashboard", icon: NavIcons.dashboard },
   { label: "Leads", href: "/admin/leads", icon: NavIcons.leads },
   { label: "Clients", href: "/admin/clients", icon: NavIcons.clients },
+  { label: "Projects", href: "/admin/projects", icon: NavIcons.projects },
   { label: "Blog", href: "/admin/blog", icon: NavIcons.blog },
   { label: "Services", href: "/admin/services", icon: NavIcons.services },
   { label: "Case Studies", href: "/admin/case-studies", icon: NavIcons.caseStudies },
   { label: "Invoices", href: "/admin/invoices", icon: NavIcons.invoices },
+  { label: "Contact Forms", href: "/admin/contact-submissions", icon: NavIcons.leads },
+  { label: "Users", href: "/admin/users", icon: NavIcons.clients },
+  { label: "Notifications", href: "/admin/notifications", icon: UIIcons.bell },
+  { label: "Site Settings", href: "/admin/settings", icon: NavIcons.settings },
+  { label: "Activity Log", href: "/admin/activity", icon: NavIcons.activity },
 ];
 
 /* ── Component ──────────────────────────────────────────────── */
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const { data: session } = useSession();
   const isLoginPage = pathname === "/admin";
+
+  const userName = session?.user?.name || "Admin";
+  const userRole = session?.user?.role || "admin";
+  const isSuperAdmin = session?.user?.role === "admin";
+  const isAdminOnlyPath = ADMIN_ONLY_HREFS.some(
+    (href) => pathname === href || pathname.startsWith(href + "/")
+  );
+  const visibleNavItems = isSuperAdmin
+    ? navItems
+    : navItems.filter((item) => !ADMIN_ONLY_HREFS.includes(item.href));
+  const initials = userName.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
 
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
@@ -89,25 +115,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Brand */}
         <div className="admin-sidebar-brand">
           <Link href="/admin/dashboard" className="admin-focus" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "10px" }}>
-            <div style={{
-              width: 34, height: 34, borderRadius: 9,
-              background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "0.95rem", color: "#fff", fontWeight: 800,
-              boxShadow: "0 4px 12px rgba(37,99,235,0.35)",
-            }}>
-              P
-            </div>
+            <Logo size={34} />
             <div>
-              <div style={{ color: "#F9FAFB", fontWeight: 700, fontSize: "0.9rem", fontFamily: "var(--font-heading)" }}>Pixelwyre</div>
-              <div style={{ color: "#60A5FA", fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>Admin Panel</div>
+              <div style={{ color: "#F9FAFB", fontWeight: 700, fontSize: "0.9rem", fontFamily: "var(--font-heading)" }}>WebTech</div>
+              <div style={{ color: "#A855F7", fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>Admin Panel</div>
             </div>
           </Link>
         </div>
 
         {/* Navigation */}
         <nav className="admin-sidebar-nav" role="navigation" aria-label="Admin menu">
-          {navItems.map((item) => (
+          {visibleNavItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -122,6 +140,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Footer */}
         <div className="admin-sidebar-footer">
+          <Link href="/admin/profile" className="admin-sidebar-link admin-focus" style={{ color: "var(--admin-text-muted)" }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+            My Profile
+          </Link>
           <Link href="/" target="_blank" className="admin-sidebar-link admin-focus" style={{ color: "var(--admin-text-muted)" }}>
             {UIIcons.externalLink}
             View Website
@@ -155,10 +177,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           <div className="admin-header-right">
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <div className="admin-avatar" aria-hidden="true">SA</div>
+              <NotificationBell />
+              <div className="admin-avatar" aria-hidden="true">{initials}</div>
               <div className="md-show">
-                <div style={{ color: "#F9FAFB", fontSize: "0.8125rem", fontWeight: 600 }}>Super Admin</div>
-                <div style={{ color: "#6B7280", fontSize: "0.6875rem" }}>Administrator</div>
+                <div style={{ color: "#F9FAFB", fontSize: "0.8125rem", fontWeight: 600 }}>{userName}</div>
+                <div style={{ color: "#6B7280", fontSize: "0.6875rem", textTransform: "capitalize" }}>{userRole}</div>
               </div>
             </div>
           </div>
@@ -166,7 +189,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Page content */}
         <main className="admin-main" role="main">
-          {children}
+          {!session ? null : isAdminOnlyPath && !isSuperAdmin ? (
+            <div
+              className="admin-card"
+              style={{ padding: "48px", textAlign: "center", color: "var(--admin-text-muted)" }}
+            >
+              <h1 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--admin-text)", marginBottom: "8px" }}>
+                Access restricted
+              </h1>
+              <p>This area is limited to administrator accounts.</p>
+            </div>
+          ) : (
+            children
+          )}
         </main>
       </div>
 

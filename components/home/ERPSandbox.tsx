@@ -21,7 +21,7 @@ const adminLog = [
 
 const typeColors: Record<string, string> = {
   LEAD: "#16A34A",
-  DISPATCH: "#2563EB",
+  DISPATCH: "#A855F7",
   DEAL: "#F59E0B",
   DEPLOY: "#7C3AED",
   BILL: "#0284C7",
@@ -34,11 +34,11 @@ export default function ERPSandbox() {
   const [view, setView] = useState<"client" | "admin">("client");
 
   return (
-    <section style={{ padding: "80px 0", background: "linear-gradient(180deg, #060D19 0%, #0A1E3F 100%)" }}>
+    <section style={{ padding: "80px 0", background: "linear-gradient(180deg, #020617 0%, #0D1730 100%)" }}>
       <div className="wrap">
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
           <span className="eyebrow">📡 ERP Command Center</span>
-          <h2 style={{ color: "#FFFFFF", marginBottom: "14px" }}>See Both Sides of the Coin</h2>
+          <h2 style={{ color: "#F8FAFC", marginBottom: "14px" }}>See Both Sides of the Coin</h2>
           <p style={{ color: "#94A3B8", maxWidth: "560px", margin: "0 auto", fontSize: "1.05rem" }}>
             Toggle between what your clients see and the backend operations powering it all.
           </p>
@@ -49,9 +49,9 @@ export default function ERPSandbox() {
             onClick={() => setView("client")}
             className="btn"
             style={{
-              background: view === "client" ? "#2563EB" : "rgba(30, 58, 138, 0.4)",
-              color: view === "client" ? "#FFFFFF" : "#94A3B8",
-              border: `1.5px solid ${view === "client" ? "#3B82F6" : "#1E40AF"}`,
+              background: view === "client" ? "#7C3AED" : "rgba(124, 58, 237, 0.4)",
+              color: view === "client" ? "#F8FAFC" : "#94A3B8",
+              border: `1.5px solid ${view === "client" ? "#A855F7" : "rgba(139, 92, 246, 0.25)"}`,
             }}
           >
             👁️ Client View
@@ -60,9 +60,9 @@ export default function ERPSandbox() {
             onClick={() => setView("admin")}
             className="btn"
             style={{
-              background: view === "admin" ? "#2563EB" : "rgba(30, 58, 138, 0.4)",
-              color: view === "admin" ? "#FFFFFF" : "#94A3B8",
-              border: `1.5px solid ${view === "admin" ? "#3B82F6" : "#1E40AF"}`,
+              background: view === "admin" ? "#7C3AED" : "rgba(124, 58, 237, 0.4)",
+              color: view === "admin" ? "#F8FAFC" : "#94A3B8",
+              border: `1.5px solid ${view === "admin" ? "#A855F7" : "rgba(139, 92, 246, 0.25)"}`,
             }}
           >
             🔧 Admin / ERP View
@@ -75,49 +75,49 @@ export default function ERPSandbox() {
               <div
                 key={p.name}
                 style={{
-                  background: "rgba(15, 43, 92, 0.4)",
-                  border: "1px solid #1E3A8A",
+                  background: "rgba(10, 18, 36, 0.65)",
+                  border: "1px solid rgba(139, 92, 246, 0.2)",
                   borderRadius: "var(--radius)",
                   padding: "28px",
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-                  <h3 style={{ color: "#FFFFFF", margin: 0, fontSize: "0.95rem" }}>{p.name}</h3>
+                  <h3 style={{ color: "#F8FAFC", margin: 0, fontSize: "0.95rem" }}>{p.name}</h3>
                   <span
                     style={{
                       fontSize: "0.72rem",
                       fontWeight: 700,
                       padding: "3px 10px",
                       borderRadius: "12px",
-                      background: p.status === "Deployed" ? "rgba(22, 163, 74, 0.2)" : "rgba(37, 99, 235, 0.2)",
-                      color: p.status === "Deployed" ? "#34D399" : "#60A5FA",
+                      background: p.status === "Deployed" ? "rgba(22, 163, 74, 0.2)" : "rgba(124, 58, 237, 0.2)",
+                      color: p.status === "Deployed" ? "#34D399" : "#A855F7",
                     }}
                   >
                     {p.status}
                   </span>
                 </div>
                 <p style={{ color: "#94A3B8", fontSize: "0.86rem", margin: "0 0 4px" }}>{p.task}</p>
-                <p style={{ color: "#64748B", fontSize: "0.78rem", margin: "0 0 16px" }}>Deadline: {p.deadline}</p>
-                <div style={{ background: "#060C1B", borderRadius: "8px", height: "8px", overflow: "hidden" }}>
+                <p style={{ color: "#94A3B8", fontSize: "0.78rem", margin: "0 0 16px" }}>Deadline: {p.deadline}</p>
+                <div style={{ background: "rgba(10, 18, 36, 0.65)", borderRadius: "8px", height: "8px", overflow: "hidden" }}>
                   <div
                     style={{
                       width: `${p.progress}%`,
                       height: "100%",
-                      background: p.progress === 100 ? "#16A34A" : "#2563EB",
+                      background: p.progress === 100 ? "#16A34A" : "#7C3AED",
                       borderRadius: "8px",
                       transition: "width 0.4s ease",
                     }}
                   />
                 </div>
-                <p style={{ color: "#64748B", fontSize: "0.76rem", margin: "8px 0 0", textAlign: "right" }}>{p.progress}%</p>
+                <p style={{ color: "#94A3B8", fontSize: "0.76rem", margin: "8px 0 0", textAlign: "right" }}>{p.progress}%</p>
               </div>
             ))}
           </div>
         ) : (
           <div
             style={{
-              background: "#060C1B",
-              border: "1px solid #1E3A8A",
+              background: "rgba(10, 18, 36, 0.65)",
+              border: "1px solid rgba(139, 92, 246, 0.2)",
               borderRadius: "var(--radius)",
               padding: "24px",
               fontFamily: "var(--font-mono, 'Courier New', monospace)",
@@ -129,7 +129,7 @@ export default function ERPSandbox() {
               <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#EF4444" }} />
               <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#F59E0B" }} />
               <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#16A34A" }} />
-              <span style={{ color: "#64748B", fontSize: "0.78rem", marginLeft: "8px" }}>ERP Lead Dispatcher Log</span>
+              <span style={{ color: "#94A3B8", fontSize: "0.78rem", marginLeft: "8px" }}>ERP Lead Dispatcher Log</span>
             </div>
             {adminLog.map((entry, i) => (
               <div
@@ -138,12 +138,12 @@ export default function ERPSandbox() {
                   display: "flex",
                   gap: "12px",
                   padding: "8px 0",
-                  borderBottom: "1px solid rgba(30, 58, 138, 0.3)",
+                  borderBottom: "1px solid rgba(139, 92, 246, 0.2)",
                   fontSize: "0.82rem",
                   alignItems: "flex-start",
                 }}
               >
-                <span style={{ color: "#64748B", flexShrink: 0, minWidth: "65px" }}>{entry.time}</span>
+                <span style={{ color: "#94A3B8", flexShrink: 0, minWidth: "65px" }}>{entry.time}</span>
                 <span
                   style={{
                     color: typeColors[entry.type] || "#94A3B8",

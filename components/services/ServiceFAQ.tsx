@@ -25,12 +25,12 @@ export default function ServiceFAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section style={{ padding: "60px 0 80px", background: "#FFFFFF" }}>
+    <section style={{ padding: "60px 0 80px", background: "var(--bg-page)" }}>
       <div className="wrap">
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
           <span className="eyebrow">❓ Frequently Asked Questions</span>
           <h2 style={{ marginBottom: "12px" }}>Common Questions</h2>
-          <p style={{ color: "#64748B", maxWidth: "480px", margin: "0 auto" }}>
+          <p style={{ color: "var(--text-muted)", maxWidth: "480px", margin: "0 auto" }}>
             Everything you need to know before getting started.
           </p>
         </div>
@@ -40,7 +40,7 @@ export default function ServiceFAQ() {
             <div
               key={i}
               style={{
-                borderBottom: "1px solid #E2E8F0",
+                borderBottom: "1px solid var(--border)",
               }}
             >
               <button
@@ -62,7 +62,7 @@ export default function ServiceFAQ() {
                     margin: 0,
                     fontSize: "1rem",
                     fontWeight: 700,
-                    color: openIndex === i ? "#2563EB" : "#0F172A",
+                    color: openIndex === i ? "#7C3AED" : "var(--text-primary)",
                     transition: "color 0.2s ease",
                   }}
                 >
@@ -71,7 +71,7 @@ export default function ServiceFAQ() {
                 <span
                   style={{
                     fontSize: "1.3rem",
-                    color: "#64748B",
+                    color: "var(--text-muted)",
                     transition: "transform 0.25s ease",
                     transform: openIndex === i ? "rotate(45deg)" : "rotate(0deg)",
                     flexShrink: 0,

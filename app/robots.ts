@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin", "/crm", "/portal", "/api"],
       },
     ],
-    sitemap: "https://pixelwyre.com/sitemap.xml",
+    sitemap: "https://webtechsolutionshub.com/sitemap.xml",
   };
 }

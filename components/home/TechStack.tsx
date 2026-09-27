@@ -9,13 +9,13 @@ const integrations = [
 
 export default function TechStack() {
   return (
-    <section style={{ padding: "80px 0", background: "#FFFFFF" }}>
+    <section style={{ padding: "80px 0", background: "var(--bg-page)" }}>
       <div className="wrap">
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
           <span className="eyebrow">🔧 Integrations & Tech Stack</span>
           <h2 style={{ marginBottom: "14px" }}>Built on What Works</h2>
           <p className="lede" style={{ maxWidth: "560px", margin: "0 auto" }}>
-            Enterprise-grade infrastructure and APIs powering every Pixelwyre solution.
+            Enterprise-grade infrastructure and APIs powering every WebTech Solutions Hub solution.
           </p>
         </div>
 
@@ -31,8 +31,8 @@ export default function TechStack() {
                   width: "48px",
                   height: "48px",
                   borderRadius: "12px",
-                  background: "rgba(59, 130, 246, 0.15)",
-                  border: "1px solid rgba(59, 130, 246, 0.3)",
+                  background: "rgba(124, 58, 237, 0.15)",
+                  border: "1px solid rgba(139, 92, 246, 0.3)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",

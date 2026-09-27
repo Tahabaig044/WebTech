@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getBlogPosts, getCaseStudies, getServices } from "@/lib/supabase/queries";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://pixelwyre.com";
+  const baseUrl = "https://webtechsolutionshub.com";
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },

@@ -3,19 +3,28 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { getAllServices, deleteService } from "@/lib/actions/admin";
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
+import Pagination from "@/components/admin/Pagination";
+import { exportToCSV } from "@/lib/utils/export";
 import type { DBService } from "@/lib/types";
 
 export default function AdminServicesPage() {
   const [services, setServices] = useState<DBService[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [page, setPage] = useState(1);
+  const pageSize = 20;
   const router = useRouter();
 
   useEffect(() => {
     getAllServices()
       .then(setServices)
-      .catch(console.error)
+      .catch((e: unknown) => {
+        console.error("Failed to load services:", e);
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -25,13 +34,23 @@ export default function AdminServicesPage() {
       s.category.toLowerCase().includes(search.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Delete "${name}"?`)) return;
+    setDeleteTarget({ id, name });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    const { id } = deleteTarget;
+    setDeleteTarget(null);
     const result = await deleteService(id);
     if (result.success) {
       setServices((prev) => prev.filter((s) => s.id !== id));
+      toast.success("Service deleted");
     } else {
-      alert("Error: " + result.error);
+      toast.error(result.error || "Failed to delete service");
     }
   };
 
@@ -47,9 +66,9 @@ export default function AdminServicesPage() {
           style={{
             display: "inline-flex", alignItems: "center", gap: "8px",
             padding: "10px 20px", borderRadius: "10px", border: "none",
-            background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
+            background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
             color: "#fff", fontSize: "0.875rem", fontWeight: 700,
-            textDecoration: "none", boxShadow: "0 4px 12px rgba(37,99,235,0.3)",
+            textDecoration: "none", boxShadow: "0 4px 12px rgba(124,58,237,0.3)",
           }}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: 16, height: 16 }}>
@@ -57,6 +76,26 @@ export default function AdminServicesPage() {
           </svg>
           New Service
         </Link>
+        <button
+          onClick={() => exportToCSV(filtered , [
+            { key: "name", label: "Name" },
+            { key: "category", label: "Category" },
+            { key: "price", label: "Price" },
+            { key: "price_period", label: "Price Period" },
+            { key: "active", label: "Active" },
+            { key: "sort_order", label: "Sort Order" },
+            { key: "created_at", label: "Created" },
+          ], "services")}
+          style={{
+            padding: "8px 16px", borderRadius: "8px", border: "1px solid var(--admin-border)",
+            background: "var(--admin-surface)", color: "var(--admin-text)", fontSize: "0.8125rem",
+            fontWeight: 600, cursor: "pointer", fontFamily: "var(--font-body)",
+            display: "inline-flex", alignItems: "center", gap: "6px",
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+          Export
+        </button>
       </div>
 
       <div style={{
@@ -71,7 +110,7 @@ export default function AdminServicesPage() {
           type="text"
           placeholder="Search by name or category..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           style={{ flex: 1, background: "transparent", border: "none", color: "#F9FAFB", fontSize: "0.875rem", outline: "none", fontFamily: "var(--font-body)" }}
         />
       </div>
@@ -84,14 +123,14 @@ export default function AdminServicesPage() {
             {services.length === 0 ? "No services yet" : "No results found"}
           </div>
           {services.length === 0 && (
-            <Link href="/admin/services/new" style={{ color: "#2563EB", fontSize: "0.875rem", fontWeight: 600, textDecoration: "none" }}>
+            <Link href="/admin/services/new" style={{ color: "#7C3AED", fontSize: "0.875rem", fontWeight: 600, textDecoration: "none" }}>
               Create your first service →
             </Link>
           )}
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          {filtered.map((svc) => (
+          {paginated.map((svc) => (
             <div
               key={svc.id}
               style={{
@@ -103,7 +142,7 @@ export default function AdminServicesPage() {
             >
               <div style={{ flex: 1, minWidth: "200px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-                  <span style={{ color: "#2563EB", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                  <span style={{ color: "#7C3AED", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>
                     {svc.category}
                   </span>
                   {svc.active ? (
@@ -143,6 +182,18 @@ export default function AdminServicesPage() {
           ))}
         </div>
       )}
+      {!loading && filtered.length > 0 && (
+        <Pagination page={page} totalPages={totalPages} total={filtered.length} pageSize={pageSize} onPageChange={setPage} />
+      )}
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete Service"
+        message={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        danger
+        confirmLabel="Delete"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

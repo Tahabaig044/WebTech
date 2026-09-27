@@ -9,9 +9,9 @@ export default function StatsCounter() {
   return (
     <section
       style={{
-        background: "var(--bg-panel)",
-        borderTop: "1px solid var(--border-light)",
-        borderBottom: "1px solid var(--border-light)",
+        background: "var(--bg-surface)",
+        borderTop: "1px solid var(--border)",
+        borderBottom: "1px solid var(--border)",
         padding: "48px 0",
       }}
     >
@@ -26,7 +26,10 @@ export default function StatsCounter() {
                   fontSize: "clamp(2rem, 3.5vw, 2.8rem)",
                   fontWeight: 800,
                   fontFamily: "var(--font-heading)",
-                  color: "var(--brand-blue)",
+                  background: "linear-gradient(135deg, #7C3AED, #A855F7)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
                   lineHeight: 1.1,
                   marginBottom: "6px",
                 }}

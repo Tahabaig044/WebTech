@@ -1,251 +1,305 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
-import type { Lead } from "@/lib/types";
+import { getCRMAnalytics } from "@/lib/actions/admin";
+import type { CRMAnalytics } from "@/lib/types";
 
-/* ── SVG Icons ──────────────────────────────────────────────── */
-const iconProps = { width: 18, height: 18, viewBox: "0 0 24 24" as const, fill: "none" as const, stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+const DATE_OPTIONS = [
+  { value: "today", label: "Today" },
+  { value: "7d", label: "7 Days" },
+  { value: "30d", label: "30 Days" },
+  { value: "all", label: "All Time" },
+];
 
-const KpiIcons = {
-  leads: <svg {...iconProps}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" /></svg>,
-  newLeads: <svg {...iconProps}><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" /></svg>,
-  blog: <svg {...iconProps}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>,
-  services: <svg {...iconProps}><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>,
-  cases: <svg {...iconProps}><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></svg>,
-  inbox: <svg {...iconProps}><polyline points="22 12 16 12 14 15 10 15 8 12 2 12" /><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /></svg>,
-  plus: <svg {...iconProps}><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>,
-  doc: <svg {...iconProps}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>,
-  folder: <svg {...iconProps}><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></svg>,
-  arrowRight: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>,
+const STATUS_COLORS: Record<string, string> = {
+  new: "#7C3AED",
+  contacted: "#F59E0B",
+  proposal_sent: "#3B82F6",
+  closed_won: "#10B981",
+  closed_lost: "#EF4444",
 };
 
-/* ── Badge config ───────────────────────────────────────────── */
-const statusBadge: Record<string, string> = {
-  "new": "accent",
-  "contacted": "warning",
-  "proposal_sent": "info",
-  "closed_won": "success",
-  "closed_lost": "muted",
+const PRIORITY_COLORS: Record<string, string> = {
+  low: "#6B7280",
+  medium: "#F59E0B",
+  high: "#F97316",
+  urgent: "#EF4444",
 };
 
-const statusLabels: Record<string, string> = {
-  "new": "New",
-  "contacted": "Contacted",
-  "proposal_sent": "Proposal Sent",
-  "closed_won": "Closed Won",
-  "closed_lost": "Closed Lost",
-};
-
-/* ── Types ──────────────────────────────────────────────────── */
-interface DashboardStats {
-  totalLeads: number;
-  newLeads: number;
-  totalBlogPosts: number;
-  totalServices: number;
-  totalCaseStudies: number;
-  totalContactSubmissions: number;
+function formatCurrency(amount: number): string {
+  if (amount >= 1_000_000) return `₨${(amount / 1_000_000).toFixed(1)}M`;
+  if (amount >= 1_000) return `₨${(amount / 1_000).toFixed(0)}K`;
+  return `₨${amount.toLocaleString()}`;
 }
 
 export default function AdminDashboardPage() {
-  const [leads, setLeads] = useState<Lead[]>([]);
-  const [stats, setStats] = useState<DashboardStats>({
-    totalLeads: 0, newLeads: 0, totalBlogPosts: 0,
-    totalServices: 0, totalCaseStudies: 0, totalContactSubmissions: 0,
-  });
+  const [analytics, setAnalytics] = useState<CRMAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
+  const [dateRange, setDateRange] = useState("30d");
+
+  const fetchAnalytics = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getCRMAnalytics(dateRange);
+      setAnalytics(data);
+    } catch (e: unknown) {
+      console.error(e);
+    }
+    setLoading(false);
+  }, [dateRange]);
 
   useEffect(() => {
-    const supabase = createClient();
+    fetchAnalytics();
+  }, [fetchAnalytics]);
 
-    Promise.all([
-      supabase.from("leads").select("*").order("created_at", { ascending: false }).limit(6),
-      supabase.from("leads").select("id", { count: "exact", head: true }),
-      supabase.from("leads").select("id", { count: "exact", head: true }).eq("status", "new"),
-      supabase.from("blog_posts").select("id", { count: "exact", head: true }),
-      supabase.from("services").select("id", { count: "exact", head: true }).eq("active", true),
-      supabase.from("case_studies").select("id", { count: "exact", head: true }).eq("published", true),
-      supabase.from("contact_submissions").select("id", { count: "exact", head: true }),
-    ]).then(([leadsRes, totalLeadsRes, newLeadsRes, blogRes, servicesRes, casesRes, contactRes]) => {
-      setLeads((leadsRes.data as Lead[] | null) || []);
-      setStats({
-        totalLeads: totalLeadsRes.count || 0,
-        newLeads: newLeadsRes.count || 0,
-        totalBlogPosts: blogRes.count || 0,
-        totalServices: servicesRes.count || 0,
-        totalCaseStudies: casesRes.count || 0,
-        totalContactSubmissions: contactRes.count || 0,
-      });
-      setLoading(false);
-    }).catch(() => setLoading(false));
-  }, []);
+  if (loading || !analytics) {
+    return (
+      <div>
+        <div className="admin-page-header">
+          <h1 className="admin-page-title">CRM Dashboard</h1>
+        </div>
+        <div className="admin-card" style={{ padding: "48px", textAlign: "center", color: "var(--admin-text-muted)" }}>
+          Loading analytics...
+        </div>
+      </div>
+    );
+  }
 
-  const barData = [65, 85, 45, 95, 70, 55, 80, 90, 60, 75, 88, 92];
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-  const kpis = [
-    { label: "Total Leads", value: stats.totalLeads, icon: KpiIcons.leads, color: "#2563EB", dim: "rgba(37,99,235,0.12)", sub: "All time" },
-    { label: "New Leads", value: stats.newLeads, icon: KpiIcons.newLeads, color: "#F59E0B", dim: "rgba(245,158,11,0.12)", sub: "Awaiting contact" },
-    { label: "Blog Posts", value: stats.totalBlogPosts, icon: KpiIcons.blog, color: "#10B981", dim: "rgba(16,185,129,0.12)", sub: "Published" },
-    { label: "Services", value: stats.totalServices, icon: KpiIcons.services, color: "#8B5CF6", dim: "rgba(139,92,246,0.12)", sub: "Active" },
-    { label: "Case Studies", value: stats.totalCaseStudies, icon: KpiIcons.cases, color: "#06B6D4", dim: "rgba(6,182,212,0.12)", sub: "Published" },
-    { label: "Contact Forms", value: stats.totalContactSubmissions, icon: KpiIcons.inbox, color: "#6366F1", dim: "rgba(99,102,241,0.12)", sub: "Submissions" },
-  ];
+  const { leads, conversion, followups, revenue, support } = analytics;
+  const maxServiceCount = Math.max(...leads.byService.map((s) => s.count), 1);
+  const maxAssigneeCount = Math.max(...leads.byAssignee.map((a) => a.count), 1);
 
   return (
     <div>
       <div className="admin-page-header">
-        <h1 className="admin-page-title">Dashboard</h1>
-        <p className="admin-page-subtitle">
-          Welcome back, Admin. Here&apos;s what&apos;s happening with your business today.
-        </p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px" }}>
+          <div>
+            <h1 className="admin-page-title">CRM Dashboard</h1>
+            <p className="admin-page-subtitle">Performance metrics and analytics</p>
+          </div>
+          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+            {DATE_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setDateRange(opt.value)}
+                style={{
+                  padding: "6px 14px", borderRadius: "8px",
+                  border: dateRange === opt.value ? "1px solid var(--admin-accent)" : "1px solid var(--admin-border)",
+                  background: dateRange === opt.value ? "var(--admin-accent)" : "var(--admin-surface)",
+                  color: dateRange === opt.value ? "#fff" : "var(--admin-text-muted)",
+                  fontSize: "0.8125rem", fontWeight: 600, cursor: "pointer", fontFamily: "var(--font-body)",
+                }}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* KPI Grid — 6 cards in 3x2 */}
-      <div className="admin-grid-3" style={{ marginBottom: 24 }}>
-        {kpis.map((kpi) => (
-          <div key={kpi.label} className="admin-kpi">
-            <div className="admin-kpi-header">
-              <span className="admin-kpi-label">{kpi.label}</span>
-              <div className="admin-kpi-icon" style={{ background: kpi.dim, color: kpi.color }}>
-                {kpi.icon}
-              </div>
-            </div>
-            <div className="admin-kpi-value">{loading ? "—" : kpi.value}</div>
-            <span className="admin-kpi-change neutral">{kpi.sub}</span>
+      {/* KPI Cards */}
+      <div className="dash-kpi-grid" style={{ gap: "16px", marginBottom: "24px" }}>
+        {[
+          { label: "Total Leads", value: leads.total, color: "#7C3AED", sub: "All leads" },
+          { label: "New Leads", value: leads.new, color: "#F59E0B", sub: "Awaiting contact" },
+          { label: "Converted", value: conversion.totalConverted, color: "#10B981", sub: `${conversion.conversionRate}% rate` },
+          { label: "Lost", value: leads.closedLost, color: "#EF4444", sub: `${conversion.lostRate}% rate` },
+          { label: "Pipeline Value", value: formatCurrency(revenue.totalPipeline), color: "#3B82F6", sub: "Total deal value" },
+          { label: "Converted Value", value: formatCurrency(revenue.convertedValue), color: "#10B981", sub: "Won deals" },
+        ].map((kpi) => (
+          <div key={kpi.label} className="admin-card" style={{ padding: "20px" }}>
+            <div style={{ fontSize: "0.75rem", color: "var(--admin-text-muted)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "8px" }}>{kpi.label}</div>
+            <div style={{ fontSize: "1.5rem", fontWeight: 800, color: kpi.color, fontFamily: "var(--font-heading)" }}>{kpi.value}</div>
+            <div style={{ fontSize: "0.75rem", color: "var(--admin-text-faint)", marginTop: "4px" }}>{kpi.sub}</div>
           </div>
         ))}
       </div>
 
-      {/* Chart + Quick Actions */}
-      <div className="admin-grid-main" style={{ marginBottom: 24 }}>
-        {/* Revenue Overview Chart */}
-        <div className="admin-card">
-          <div className="admin-card-header">
-            <div>
-              <h3 className="admin-card-title">Activity Overview</h3>
-              <p className="admin-card-subtitle">Lead activity across months</p>
-            </div>
-            <span className="admin-badge info">Sample Data</span>
+      <div className="dash-2col" style={{ gap: "20px", marginBottom: "24px" }}>
+        {/* Leads by Status */}
+        <div className="admin-card" style={{ padding: "24px" }}>
+          <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--admin-text)", marginBottom: "16px", fontFamily: "var(--font-heading)" }}>Leads by Status</h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {["new", "contacted", "proposal_sent", "closed_won", "closed_lost"].map((status) => {
+              const count = status === "new" ? leads.new : status === "contacted" ? leads.contacted : status === "proposal_sent" ? leads.proposalSent : status === "closed_won" ? leads.closedWon : leads.closedLost;
+              const pct = leads.total > 0 ? Math.round((count / leads.total) * 100) : 0;
+              return (
+                <div key={status}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8125rem", marginBottom: "4px" }}>
+                    <span style={{ color: "var(--admin-text)", textTransform: "capitalize" }}>{status.replace(/_/g, " ")}</span>
+                    <span style={{ color: "var(--admin-text-muted)", fontWeight: 600 }}>{count} <span style={{ fontSize: "0.75rem" }}>({pct}%)</span></span>
+                  </div>
+                  <div style={{ height: "6px", borderRadius: "3px", background: "var(--admin-border)", overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${pct}%`, borderRadius: "3px", background: STATUS_COLORS[status], transition: "width 0.3s" }} />
+                  </div>
+                </div>
+              );
+            })}
           </div>
+        </div>
 
-          <div style={{ display: "flex", alignItems: "flex-end", gap: 6, height: 180, paddingBottom: 8 }}>
-            {barData.map((val, i) => (
-              <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                <div
-                  style={{
-                    width: "100%",
-                    height: `${val * 1.6}px`,
-                    background: i === 8
-                      ? "linear-gradient(180deg, #2563EB, #1D4ED8)"
-                      : "rgba(37, 99, 235, 0.18)",
-                    borderRadius: "4px 4px 2px 2px",
-                    transition: "height 0.3s ease",
-                    boxShadow: i === 8 ? "0 4px 12px rgba(37,99,235,0.25)" : "none",
-                  }}
-                  title={`${months[i]}: ${val}%`}
-                />
-                <span style={{ color: "var(--admin-text-faint)", fontSize: "0.625rem", fontWeight: 600 }}>{months[i]}</span>
+        {/* Leads by Service */}
+        <div className="admin-card" style={{ padding: "24px" }}>
+          <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--admin-text)", marginBottom: "16px", fontFamily: "var(--font-heading)" }}>Leads by Service</h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {leads.byService.slice(0, 6).map((s) => {
+              const pct = Math.round((s.count / maxServiceCount) * 100);
+              return (
+                <div key={s.service}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8125rem", marginBottom: "4px" }}>
+                    <span style={{ color: "var(--admin-text)" }}>{s.service}</span>
+                    <span style={{ color: "var(--admin-text-muted)", fontWeight: 600 }}>{s.count}</span>
+                  </div>
+                  <div style={{ height: "6px", borderRadius: "3px", background: "var(--admin-border)", overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${pct}%`, borderRadius: "3px", background: "#7C3AED", transition: "width 0.3s" }} />
+                  </div>
+                </div>
+              );
+            })}
+            {leads.byService.length === 0 && <p style={{ color: "var(--admin-text-muted)", fontSize: "0.875rem" }}>No data</p>}
+          </div>
+        </div>
+
+        {/* Leads by Assignee */}
+        <div className="admin-card" style={{ padding: "24px" }}>
+          <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--admin-text)", marginBottom: "16px", fontFamily: "var(--font-heading)" }}>Leads by Assignee</h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {leads.byAssignee.slice(0, 6).map((a) => {
+              const pct = Math.round((a.count / maxAssigneeCount) * 100);
+              return (
+                <div key={a.name}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8125rem", marginBottom: "4px" }}>
+                    <span style={{ color: "var(--admin-text)" }}>{a.name}</span>
+                    <span style={{ color: "var(--admin-text-muted)", fontWeight: 600 }}>{a.count}</span>
+                  </div>
+                  <div style={{ height: "6px", borderRadius: "3px", background: "var(--admin-border)", overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${pct}%`, borderRadius: "3px", background: "#3B82F6", transition: "width 0.3s" }} />
+                  </div>
+                </div>
+              );
+            })}
+            {leads.byAssignee.length === 0 && <p style={{ color: "var(--admin-text-muted)", fontSize: "0.875rem" }}>No data</p>}
+          </div>
+        </div>
+
+        {/* Follow-ups Summary */}
+        <div className="admin-card" style={{ padding: "24px" }}>
+          <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--admin-text)", marginBottom: "16px", fontFamily: "var(--font-heading)" }}>Follow-ups</h3>
+          <div className="dash-2col-inner" style={{ gap: "12px", marginBottom: "16px" }}>
+            {[
+              { label: "Pending", value: followups.pending, color: "#F59E0B" },
+              { label: "Completed", value: followups.completed, color: "#10B981" },
+              { label: "Overdue", value: followups.overdue, color: "#EF4444" },
+              { label: "Due Today", value: followups.dueToday, color: "#3B82F6" },
+            ].map((item) => (
+              <div key={item.label} style={{ background: "var(--admin-bg)", borderRadius: "8px", padding: "12px", border: "1px solid var(--admin-border)" }}>
+                <div style={{ fontSize: "0.6875rem", color: "var(--admin-text-faint)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>{item.label}</div>
+                <div style={{ fontSize: "1.25rem", fontWeight: 800, color: item.color, fontFamily: "var(--font-heading)" }}>{item.value}</div>
               </div>
             ))}
           </div>
+          {followups.byAssignee.length > 0 && (
+            <div style={{ borderTop: "1px solid var(--admin-border)", paddingTop: "12px" }}>
+              <div style={{ fontSize: "0.75rem", color: "var(--admin-text-muted)", fontWeight: 600, marginBottom: "8px" }}>By Assignee</div>
+              {followups.byAssignee.slice(0, 4).map((a) => (
+                <div key={a.name} style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8125rem", padding: "4px 0" }}>
+                  <span style={{ color: "var(--admin-text)" }}>{a.name}</span>
+                  <span style={{ color: "var(--admin-text-muted)" }}>{a.pending} pending / {a.completed} done</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Support + Quick Actions */}
+      <div className="dash-2col" style={{ gap: "20px" }}>
+        <div className="admin-card" style={{ padding: "24px" }}>
+          <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--admin-text)", marginBottom: "16px", fontFamily: "var(--font-heading)" }}>Support Tickets</h3>
+          <div className="dash-3col-inner" style={{ gap: "12px", marginBottom: "16px" }}>
+            {[
+              { label: "Open", value: support.open, color: "#F59E0B" },
+              { label: "Closed", value: support.closed, color: "#10B981" },
+              { label: "Pending", value: support.pending, color: "#3B82F6" },
+            ].map((item) => (
+              <div key={item.label} style={{ background: "var(--admin-bg)", borderRadius: "8px", padding: "12px", border: "1px solid var(--admin-border)", textAlign: "center" }}>
+                <div style={{ fontSize: "0.6875rem", color: "var(--admin-text-faint)", fontWeight: 700, textTransform: "uppercase" }}>{item.label}</div>
+                <div style={{ fontSize: "1.25rem", fontWeight: 800, color: item.color, fontFamily: "var(--font-heading)" }}>{item.value}</div>
+              </div>
+            ))}
+          </div>
+          {support.byPriority.length > 0 && (
+            <div>
+              <div style={{ fontSize: "0.75rem", color: "var(--admin-text-muted)", fontWeight: 600, marginBottom: "8px" }}>By Priority</div>
+              {support.byPriority.map((p) => (
+                <div key={p.priority} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.8125rem", padding: "4px 0" }}>
+                  <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: PRIORITY_COLORS[p.priority] || "#6B7280" }} />
+                  <span style={{ color: "var(--admin-text)", textTransform: "capitalize" }}>{p.priority}</span>
+                  <span style={{ color: "var(--admin-text-muted)", fontWeight: 600 }}>{p.count}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Quick Actions */}
-        <div className="admin-card">
-          <h3 className="admin-card-title" style={{ marginBottom: 16 }}>Quick Actions</h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <Link href="/admin/leads" className="admin-action admin-focus">
-              <div className="admin-action-icon" style={{ background: "var(--admin-accent-dim)", color: "var(--admin-accent)" }}>
-                {KpiIcons.plus}
-              </div>
-              <div className="admin-action-text">
-                <span className="admin-action-title">Add Lead</span>
-                <span className="admin-action-desc">Create a new lead entry</span>
-              </div>
-            </Link>
-            <Link href="/admin/blog/new" className="admin-action admin-focus">
-              <div className="admin-action-icon" style={{ background: "var(--admin-info-dim)", color: "var(--admin-info)" }}>
-                {KpiIcons.blog}
-              </div>
-              <div className="admin-action-text">
-                <span className="admin-action-title">New Blog Post</span>
-                <span className="admin-action-desc">Write and publish a post</span>
-              </div>
-            </Link>
-            <Link href="/admin/services/new" className="admin-action admin-focus">
-              <div className="admin-action-icon" style={{ background: "var(--admin-success-dim)", color: "var(--admin-success)" }}>
-                {KpiIcons.doc}
-              </div>
-              <div className="admin-action-text">
-                <span className="admin-action-title">Add Service</span>
-                <span className="admin-action-desc">Create a new service listing</span>
-              </div>
-            </Link>
-            <Link href="/admin/case-studies/new" className="admin-action admin-focus">
-              <div className="admin-action-icon" style={{ background: "rgba(139,92,246,0.12)", color: "#8B5CF6" }}>
-                {KpiIcons.folder}
-              </div>
-              <div className="admin-action-text">
-                <span className="admin-action-title">New Case Study</span>
-                <span className="admin-action-desc">Document a client success</span>
-              </div>
-            </Link>
+        <div className="admin-card" style={{ padding: "24px" }}>
+          <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--admin-text)", marginBottom: "16px", fontFamily: "var(--font-heading)" }}>Quick Actions</h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {[
+              { label: "Add New Lead", href: "/admin/leads/new", color: "#7C3AED" },
+              { label: "View Lead Pipeline", href: "/admin/leads", color: "#3B82F6" },
+              { label: "All Leads (List)", href: "/admin/leads/all", color: "#F59E0B" },
+              { label: "View Notifications", href: "/admin/notifications", color: "#10B981" },
+            ].map((action) => (
+              <Link
+                key={action.href}
+                href={action.href}
+                style={{
+                  display: "flex", alignItems: "center", gap: "10px",
+                  padding: "10px 14px", borderRadius: "8px",
+                  border: "1px solid var(--admin-border)", background: "var(--admin-surface)",
+                  textDecoration: "none", fontSize: "0.875rem", fontWeight: 600,
+                  color: "var(--admin-text)", fontFamily: "var(--font-body)",
+                  transition: "border-color 0.2s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = action.color; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--admin-border)"; }}
+              >
+                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: action.color }} />
+                {action.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Recent Leads */}
-      <div className="admin-card">
-        <div className="admin-card-header">
-          <h3 className="admin-card-title">Recent Leads</h3>
-          <Link href="/admin/leads" className="admin-btn admin-btn-ghost admin-focus" style={{ fontSize: "0.8125rem", padding: "6px 12px" }}>
-            View All {KpiIcons.arrowRight}
-          </Link>
-        </div>
-
-        <div className="admin-table-wrap">
-          {loading ? (
-            <div style={{ padding: "32px", textAlign: "center", color: "var(--admin-text-muted)" }}>
-              Loading leads from Supabase...
-            </div>
-          ) : leads.length === 0 ? (
-            <div style={{ padding: "32px", textAlign: "center", color: "var(--admin-text-muted)" }}>
-              No leads yet. Submissions from the contact form will appear here.
-            </div>
-          ) : (
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Service</th>
-                  <th>Email</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {leads.map((lead) => (
-                  <tr key={lead.id}>
-                    <td>{lead.name}</td>
-                    <td>{lead.service}</td>
-                    <td style={{ color: "var(--admin-text-muted)", fontSize: "0.8125rem" }}>{lead.email || "—"}</td>
-                    <td>
-                      <span className={`admin-badge ${statusBadge[lead.status] || "muted"}`}>
-                        {statusLabels[lead.status] || lead.status}
-                      </span>
-                    </td>
-                    <td style={{ color: "var(--admin-text-muted)", fontSize: "0.8125rem" }}>
-                      {new Date(lead.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      </div>
+      <style>{`
+        .dash-kpi-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+        .dash-2col {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+        .dash-2col-inner {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+        .dash-3col-inner {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+        @media (max-width: 900px) {
+          .dash-2col { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+          .dash-2col-inner { grid-template-columns: 1fr; }
+          .dash-3col-inner { grid-template-columns: 1fr; }
+          .dash-kpi-grid { grid-template-columns: 1fr 1fr; }
+        }
+      `}</style>
     </div>
   );
 }

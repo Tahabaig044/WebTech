@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createCaseStudy, updateCaseStudy } from "@/lib/actions/admin";
+import { caseStudySchema } from "@/lib/validations/admin";
 import type { CaseStudy } from "@/lib/types";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 const inputStyle: React.CSSProperties = {
   width: "100%", background: "var(--admin-surface)", border: "1px solid var(--admin-border)",
@@ -24,6 +26,7 @@ export default function CaseStudyForm({ initial, mode }: CaseStudyFormProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState({
     client_name: initial?.client_name || "",
     slug: initial?.slug || "",
@@ -39,7 +42,10 @@ export default function CaseStudyForm({ initial, mode }: CaseStudyFormProps) {
     published: initial?.published ?? false,
   });
 
-  const set = (key: string, value: string | boolean) => setForm((f) => ({ ...f, [key]: value }));
+  const set = (key: string, value: string | boolean) => {
+    setForm((f) => ({ ...f, [key]: value }));
+    setFieldErrors((prev) => { const next = { ...prev }; delete next[key]; return next; });
+  };
 
   const autoSlug = (name: string) =>
     name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -54,6 +60,19 @@ export default function CaseStudyForm({ initial, mode }: CaseStudyFormProps) {
       slug: form.slug || autoSlug(form.client_name),
       tech_stack: form.tech_stack.split(",").map((t) => t.trim()).filter(Boolean),
     };
+
+    const schemaResult = caseStudySchema.safeParse(payload);
+    if (!schemaResult.success) {
+      const errors: Record<string, string> = {};
+      schemaResult.error.issues.forEach((issue) => {
+        const key = issue.path[0] as string;
+        if (!errors[key]) errors[key] = issue.message;
+      });
+      setFieldErrors(errors);
+      setSaving(false);
+      return;
+    }
+    setFieldErrors({});
 
     const result = mode === "create"
       ? await createCaseStudy(payload)
@@ -80,15 +99,18 @@ export default function CaseStudyForm({ initial, mode }: CaseStudyFormProps) {
         <div>
           <label htmlFor="cs-client" style={labelStyle}>Client Name *</label>
           <input id="cs-client" style={inputStyle} value={form.client_name} onChange={(e) => { set("client_name", e.target.value); if (mode === "create") set("slug", autoSlug(e.target.value)); }} required />
+          {fieldErrors.client_name && <p style={{ color: "#EF4444", fontSize: "0.75rem", marginTop: "4px" }}>{fieldErrors.client_name}</p>}
         </div>
         <div>
           <label htmlFor="cs-slug" style={labelStyle}>Slug *</label>
           <input id="cs-slug" style={inputStyle} value={form.slug} onChange={(e) => set("slug", e.target.value)} required />
+          {fieldErrors.slug && <p style={{ color: "#EF4444", fontSize: "0.75rem", marginTop: "4px" }}>{fieldErrors.slug}</p>}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
           <div>
             <label htmlFor="cs-industry" style={labelStyle}>Industry *</label>
             <input id="cs-industry" style={inputStyle} value={form.industry} onChange={(e) => set("industry", e.target.value)} required />
+            {fieldErrors.industry && <p style={{ color: "#EF4444", fontSize: "0.75rem", marginTop: "4px" }}>{fieldErrors.industry}</p>}
           </div>
           <div>
             <label htmlFor="cs-timeline" style={labelStyle}>Timeline</label>
@@ -98,10 +120,15 @@ export default function CaseStudyForm({ initial, mode }: CaseStudyFormProps) {
         <div>
           <label htmlFor="cs-result" style={labelStyle}>Result Summary *</label>
           <input id="cs-result" style={inputStyle} value={form.result_summary} onChange={(e) => set("result_summary", e.target.value)} required placeholder="Brief result summary" />
+          {fieldErrors.result_summary && <p style={{ color: "#EF4444", fontSize: "0.75rem", marginTop: "4px" }}>{fieldErrors.result_summary}</p>}
         </div>
         <div>
-          <label htmlFor="cs-image" style={labelStyle}>Featured Image URL</label>
-          <input id="cs-image" style={inputStyle} value={form.featured_image} onChange={(e) => set("featured_image", e.target.value)} placeholder="https://..." />
+          <ImageUpload
+            value={form.featured_image}
+            onChange={(url) => set("featured_image", url)}
+            folder="case-studies"
+            label="Featured Image"
+          />
         </div>
         <div>
           <label htmlFor="cs-desc" style={labelStyle}>Description * (Markdown)</label>
@@ -112,6 +139,7 @@ export default function CaseStudyForm({ initial, mode }: CaseStudyFormProps) {
             onChange={(e) => set("description", e.target.value)}
             required
           />
+          {fieldErrors.description && <p style={{ color: "#EF4444", fontSize: "0.75rem", marginTop: "4px" }}>{fieldErrors.description}</p>}
         </div>
         <div>
           <label htmlFor="cs-challenge" style={labelStyle}>Challenge</label>
@@ -134,10 +162,11 @@ export default function CaseStudyForm({ initial, mode }: CaseStudyFormProps) {
         <div>
           <label htmlFor="cs-tech" style={labelStyle}>Tech Stack (comma-separated)</label>
           <input id="cs-tech" style={inputStyle} value={form.tech_stack} onChange={(e) => set("tech_stack", e.target.value)} placeholder="React, Node.js, Supabase" />
+          {fieldErrors.tech_stack && <p style={{ color: "#EF4444", fontSize: "0.75rem", marginTop: "4px" }}>{fieldErrors.tech_stack}</p>}
         </div>
         <div style={{ display: "flex", gap: "20px", paddingBottom: "4px" }}>
           <label htmlFor="cs-featured" style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
-            <input id="cs-featured" type="checkbox" checked={form.featured} onChange={(e) => set("featured", e.target.checked)} style={{ accentColor: "#2563EB" }} />
+            <input id="cs-featured" type="checkbox" checked={form.featured} onChange={(e) => set("featured", e.target.checked)} style={{ accentColor: "#7C3AED" }} />
             Featured
           </label>
           <label htmlFor="cs-published" style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", color: "#D1D5DB", fontSize: "0.85rem" }}>
@@ -153,7 +182,7 @@ export default function CaseStudyForm({ initial, mode }: CaseStudyFormProps) {
           disabled={saving}
           style={{
             padding: "10px 24px", borderRadius: "10px", border: "none",
-            background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
+            background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
             color: "#fff", fontSize: "0.875rem", fontWeight: 700, cursor: saving ? "not-allowed" : "pointer",
             opacity: saving ? 0.7 : 1,
           }}

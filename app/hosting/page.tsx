@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Managed Hosting",
-  description: "Enterprise-grade managed hosting with 99.99% uptime SLA, daily backups, SSL, CDN, and 24/7 monitoring from Pixelwyre Digital.",
+  description: "Enterprise-grade managed hosting with 99.99% uptime SLA, daily backups, SSL, CDN, and 24/7 monitoring from WebTech Solutions Hub.",
 };
 
 const features = [
@@ -20,7 +20,7 @@ const plans = [
     price: "₨ 1,499",
     period: "/month",
     desc: "Perfect for personal websites and small blogs.",
-    color: "#2563EB",
+    color: "#7C3AED",
     features: [
       "1 Website",
       "5 GB SSD Storage",
@@ -84,12 +84,12 @@ const techSpecs = [
 export default function HostingPage() {
   return (
     <>
-      <section style={{ background: "linear-gradient(135deg, #0A1E3F 0%, #0F2B5C 50%, #1E40AF 100%)", padding: "80px 0" }}>
+      <section style={{ background: "linear-gradient(135deg, rgba(10, 18, 36, 0.8), rgba(13, 23, 48, 0.6), rgba(124, 58, 237, 0.3))", padding: "80px 0" }}>
         <div className="wrap">
-          <span className="eyebrow" style={{ background: "rgba(59, 130, 246, 0.2)", border: "1px solid #3B82F6" }}>
+          <span className="eyebrow" style={{ background: "rgba(124, 58, 237, 0.2)", border: "1px solid #7C3AED" }}>
             ☁️ Managed Hosting
           </span>
-          <h1 style={{ color: "#FFFFFF", marginBottom: "16px" }}>Hosting That Never Sleeps</h1>
+          <h1 style={{ color: "#F8FAFC", marginBottom: "16px" }}>Hosting That Never Sleeps</h1>
           <p style={{ color: "#94A3B8", maxWidth: "560px", fontSize: "1.1rem" }}>
             Cloud infrastructure managed end-to-end so you can focus on growing your business.
           </p>
@@ -110,14 +110,14 @@ export default function HostingPage() {
         </div>
       </section>
 
-      <section style={{ padding: "80px 0", background: "#F8FAFC", borderTop: "1px solid #E2E8F0" }}>
+      <section style={{ padding: "80px 0", background: "rgba(10,18,36,0.65)", borderTop: "1px solid rgba(148,163,184,0.14)" }}>
         <div className="wrap">
           <div style={{ textAlign: "center", marginBottom: "48px" }}>
-            <span className="eyebrow" style={{ background: "rgba(59, 130, 246, 0.2)", border: "1px solid #3B82F6" }}>
+            <span className="eyebrow" style={{ background: "rgba(124, 58, 237, 0.2)", border: "1px solid #7C3AED" }}>
               💰 Hosting Plans
             </span>
             <h2 style={{ marginBottom: "12px" }}>Simple, Transparent Pricing</h2>
-            <p style={{ color: "#64748B", maxWidth: "520px", margin: "0 auto" }}>
+            <p style={{ color: "#94A3B8", maxWidth: "520px", margin: "0 auto" }}>
               All plans include free migration, SSL, and our 99.99% uptime guarantee.
             </p>
           </div>
@@ -131,7 +131,7 @@ export default function HostingPage() {
                   borderTopColor: plan.color,
                   position: "relative",
                   padding: plan.popular ? "40px 32px" : "32px",
-                  boxShadow: plan.popular ? "0 18px 45px rgba(22, 163, 74, 0.2)" : undefined,
+                  boxShadow: plan.popular ? "0 18px 45px rgba(124, 58, 237, 0.2)" : undefined,
                 }}
               >
                 {plan.popular && (
@@ -140,7 +140,7 @@ export default function HostingPage() {
                     top: "-1px",
                     right: "24px",
                     background: plan.color,
-                    color: "#FFFFFF",
+                    color: "#F8FAFC",
                     fontSize: "0.72rem",
                     fontWeight: 800,
                     padding: "4px 14px",
@@ -158,7 +158,7 @@ export default function HostingPage() {
                 </div>
                 <ul style={{ listStyle: "none", padding: 0, margin: "0 0 24px 0", display: "flex", flexDirection: "column", gap: "8px" }}>
                   {plan.features.map((f) => (
-                    <li key={f} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.88rem", color: "#475569" }}>
+                    <li key={f} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.88rem", color: "#94A3B8" }}>
                       <span style={{ color: plan.color, fontWeight: 700 }}>✓</span> {f}
                     </li>
                   ))}
@@ -176,26 +176,26 @@ export default function HostingPage() {
         </div>
       </section>
 
-      <section style={{ padding: "60px 0", background: "#FFFFFF", borderTop: "1px solid #E2E8F0" }}>
+      <section style={{ padding: "60px 0", background: "var(--bg-page)", borderTop: "1px solid rgba(148,163,184,0.14)" }}>
         <div className="wrap">
           <div style={{ textAlign: "center", marginBottom: "36px" }}>
             <h2>Technical Specifications</h2>
-            <p style={{ color: "#64748B" }}>Built on enterprise-grade infrastructure for maximum performance.</p>
+            <p style={{ color: "#94A3B8" }}>Built on enterprise-grade infrastructure for maximum performance.</p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "16px", maxWidth: "800px", margin: "0 auto" }}>
             {techSpecs.map((spec) => (
-              <div key={spec.label} style={{ display: "flex", justifyContent: "space-between", padding: "14px 18px", background: "#F8FAFC", borderRadius: "8px", border: "1px solid #E2E8F0" }}>
-                <span style={{ fontSize: "0.88rem", fontWeight: 700, color: "#0F172A" }}>{spec.label}</span>
-                <span style={{ fontSize: "0.84rem", color: "#64748B" }}>{spec.value}</span>
+              <div key={spec.label} style={{ display: "flex", justifyContent: "space-between", padding: "14px 18px", background: "rgba(10,18,36,0.65)", borderRadius: "8px", border: "1px solid rgba(148,163,184,0.14)" }}>
+                <span style={{ fontSize: "0.88rem", fontWeight: 700, color: "#F8FAFC" }}>{spec.label}</span>
+                <span style={{ fontSize: "0.84rem", color: "#94A3B8" }}>{spec.value}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section style={{ padding: "60px 0", background: "linear-gradient(135deg, #060D19 0%, #0F2B5C 100%)", borderTop: "1px solid #1E3A8A" }}>
+      <section style={{ padding: "60px 0", background: "linear-gradient(135deg, #020617, rgba(10, 18, 36, 0.8))", borderTop: "1px solid rgba(139, 92, 246, 0.2)" }}>
         <div className="wrap" style={{ textAlign: "center" }}>
-          <h2 style={{ color: "#FFFFFF", marginBottom: "12px" }}>Free Migration</h2>
+          <h2 style={{ color: "#F8FAFC", marginBottom: "12px" }}>Free Migration</h2>
           <p style={{ color: "#94A3B8", maxWidth: "520px", margin: "0 auto 24px" }}>
             Moving from another host? We&apos;ll migrate your sites for free — zero downtime guaranteed.
           </p>

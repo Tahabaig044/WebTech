@@ -6,9 +6,25 @@ import PostgresAdapter from "@auth/pg-adapter";
 import { Pool } from "pg";
 import bcryptjs from "bcryptjs";
 
+/**
+ * Supabase's connection pooler presents its own certificate inside the
+ * PostgreSQL SSL handshake, and that root is not in Node's default trust
+ * store. Verifying it therefore fails with
+ * "self-signed certificate in certificate chain", which broke every login in
+ * production (`authorize` threw, so the credentials callback returned
+ * `error=Configuration`).
+ *
+ * The connection is still TLS-encrypted. Set `DATABASE_SSL_CA` to the
+ * Supabase CA (PEM contents, newlines preserved) to re-enable full
+ * certificate verification.
+ */
+const databaseSsl = process.env.DATABASE_SSL_CA
+  ? { rejectUnauthorized: true, ca: process.env.DATABASE_SSL_CA }
+  : { rejectUnauthorized: false };
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: true },
+  ssl: databaseSsl,
 });
 
 declare module "next-auth" {
@@ -34,6 +50,10 @@ export const {
 } = NextAuth({
   adapter: PostgresAdapter(pool),
   session: { strategy: "jwt" },
+  // Required for self-hosted/proxied deployments. Without it Auth.js only
+  // trusts the host in development, and every /api/auth/* route returns
+  // HTTP 500 "UntrustedHost" once NODE_ENV=production.
+  trustHost: true,
   pages: {
     signIn: "/admin",
   },
@@ -56,7 +76,7 @@ export const {
         if (!credentials?.email || !credentials?.password) return null;
 
         const result = await pool.query(
-          "SELECT id, email, password, name, role FROM users WHERE email = $1",
+          "SELECT id, email, password, name, role FROM public.users WHERE email = $1",
           [credentials.email]
         );
 

@@ -4,13 +4,15 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import Logo from "@/components/layout/Logo";
+import ClientNotificationBell from "@/components/portal/ClientNotificationBell";
 
 const navItems = [
   { label: "Dashboard", href: "/portal/dashboard", icon: "◈" },
   { label: "Projects", href: "/portal/dashboard/projects", icon: "⊞" },
-  { label: "Invoices", href: "/portal/dashboard/invoices", icon: " ⊡" },
-  { label: "Support", href: "/portal/dashboard/support", icon: " ⊘" },
-  { label: "Settings", href: "/portal/dashboard/settings", icon: " ⊚" },
+  { label: "Invoices", href: "/portal/dashboard/invoices", icon: "⊡" },
+  { label: "Support", href: "/portal/dashboard/support", icon: "⊘" },
+  { label: "Settings", href: "/portal/dashboard/settings", icon: "⊚" },
 ];
 
 export default function PortalLayout({ children }: { children: React.ReactNode }) {
@@ -68,25 +70,9 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
         {/* Brand */}
         <div style={{ padding: "24px 20px", borderBottom: "1px solid rgba(139,92,246,0.12)" }}>
           <Link href="/portal/dashboard" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "10px" }}>
-            <div
-              style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "10px",
-                background: "linear-gradient(135deg, #8B5CF6, #6D28D9)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "1rem",
-                color: "#fff",
-                fontWeight: 800,
-                boxShadow: "0 4px 14px rgba(139,92,246,0.4)",
-              }}
-            >
-              P
-            </div>
+            <Logo size={36} />
             <div>
-              <div style={{ color: "#F1F5F9", fontWeight: 700, fontSize: "0.95rem", fontFamily: "var(--font-heading)" }}>Pixelwyre</div>
+              <div style={{ color: "#F1F5F9", fontWeight: 700, fontSize: "0.95rem", fontFamily: "var(--font-heading)" }}>WebTech</div>
               <div style={{ color: "#6B7280", fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.5px", textTransform: "uppercase" }}>Client Portal</div>
             </div>
           </Link>
@@ -153,7 +139,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       </aside>
 
       {/* Main area */}
-      <div style={{ flex: 1, marginLeft: "0", display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <div className="portal-content" style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: "100vh", minWidth: 0 }}>
         {/* Top bar */}
         <header
           style={{
@@ -194,6 +180,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <ClientNotificationBell />
             <div
               style={{
                 width: "36px",
@@ -227,6 +214,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
       <style>{`
         @media (min-width: 768px) {
           aside { left: 0 !important; }
+          .portal-content { margin-left: 260px; }
           .md-show { display: block !important; }
         }
       `}</style>

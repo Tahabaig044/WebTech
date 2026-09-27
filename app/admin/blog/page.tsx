@@ -3,19 +3,28 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { getAllBlogPosts, deleteBlogPost } from "@/lib/actions/admin";
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
+import Pagination from "@/components/admin/Pagination";
+import { exportToCSV } from "@/lib/utils/export";
 import type { BlogPost } from "@/lib/types";
 
 export default function AdminBlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null);
+  const [page, setPage] = useState(1);
+  const pageSize = 20;
   const router = useRouter();
 
   useEffect(() => {
     getAllBlogPosts()
       .then(setPosts)
-      .catch(console.error)
+      .catch((e: unknown) => {
+        console.error("Failed to load blog posts:", e);
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -25,13 +34,23 @@ export default function AdminBlogPage() {
       p.category.toLowerCase().includes(search.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+
   const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Delete "${title}"?`)) return;
+    setDeleteTarget({ id, title });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    const { id, title } = deleteTarget;
+    setDeleteTarget(null);
     const result = await deleteBlogPost(id);
     if (result.success) {
       setPosts((prev) => prev.filter((p) => p.id !== id));
+      toast.success("Post deleted");
     } else {
-      alert("Error: " + result.error);
+      toast.error(result.error || "Failed to delete post");
     }
   };
 
@@ -47,9 +66,9 @@ export default function AdminBlogPage() {
           style={{
             display: "inline-flex", alignItems: "center", gap: "8px",
             padding: "10px 20px", borderRadius: "10px", border: "none",
-            background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
+            background: "linear-gradient(135deg, #7C3AED, #6D28D9)",
             color: "#fff", fontSize: "0.875rem", fontWeight: 700,
-            textDecoration: "none", boxShadow: "0 4px 12px rgba(37,99,235,0.3)",
+            textDecoration: "none", boxShadow: "0 4px 12px rgba(124,58,237,0.3)",
           }}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: 16, height: 16 }}>
@@ -57,6 +76,24 @@ export default function AdminBlogPage() {
           </svg>
           New Post
         </Link>
+        <button
+          onClick={() => exportToCSV(filtered , [
+            { key: "title", label: "Title" },
+            { key: "category", label: "Category" },
+            { key: "author", label: "Author" },
+            { key: "published", label: "Published" },
+            { key: "created_at", label: "Created" },
+          ], "blog-posts")}
+          style={{
+            padding: "8px 16px", borderRadius: "8px", border: "1px solid var(--admin-border)",
+            background: "var(--admin-surface)", color: "var(--admin-text)", fontSize: "0.8125rem",
+            fontWeight: 600, cursor: "pointer", fontFamily: "var(--font-body)",
+            display: "inline-flex", alignItems: "center", gap: "6px",
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+          Export
+        </button>
       </div>
 
       <div style={{
@@ -71,7 +108,7 @@ export default function AdminBlogPage() {
           type="text"
           placeholder="Search by title or category..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           style={{
             flex: 1, background: "transparent", border: "none", color: "#F9FAFB",
             fontSize: "0.875rem", outline: "none", fontFamily: "var(--font-body)",
@@ -87,14 +124,14 @@ export default function AdminBlogPage() {
             {posts.length === 0 ? "No blog posts yet" : "No results found"}
           </div>
           {posts.length === 0 && (
-            <Link href="/admin/blog/new" style={{ color: "#2563EB", fontSize: "0.875rem", fontWeight: 600, textDecoration: "none" }}>
+            <Link href="/admin/blog/new" style={{ color: "#7C3AED", fontSize: "0.875rem", fontWeight: 600, textDecoration: "none" }}>
               Create your first post →
             </Link>
           )}
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          {filtered.map((post) => (
+          {paginated.map((post) => (
             <div
               key={post.id}
               style={{
@@ -106,7 +143,7 @@ export default function AdminBlogPage() {
             >
               <div style={{ flex: 1, minWidth: "200px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-                  <span style={{ color: "#2563EB", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                  <span style={{ color: "#7C3AED", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>
                     {post.category}
                   </span>
                   {post.published ? (
@@ -149,6 +186,18 @@ export default function AdminBlogPage() {
           ))}
         </div>
       )}
+      {!loading && filtered.length > 0 && (
+        <Pagination page={page} totalPages={totalPages} total={filtered.length} pageSize={pageSize} onPageChange={setPage} />
+      )}
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete Post"
+        message={`Are you sure you want to delete "${deleteTarget?.title}"? This action cannot be undone.`}
+        danger
+        confirmLabel="Delete"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }
